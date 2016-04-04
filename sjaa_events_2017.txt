@@ -65,151 +65,305 @@ public events - total: 118
 2017 Sun 01/01 02:00 PM - Fix It
 2017 Sun 01/01 02:00 PM - Solar Sunday
 2017 Fri 01/06 07:00 PM - Intro to the Night Sky
+                          05:06 PM sunset - 05:36 PM / 06:08 PM / 06:39 PM
+                          01:58 AM moonset - 67.8%
 2017 Fri 01/06 07:00 PM - In-town Star Party
+                          05:06 PM sunset - 05:36 PM / 06:08 PM / 06:39 PM
+                          01:58 AM moonset - 67.8%
 2017 Sat 01/14 07:30 PM - General Meeting
 2017 Tue 01/17 07:30 PM - Imaging SIG
 2017 Fri 01/20 07:00 PM - Astronomy 101
+                          05:20 PM sunset - 05:49 PM / 06:21 PM / 06:52 PM
+                          01:48 AM moonrise - 36.3%
 2017 Fri 01/20 07:00 PM - In-town Star Party
+                          05:20 PM sunset - 05:49 PM / 06:21 PM / 06:52 PM
+                          01:48 AM moonrise - 36.3%
 2017 Sat 01/21 06:00 PM - Starry Night (OSA)
+                          05:21 PM sunset - 05:50 PM / 06:21 PM / 06:53 PM
+                          02:43 AM moonrise - 27.2%
 2017 Fri 02/03 07:00 PM - Intro to the Night Sky
+                          05:35 PM sunset - 06:04 PM / 06:34 PM / 07:05 PM
+                          12:55 AM moonset - 52.3%
 2017 Fri 02/03 07:00 PM - In-town Star Party
+                          05:35 PM sunset - 06:04 PM / 06:34 PM / 07:05 PM
+                          12:55 AM moonset - 52.3%
 2017 Sun 02/05 02:00 PM - Fix It
 2017 Sun 02/05 02:00 PM - Solar Sunday
 2017 Sat 02/11 07:30 PM - *Membership Meeting/Awards Night
 2017 Sat 02/11 07:30 PM - General Meeting
 2017 Fri 02/17 07:00 PM - Astronomy 101
+                          05:50 PM sunset - 06:18 PM / 06:48 PM / 07:18 PM
+                          12:32 AM moonrise - 54.5%
 2017 Fri 02/17 07:00 PM - In-town Star Party
+                          05:50 PM sunset - 06:18 PM / 06:48 PM / 07:18 PM
+                          12:32 AM moonrise - 54.5%
 2017 Sat 02/18 06:15 PM - Starry Night (OSA)
+                          05:51 PM sunset - 06:19 PM / 06:49 PM / 07:19 PM
+                          01:26 AM moonrise - 44.7%
 2017 Tue 02/21 07:30 PM - Imaging SIG
 2017 Fri 03/03 07:00 PM - Intro to the Night Sky
+                          06:04 PM sunset - 06:32 PM / 07:01 PM / 07:31 PM
+                          11:55 PM moonset - 37.0%
 2017 Fri 03/03 07:00 PM - In-town Star Party
+                          06:04 PM sunset - 06:32 PM / 07:01 PM / 07:31 PM
+                          11:55 PM moonset - 37.0%
 2017 Sun 03/05 02:00 PM - Fix It
 2017 Sun 03/05 02:00 PM - Solar Sunday
 2017 Sat 03/11 07:30 PM - General Meeting
 2017 Sun 03/12 11:00 AM - *Spring Swap Meet
 2017 Fri 03/17 07:15 PM - Astronomy 101
+                          07:17 PM sunset - 07:45 PM / 08:14 PM / 08:45 PM
+                          12:16 AM moonrise - 71.7%
 2017 Fri 03/17 08:15 PM - In-town Star Party
+                          07:17 PM sunset - 07:45 PM / 08:14 PM / 08:45 PM
+                          12:16 AM moonrise - 71.7%
 2017 Sat 03/18 07:45 PM - Starry Night (OSA)
+                          07:18 PM sunset - 07:46 PM / 08:15 PM / 08:46 PM
+                          01:09 AM moonrise - 62.6%
 2017 Tue 03/21 07:30 PM - Imaging SIG
 2017 Fri 03/31 07:30 PM - Intro to the Night Sky
+                          07:30 PM sunset - 07:58 PM / 08:28 PM / 09:00 PM
+                          11:51 PM moonset - 22.9%
 2017 Fri 03/31 08:30 PM - In-town Star Party
+                          07:30 PM sunset - 07:58 PM / 08:28 PM / 09:00 PM
+                          11:51 PM moonset - 22.9%
 2017 Sun 04/02 02:00 PM - Fix It
 2017 Sun 04/02 02:00 PM - Solar Sunday
 2017 Sat 04/08 07:30 PM - General Meeting
 2017 Sat 04/15 08:15 PM - Starry Night (OSA)
+                          07:43 PM sunset - 08:12 PM / 08:43 PM / 09:17 PM
+                          11:54 PM moonrise - 78.3%
 2017 Tue 04/18 07:30 PM - Imaging SIG
 2017 Fri 04/21 08:00 PM - Astronomy 101
+                          07:48 PM sunset - 08:17 PM / 08:50 PM / 09:24 PM
+                          04:14 AM moonrise - 20.7%
 2017 Fri 04/21 09:00 PM - In-town Star Party
+                          07:48 PM sunset - 08:17 PM / 08:50 PM / 09:24 PM
+                          04:14 AM moonrise - 20.7%
 2017 Fri 05/05 08:15 PM - Intro to the Night Sky
+                          08:01 PM sunset - 08:31 PM / 09:05 PM / 09:42 PM
+                          03:19 PM moonrise - 78.0%
 2017 Fri 05/05 09:15 PM - In-town Star Party
+                          08:01 PM sunset - 08:31 PM / 09:05 PM / 09:42 PM
+                          03:19 PM moonrise - 78.0%
 2017 Sat 05/06 07:30 PM - General Meeting
 2017 Sun 05/07 02:00 PM - Fix It
 2017 Sun 05/07 02:00 PM - Solar Sunday
 2017 Sat 05/13 07:30 PM - General Meeting
 2017 Tue 05/16 07:30 PM - Imaging SIG
 2017 Fri 05/19 08:30 PM - Astronomy 101
+                          08:13 PM sunset - 08:44 PM / 09:20 PM / 10:00 PM
+                          02:47 AM moonrise - 35.8%
 2017 Fri 05/19 09:30 PM - In-town Star Party
+                          08:13 PM sunset - 08:44 PM / 09:20 PM / 10:00 PM
+                          02:47 AM moonrise - 35.8%
 2017 Sat 05/20 08:45 PM - Starry Night (OSA)
+                          08:14 PM sunset - 08:45 PM / 09:21 PM / 10:01 PM
+                          03:23 AM moonrise - 25.5%
 2017 Fri 06/02 08:30 PM - Intro to the Night Sky
+                          08:23 PM sunset - 08:56 PM / 09:33 PM / 10:16 PM
+                          02:45 AM moonset - 68.8%
 2017 Fri 06/02 09:30 PM - In-town Star Party
+                          08:23 PM sunset - 08:56 PM / 09:33 PM / 10:16 PM
+                          02:45 AM moonset - 68.8%
 2017 Sun 06/04 02:00 PM - Fix It
 2017 Sun 06/04 02:00 PM - Solar Sunday
 2017 Sat 06/10 07:30 PM - General Meeting
 2017 Fri 06/16 08:45 PM - Astronomy 101
+                          08:30 PM sunset - 09:03 PM / 09:41 PM / 10:25 PM
+                          01:22 AM moonrise - 51.6%
 2017 Fri 06/16 09:45 PM - In-town Star Party
+                          08:30 PM sunset - 09:03 PM / 09:41 PM / 10:25 PM
+                          01:22 AM moonrise - 51.6%
 2017 Sat 06/17 09:00 PM - Starry Night (OSA)
+                          08:30 PM sunset - 09:03 PM / 09:42 PM / 10:26 PM
+                          01:56 AM moonrise - 40.5%
 2017 Tue 06/20 07:30 PM - Imaging SIG
 2017 Fri 06/30 08:45 PM - Intro to the Night Sky
+                          08:32 PM sunset - 09:05 PM / 09:43 PM / 10:26 PM
+                          01:18 AM moonset - 53.2%
 2017 Fri 06/30 09:45 PM - In-town Star Party
+                          08:32 PM sunset - 09:05 PM / 09:43 PM / 10:26 PM
+                          01:18 AM moonset - 53.2%
 2017 Sun 07/02 02:00 PM - Fix It
 2017 Sun 07/02 02:00 PM - Solar Sunday
 2017 Sat 07/08 07:30 PM - General Meeting
 2017 Fri 07/14 08:45 PM - Astronomy 101
+                          08:28 PM sunset - 09:00 PM / 09:37 PM / 10:18 PM
+                          11:59 PM moonrise - 66.4%
 2017 Fri 07/14 09:45 PM - In-town Star Party
+                          08:28 PM sunset - 09:00 PM / 09:37 PM / 10:18 PM
+                          11:59 PM moonrise - 66.4%
 2017 Sat 07/15 09:00 PM - Starry Night (OSA)
+                          08:27 PM sunset - 08:59 PM / 09:36 PM / 10:17 PM
+                          12:33 AM moonrise - 55.6%
 2017 Tue 07/18 07:30 PM - Imaging SIG
 2017 Fri 07/28 08:30 PM - Intro to the Night Sky
+                          08:18 PM sunset - 08:49 PM / 09:24 PM / 10:03 PM
+                          11:50 PM moonset - 36.8%
 2017 Fri 07/28 09:30 PM - In-town Star Party
+                          08:18 PM sunset - 08:49 PM / 09:24 PM / 10:03 PM
+                          11:50 PM moonset - 36.8%
 2017 Sat 08/05 07:30 PM - General Meeting
 2017 Sun 08/06 02:00 PM - Fix It
 2017 Sun 08/06 02:00 PM - Solar Sunday
 2017 Fri 08/11 08:15 PM - Astronomy 101
+                          08:04 PM sunset - 08:34 PM / 09:07 PM / 09:43 PM
+                          10:35 PM moonrise - 79.6%
 2017 Fri 08/11 09:15 PM - In-town Star Party
+                          08:04 PM sunset - 08:34 PM / 09:07 PM / 09:43 PM
+                          10:35 PM moonrise - 79.6%
 2017 Sat 08/12 08:30 PM - Starry Night (OSA)
+                          08:03 PM sunset - 08:32 PM / 09:05 PM / 09:41 PM
+                          11:10 PM moonrise - 69.8%
 2017 Tue 08/15 07:30 PM - Imaging SIG
 2017 Fri 08/25 07:45 PM - Intro to the Night Sky
+                          07:46 PM sunset - 08:14 PM / 08:46 PM / 09:20 PM
+                          10:20 PM moonset - 21.5%
 2017 Fri 08/25 08:45 PM - In-town Star Party
+                          07:46 PM sunset - 08:14 PM / 08:46 PM / 09:20 PM
+                          10:20 PM moonset - 21.5%
 2017 Fri 09/01 07:30 PM - Intro to the Night Sky
+                          07:36 PM sunset - 08:04 PM / 08:35 PM / 09:08 PM
+                          04:46 PM moonrise - 82.2%
 2017 Fri 09/01 08:30 PM - In-town Star Party
+                          07:36 PM sunset - 08:04 PM / 08:35 PM / 09:08 PM
+                          04:46 PM moonrise - 82.2%
 2017 Sat 09/02 07:30 PM - *Show-n-tell
 2017 Sat 09/02 07:30 PM - General Meeting
 2017 Sun 09/03 02:00 PM - Fix It
 2017 Sun 09/03 02:00 PM - Solar Sunday
 2017 Sat 09/09 08:00 PM - Starry Night (OSA)
+                          07:24 PM sunset - 07:52 PM / 08:22 PM / 08:54 PM
+                          09:48 PM moonrise - 82.4%
 2017 Fri 09/15 07:15 PM - Astronomy 101
+                          07:15 PM sunset - 07:42 PM / 08:12 PM / 08:44 PM
+                          04:27 PM moonset - 20.9%
 2017 Fri 09/15 08:15 PM - In-town Star Party
+                          07:15 PM sunset - 07:42 PM / 08:12 PM / 08:44 PM
+                          04:27 PM moonset - 20.9%
 2017 Tue 09/19 07:30 PM - Imaging SIG
 2017 Fri 09/29 07:00 PM - Intro to the Night Sky
+                          06:53 PM sunset - 07:21 PM / 07:50 PM / 08:21 PM
+                          01:49 AM moonset - 71.0%
 2017 Fri 09/29 07:45 PM - In-town Star Party
+                          06:53 PM sunset - 07:21 PM / 07:50 PM / 08:21 PM
+                          01:49 AM moonset - 71.0%
 2017 Sun 10/01 11:00 AM - *Fall Swap Meet
 2017 Sun 10/01 02:00 PM - Fix It
 2017 Sun 10/01 02:00 PM - Solar Sunday
 2017 Sat 10/07 07:30 PM - General Meeting
 2017 Fri 10/13 07:00 PM - Astronomy 101
+                          06:33 PM sunset - 07:01 PM / 07:30 PM / 08:00 PM
+                          03:14 PM moonset - 34.5%
 2017 Fri 10/13 07:30 PM - In-town Star Party
+                          06:33 PM sunset - 07:01 PM / 07:30 PM / 08:00 PM
+                          03:14 PM moonset - 34.5%
 2017 Sat 10/14 07:00 PM - Starry Night (OSA)
+                          06:31 PM sunset - 06:59 PM / 07:29 PM / 07:59 PM
+                          03:57 PM moonset - 24.1%
 2017 Tue 10/17 07:30 PM - Imaging SIG
 2017 Fri 10/27 07:00 PM - Intro to the Night Sky
+                          06:15 PM sunset - 06:43 PM / 07:13 PM / 07:44 PM
+                          12:32 AM moonset - 53.8%
 2017 Fri 10/27 07:15 PM - In-town Star Party
+                          06:15 PM sunset - 06:43 PM / 07:13 PM / 07:44 PM
+                          12:32 AM moonset - 53.8%
 2017 Sat 11/04 07:30 PM - General Meeting
 2017 Sun 11/05 02:00 PM - Fix It
 2017 Sun 11/05 02:00 PM - Solar Sunday
 2017 Fri 11/10 07:00 PM - Astronomy 101
+                          05:01 PM sunset - 05:30 PM / 06:01 PM / 06:31 PM
+                          11:53 PM moonrise - 45.0%
 2017 Fri 11/10 07:00 PM - In-town Star Party
+                          05:01 PM sunset - 05:30 PM / 06:01 PM / 06:31 PM
+                          11:53 PM moonrise - 45.0%
 2017 Sat 11/11 05:30 PM - Starry Night (OSA)
+                          05:00 PM sunset - 05:29 PM / 06:00 PM / 06:31 PM
+                          12:56 AM moonrise - 33.9%
 2017 Tue 11/21 07:30 PM - Imaging SIG
 2017 Fri 11/24 07:00 PM - Intro to the Night Sky
+                          04:52 PM sunset - 05:22 PM / 05:54 PM / 06:25 PM
+                          10:18 PM moonset - 36.1%
 2017 Fri 11/24 07:00 PM - In-town Star Party
+                          04:52 PM sunset - 05:22 PM / 05:54 PM / 06:25 PM
+                          10:18 PM moonset - 36.1%
 2017 Sat 12/02 07:30 PM - General Meeting
 2017 Sun 12/03 02:00 PM - Fix It
 2017 Sun 12/03 02:00 PM - Solar Sunday
 2017 Fri 12/08 07:00 PM - Astronomy 101
+                          04:50 PM sunset - 05:21 PM / 05:53 PM / 06:24 PM
+                          10:47 PM moonrise - 61.4%
 2017 Fri 12/08 07:00 PM - In-town Star Party
+                          04:50 PM sunset - 05:21 PM / 05:53 PM / 06:24 PM
+                          10:47 PM moonrise - 61.4%
 2017 Sat 12/09 05:30 PM - Starry Night (OSA)
+                          04:50 PM sunset - 05:21 PM / 05:53 PM / 06:24 PM
+                          11:51 PM moonrise - 50.1%
 2017 Tue 12/19 07:30 PM - Imaging SIG
 2017 Fri 12/22 07:00 PM - Intro to the Night Sky
+                          04:54 PM sunset - 05:25 PM / 05:57 PM / 06:29 PM
+                          09:07 PM moonset - 20.4%
 2017 Fri 12/22 07:00 PM - In-town Star Party
+                          04:54 PM sunset - 05:25 PM / 05:57 PM / 06:29 PM
+                          09:07 PM moonset - 20.4%
 2017 Sat 12/30 07:30 PM - General Meeting
 ======================================
 member events - total: 28
 --
 2017 Sat 01/14 06:00 PM - Board Meeting
 2017 Sat 01/28 06:00 PM - Dark Sky Night
+                          05:28 PM sunset - 05:58 PM / 06:28 PM / 06:59 PM
+                          06:30 PM moonset - 1.3%
 2017 Sat 02/11 06:00 PM - Board Meeting
 2017 Sat 02/25 06:30 PM - Dark Sky Night
+                          05:58 PM sunset - 06:26 PM / 06:56 PM / 07:26 PM
+                          05:18 PM moonset - 0.4%
 2017 Sat 03/11 06:00 PM - Board Meeting
 2017 Sat 03/25 08:00 PM - Dark Sky Night
+                          07:24 PM sunset - 07:52 PM / 08:22 PM / 08:53 PM
+                          05:03 PM moonset - 5.7%
 2017 Sat 04/08 06:00 PM - Board Meeting
 2017 Sat 04/22 08:15 PM - Dark Sky Night
+                          07:49 PM sunset - 08:18 PM / 08:51 PM / 09:25 PM
+                          03:48 PM moonset - 16.6%
 2017 Sat 05/06 06:00 PM - Board Meeting
 2017 Sat 05/13 06:00 PM - Board Meeting
 2017 Sat 05/27 09:00 PM - Dark Sky Night
+                          08:19 PM sunset - 08:51 PM / 09:28 PM / 10:10 PM
+                          10:33 PM moonset - 8.8%
 2017 Sat 06/10 06:00 PM - Board Meeting
 2017 Sat 06/24 09:15 PM - Dark Sky Night
+                          08:32 PM sunset - 09:05 PM / 09:43 PM / 10:27 PM
+                          09:14 PM moonset - 1.8%
 2017 Sat 07/08 06:00 PM - Board Meeting
 2017 Sat 07/22 09:00 PM - Dark Sky Night
+                          08:23 PM sunset - 08:55 PM / 09:30 PM / 10:10 PM
+                          07:54 PM moonset - 0.2%
 2017 Sat 08/05 06:00 PM - Board Meeting
 2017 Sat 08/05 07:30 PM - *Movie Night
 2017 Sat 08/19 08:30 PM - Dark Sky Night
+                          07:54 PM sunset - 08:23 PM / 08:55 PM / 09:30 PM
+                          06:33 PM moonset - 3.9%
 2017 Sat 09/02 06:00 PM - Board Meeting
 2017 Sat 09/16 07:45 PM - Dark Sky Night
+                          07:13 PM sunset - 07:41 PM / 08:11 PM / 08:42 PM
+                          05:15 PM moonset - 12.2%
 2017 Sat 09/23 07:30 PM - Dark Sky Night
+                          07:02 PM sunset - 07:30 PM / 08:00 PM / 08:30 PM
+                          09:24 PM moonset - 15.9%
 2017 Sat 10/07 06:00 PM - Board Meeting
 2017 Sat 10/21 06:45 PM - Dark Sky Night
+                          06:22 PM sunset - 06:50 PM / 07:20 PM / 07:50 PM
+                          07:57 PM moonset - 5.5%
 2017 Sat 11/04 06:00 PM - Board Meeting
 2017 Sat 11/18 05:30 PM - Dark Sky Night
+                          04:55 PM sunset - 05:25 PM / 05:56 PM / 06:27 PM
+                          05:32 PM moonset - 0.5%
 2017 Sat 12/02 06:00 PM - Board Meeting
 2017 Sat 12/16 05:30 PM - Dark Sky Night
+                          04:52 PM sunset - 05:23 PM / 05:55 PM / 06:26 PM
+                          04:10 PM moonset - 1.6%
 2017 Sat 12/30 06:00 PM - Board Meeting
 ======================================
 private events - total: 13

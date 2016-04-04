@@ -1,0 +1,389 @@
+======================================
+ephemeris events - total: 60
+--
+2016 Fri 01/01 09:30 PM - 3rd Qtr moon
+2016 Sat 01/09 05:30 PM - New moon
+2016 Sat 01/16 03:26 PM - 1st Qtr moon
+2016 Sat 01/23 05:45 PM - Full moon
+2016 Sun 01/31 07:27 PM - 3rd Qtr moon
+2016 Mon 02/08 06:38 AM - New moon
+2016 Sun 02/14 11:46 PM - 1st Qtr moon
+2016 Mon 02/22 10:19 AM - Full moon
+2016 Tue 03/01 03:10 PM - 3rd Qtr moon
+2016 Tue 03/08 02:42 AM -                                Jupiter at opposition
+2016 Tue 03/08 05:54 PM - New moon
+2016 Tue 03/15 10:02 AM - 1st Qtr moon
+2016 Sat 03/19 09:30 PM -               Spring Equinox
+2016 Wed 03/23 05:00 AM - Full moon
+2016 Thu 03/31 08:16 AM - 3rd Qtr moon
+2016 Thu 04/07 04:23 AM - New moon
+2016 Wed 04/13 08:59 PM - 1st Qtr moon
+2016 Thu 04/21 10:23 PM - Full moon
+2016 Fri 04/29 08:28 PM - 3rd Qtr moon
+2016 Fri 05/06 12:29 PM - New moon
+2016 Fri 05/13 10:02 AM - 1st Qtr moon
+2016 Sat 05/21 02:14 PM - Full moon
+2016 Sun 05/22 04:04 AM -                                Mars at opposition
+2016 Sun 05/29 05:11 AM - 3rd Qtr moon
+2016 Thu 06/02 11:21 PM -                                Saturn at opposition
+2016 Sat 06/04 07:59 PM - New moon
+2016 Sun 06/12 01:09 AM - 1st Qtr moon
+2016 Mon 06/20 04:02 AM - Full moon
+2016 Mon 06/20 03:34 PM -               Summer Solstice
+2016 Mon 06/27 11:18 AM - 3rd Qtr moon
+2016 Mon 07/04 04:00 AM - New moon
+2016 Thu 07/07 03:07 PM -                                Pluto at opposition
+2016 Mon 07/11 05:51 PM - 1st Qtr moon
+2016 Tue 07/19 03:56 PM - Full moon
+2016 Tue 07/26 03:59 PM - 3rd Qtr moon
+2016 Tue 08/02 01:44 PM - New moon
+2016 Wed 08/10 11:20 AM - 1st Qtr moon
+2016 Thu 08/18 02:26 AM - Full moon
+2016 Wed 08/24 08:40 PM - 3rd Qtr moon
+2016 Thu 09/01 02:03 AM - New moon
+2016 Fri 09/02 09:21 AM -                                Neptune at opposition
+2016 Fri 09/09 04:48 AM - 1st Qtr moon
+2016 Fri 09/16 12:05 PM - Full moon
+2016 Thu 09/22 07:21 AM -               Fall Equinox
+2016 Fri 09/23 02:56 AM - 3rd Qtr moon
+2016 Fri 09/30 05:11 PM - New moon
+2016 Sat 10/08 09:32 PM - 1st Qtr moon
+2016 Sat 10/15 03:26 AM -                                Uranus at opposition
+2016 Sat 10/15 09:23 PM - Full moon
+2016 Sat 10/22 12:13 PM - 3rd Qtr moon
+2016 Sun 10/30 10:38 AM - New moon
+2016 Mon 11/07 11:51 AM - 1st Qtr moon
+2016 Mon 11/14 05:52 AM - Full moon
+2016 Mon 11/21 12:33 AM - 3rd Qtr moon
+2016 Tue 11/29 04:18 AM - New moon
+2016 Wed 12/07 01:03 AM - 1st Qtr moon
+2016 Tue 12/13 04:05 PM - Full moon
+2016 Tue 12/20 05:55 PM - 3rd Qtr moon
+2016 Wed 12/21 02:44 AM -               Winter Solstice
+2016 Wed 12/28 10:53 PM - New moon
+======================================
+public events - total: 119
+--
+2016 Fri 01/01 07:00 PM - Astronomy 101
+                          05:01 PM sunset - 05:32 PM / 06:03 PM / 06:35 PM
+                          12:22 AM moonrise - 49.0%
+2016 Fri 01/01 07:00 PM - In-town Star Party
+                          05:01 PM sunset - 05:32 PM / 06:03 PM / 06:35 PM
+                          12:22 AM moonrise - 49.0%
+2016 Sat 01/02 05:30 PM - Starry Night (OSA)
+                          05:01 PM sunset - 05:32 PM / 06:04 PM / 06:36 PM
+                          01:16 AM moonrise - 39.3%
+2016 Sun 01/03 02:00 PM - Fix It
+2016 Sun 01/03 02:00 PM - Solar Sunday
+2016 Fri 01/15 07:00 PM - Intro to the Night Sky
+                          05:14 PM sunset - 05:44 PM / 06:15 PM / 06:46 PM
+                          11:47 PM moonset - 42.7%
+2016 Fri 01/15 07:00 PM - In-town Star Party
+                          05:14 PM sunset - 05:44 PM / 06:15 PM / 06:46 PM
+                          11:47 PM moonset - 42.7%
+2016 Tue 01/19 07:30 PM - Imaging SIG
+2016 Sat 01/23 07:30 PM - General Meeting
+2016 Fri 01/29 07:00 PM - Astronomy 101
+                          05:28 PM sunset - 05:58 PM / 06:29 PM / 06:59 PM
+                          11:05 PM moonrise - 67.2%
+2016 Fri 01/29 07:00 PM - In-town Star Party
+                          05:28 PM sunset - 05:58 PM / 06:29 PM / 06:59 PM
+                          11:05 PM moonrise - 67.2%
+2016 Sat 01/30 06:00 PM - Starry Night (OSA)
+                          05:30 PM sunset - 05:59 PM / 06:30 PM / 07:00 PM
+                          12:00 AM moonrise - 57.8%
+2016 Sun 02/07 02:00 PM - Fix It
+2016 Sun 02/07 02:00 PM - Solar Sunday
+2016 Fri 02/12 07:00 PM - Intro to the Night Sky
+                          05:44 PM sunset - 06:12 PM / 06:42 PM / 07:13 PM
+                          10:44 PM moonset - 27.5%
+2016 Fri 02/12 07:00 PM - In-town Star Party
+                          05:44 PM sunset - 06:12 PM / 06:42 PM / 07:13 PM
+                          10:44 PM moonset - 27.5%
+2016 Tue 02/16 07:30 PM - Imaging SIG
+2016 Sat 02/20 07:30 PM - *Membership Meeting/Awards Night
+2016 Sat 02/20 07:30 PM - General Meeting
+2016 Fri 02/26 07:00 PM - Astronomy 101
+                          05:58 PM sunset - 06:26 PM / 06:56 PM / 07:26 PM
+                          09:50 PM moonrise - 82.7%
+2016 Fri 02/26 07:00 PM - In-town Star Party
+                          05:58 PM sunset - 06:26 PM / 06:56 PM / 07:26 PM
+                          09:50 PM moonrise - 82.7%
+2016 Sat 02/27 06:30 PM - Starry Night (OSA)
+                          05:59 PM sunset - 06:27 PM / 06:57 PM / 07:27 PM
+                          10:45 PM moonrise - 74.7%
+2016 Fri 03/04 07:00 PM - Astronomy 101
+                          06:05 PM sunset - 06:33 PM / 07:02 PM / 07:33 PM
+                          04:00 AM moonrise - 16.6%
+2016 Fri 03/04 07:00 PM - In-town Star Party
+                          06:05 PM sunset - 06:33 PM / 07:02 PM / 07:33 PM
+                          04:00 AM moonrise - 16.6%
+2016 Sun 03/06 02:00 PM - Fix It
+2016 Sun 03/06 02:00 PM - Solar Sunday
+2016 Tue 03/15 07:30 PM - Imaging SIG
+2016 Fri 03/18 07:15 PM - Intro to the Night Sky
+                          07:18 PM sunset - 07:46 PM / 08:16 PM / 08:46 PM
+                          03:09 PM moonrise - 81.3%
+2016 Fri 03/18 08:15 PM - In-town Star Party
+                          07:18 PM sunset - 07:46 PM / 08:16 PM / 08:46 PM
+                          03:09 PM moonrise - 81.3%
+2016 Sat 03/19 07:30 PM - General Meeting
+2016 Sun 03/20 11:00 AM - *Spring Swap Meet
+2016 Sat 03/26 07:30 PM - General Meeting
+2016 Fri 04/01 07:30 PM - Astronomy 101
+                          07:31 PM sunset - 07:59 PM / 08:29 PM / 09:01 PM
+                          03:37 AM moonrise - 31.5%
+2016 Fri 04/01 08:30 PM - In-town Star Party
+                          07:31 PM sunset - 07:59 PM / 08:29 PM / 09:01 PM
+                          03:37 AM moonrise - 31.5%
+2016 Sat 04/02 08:00 PM - Starry Night (OSA)
+                          07:32 PM sunset - 08:00 PM / 08:30 PM / 09:02 PM
+                          04:20 AM moonrise - 21.4%
+2016 Sun 04/03 02:00 PM - Fix It
+2016 Sun 04/03 02:00 PM - Solar Sunday
+2016 Fri 04/15 07:45 PM - Intro to the Night Sky
+                          07:43 PM sunset - 08:12 PM / 08:44 PM / 09:17 PM
+                          02:01 PM moonrise - 67.3%
+2016 Fri 04/15 08:45 PM - In-town Star Party
+                          07:43 PM sunset - 08:12 PM / 08:44 PM / 09:17 PM
+                          02:01 PM moonrise - 67.3%
+2016 Tue 04/19 07:30 PM - Imaging SIG
+2016 Sat 04/23 07:30 PM - General Meeting
+2016 Fri 04/29 08:00 PM - Astronomy 101
+                          07:56 PM sunset - 08:26 PM / 08:59 PM / 09:35 PM
+                          02:16 AM moonrise - 47.6%
+2016 Fri 04/29 09:00 PM - In-town Star Party
+                          07:56 PM sunset - 08:26 PM / 08:59 PM / 09:35 PM
+                          02:16 AM moonrise - 47.6%
+2016 Sat 04/30 08:30 PM - Starry Night (OSA)
+                          07:57 PM sunset - 08:27 PM / 09:00 PM / 09:36 PM
+                          02:56 AM moonrise - 36.4%
+2016 Sun 05/01 02:00 PM - Fix It
+2016 Sun 05/01 02:00 PM - Solar Sunday
+2016 Fri 05/13 08:15 PM - Intro to the Night Sky
+                          08:08 PM sunset - 08:39 PM / 09:14 PM / 09:53 PM
+                          02:19 AM moonset - 56.9%
+2016 Fri 05/13 09:15 PM - In-town Star Party
+                          08:08 PM sunset - 08:39 PM / 09:14 PM / 09:53 PM
+                          02:19 AM moonset - 56.9%
+2016 Tue 05/17 07:30 PM - Imaging SIG
+2016 Sat 05/21 07:30 PM - General Meeting
+2016 Fri 05/27 08:30 PM - Astronomy 101
+                          08:19 PM sunset - 08:51 PM / 09:28 PM / 10:10 PM
+                          12:57 AM moonrise - 62.9%
+2016 Fri 05/27 09:30 PM - In-town Star Party
+                          08:19 PM sunset - 08:51 PM / 09:28 PM / 10:10 PM
+                          12:57 AM moonrise - 62.9%
+2016 Sat 05/28 09:00 PM - Starry Night (OSA)
+                          08:20 PM sunset - 08:52 PM / 09:29 PM / 10:11 PM
+                          01:35 AM moonrise - 51.8%
+2016 Sun 06/05 02:00 PM - Fix It
+2016 Sun 06/05 02:00 PM - Solar Sunday
+2016 Fri 06/10 08:45 PM - Intro to the Night Sky
+                          08:28 PM sunset - 09:01 PM / 09:39 PM / 10:22 PM
+                          12:52 AM moonset - 40.2%
+2016 Fri 06/10 09:45 PM - In-town Star Party
+                          08:28 PM sunset - 09:01 PM / 09:39 PM / 10:22 PM
+                          12:52 AM moonset - 40.2%
+2016 Sat 06/18 07:30 PM - General Meeting
+2016 Tue 06/21 07:30 PM - Imaging SIG
+2016 Fri 06/24 08:45 PM - Astronomy 101
+                          08:32 PM sunset - 09:05 PM / 09:43 PM / 10:27 PM
+                          11:37 PM moonrise - 76.5%
+2016 Fri 06/24 09:45 PM - In-town Star Party
+                          08:32 PM sunset - 09:05 PM / 09:43 PM / 10:27 PM
+                          11:37 PM moonrise - 76.5%
+2016 Sat 06/25 09:15 PM - Starry Night (OSA)
+                          08:32 PM sunset - 09:05 PM / 09:43 PM / 10:27 PM
+                          12:15 AM moonrise - 66.3%
+2016 Sun 07/03 02:00 PM - Fix It
+2016 Sun 07/03 02:00 PM - Solar Sunday
+2016 Fri 07/08 08:45 PM - Intro to the Night Sky
+                          08:30 PM sunset - 09:03 PM / 09:40 PM / 10:23 PM
+                          11:24 PM moonset - 24.5%
+2016 Fri 07/08 09:45 PM - In-town Star Party
+                          08:30 PM sunset - 09:03 PM / 09:40 PM / 10:23 PM
+                          11:24 PM moonset - 24.5%
+2016 Sat 07/16 07:30 PM - General Meeting
+2016 Tue 07/19 07:30 PM - Imaging SIG
+2016 Sat 07/23 09:00 PM - Starry Night (OSA)
+                          08:22 PM sunset - 08:54 PM / 09:29 PM / 10:09 PM
+                          10:54 PM moonrise - 79.2%
+2016 Fri 07/29 08:30 PM - Astronomy 101
+                          08:17 PM sunset - 08:48 PM / 09:23 PM / 10:01 PM
+                          04:38 PM moonset - 18.0%
+2016 Fri 07/29 09:30 PM - In-town Star Party
+                          08:17 PM sunset - 08:48 PM / 09:23 PM / 10:01 PM
+                          04:38 PM moonset - 18.0%
+2016 Sun 08/07 02:00 PM - Fix It
+2016 Sun 08/07 02:00 PM - Solar Sunday
+2016 Fri 08/12 08:00 PM - Intro to the Night Sky
+                          08:02 PM sunset - 08:32 PM / 09:05 PM / 09:41 PM
+                          02:00 AM moonset - 74.2%
+2016 Fri 08/12 09:00 PM - In-town Star Party
+                          08:02 PM sunset - 08:32 PM / 09:05 PM / 09:41 PM
+                          02:00 AM moonset - 74.2%
+2016 Tue 08/16 07:30 PM - Imaging SIG
+2016 Sat 08/20 07:30 PM - General Meeting
+2016 Fri 08/26 07:45 PM - Astronomy 101
+                          07:44 PM sunset - 08:13 PM / 08:44 PM / 09:17 PM
+                          03:32 PM moonset - 30.4%
+2016 Fri 08/26 08:45 PM - In-town Star Party
+                          07:44 PM sunset - 08:13 PM / 08:44 PM / 09:17 PM
+                          03:32 PM moonset - 30.4%
+2016 Sat 08/27 08:15 PM - Starry Night (OSA)
+                          07:43 PM sunset - 08:11 PM / 08:42 PM / 09:16 PM
+                          04:28 PM moonset - 20.4%
+2016 Sun 09/04 02:00 PM - Fix It
+2016 Sun 09/04 02:00 PM - Solar Sunday
+2016 Fri 09/09 07:30 PM - Intro to the Night Sky
+                          07:23 PM sunset - 07:51 PM / 08:22 PM / 08:53 PM
+                          12:38 AM moonset - 58.1%
+2016 Fri 09/09 08:30 PM - In-town Star Party
+                          07:23 PM sunset - 07:51 PM / 08:22 PM / 08:53 PM
+                          12:38 AM moonset - 58.1%
+2016 Sat 09/17 07:30 PM - *Show-n-tell
+2016 Sat 09/17 07:30 PM - General Meeting
+2016 Tue 09/20 07:30 PM - Imaging SIG
+2016 Fri 09/23 07:00 PM - Astronomy 101
+                          07:02 PM sunset - 07:30 PM / 07:59 PM / 08:30 PM
+                          12:51 AM moonrise - 40.1%
+2016 Fri 09/23 08:00 PM - In-town Star Party
+                          07:02 PM sunset - 07:30 PM / 07:59 PM / 08:30 PM
+                          12:51 AM moonrise - 40.1%
+2016 Sat 09/24 07:30 PM - Starry Night (OSA)
+                          07:00 PM sunset - 07:28 PM / 07:58 PM / 08:28 PM
+                          03:16 PM moonset - 33.8%
+2016 Sun 10/02 02:00 PM - Fix It
+2016 Sun 10/02 02:00 PM - Solar Sunday
+2016 Fri 10/07 07:00 PM - Intro to the Night Sky
+                          06:41 PM sunset - 07:09 PM / 07:38 PM / 08:08 PM
+                          11:19 PM moonset - 41.0%
+2016 Fri 10/07 07:45 PM - In-town Star Party
+                          06:41 PM sunset - 07:09 PM / 07:38 PM / 08:08 PM
+                          11:19 PM moonset - 41.0%
+2016 Sat 10/15 07:30 PM - General Meeting
+2016 Sun 10/16 11:00 AM - *Fall Swap Meet
+2016 Tue 10/18 07:30 PM - Imaging SIG
+2016 Fri 10/21 07:00 PM - Astronomy 101
+                          06:22 PM sunset - 06:50 PM / 07:20 PM / 07:50 PM
+                          11:43 PM moonrise - 55.8%
+2016 Fri 10/21 07:15 PM - In-town Star Party
+                          06:22 PM sunset - 06:50 PM / 07:20 PM / 07:50 PM
+                          11:43 PM moonrise - 55.8%
+2016 Sat 10/22 06:45 PM - Starry Night (OSA)
+                          06:21 PM sunset - 06:49 PM / 07:19 PM / 07:49 PM
+                          12:43 AM moonrise - 44.6%
+2016 Fri 11/04 07:00 PM - Intro to the Night Sky
+                          06:06 PM sunset - 06:35 PM / 07:05 PM / 07:36 PM
+                          10:04 PM moonset - 25.1%
+2016 Fri 11/04 07:00 PM - In-town Star Party
+                          06:06 PM sunset - 06:35 PM / 07:05 PM / 07:36 PM
+                          10:04 PM moonset - 25.1%
+2016 Sun 11/06 02:00 PM - Fix It
+2016 Sun 11/06 02:00 PM - Solar Sunday
+2016 Sat 11/12 07:30 PM - General Meeting
+2016 Tue 11/15 07:30 PM - Imaging SIG
+2016 Fri 11/18 07:00 PM - Astronomy 101
+                          04:55 PM sunset - 05:25 PM / 05:56 PM / 06:27 PM
+                          09:31 PM moonrise - 72.0%
+2016 Fri 11/18 07:00 PM - In-town Star Party
+                          04:55 PM sunset - 05:25 PM / 05:56 PM / 06:27 PM
+                          09:31 PM moonrise - 72.0%
+2016 Sat 11/19 05:30 PM - Starry Night (OSA)
+                          04:54 PM sunset - 05:24 PM / 05:55 PM / 06:26 PM
+                          10:33 PM moonrise - 61.3%
+2016 Sun 12/04 02:00 PM - Fix It
+2016 Sun 12/04 02:00 PM - Solar Sunday
+2016 Fri 12/09 07:00 PM - Intro to the Night Sky
+                          04:50 PM sunset - 05:21 PM / 05:53 PM / 06:24 PM
+                          01:59 PM moonrise - 77.1%
+2016 Fri 12/09 07:00 PM - In-town Star Party
+                          04:50 PM sunset - 05:21 PM / 05:53 PM / 06:24 PM
+                          01:59 PM moonrise - 77.1%
+2016 Sat 12/10 07:30 PM - General Meeting
+2016 Sat 12/17 05:30 PM - Starry Night (OSA)
+                          04:52 PM sunset - 05:23 PM / 05:55 PM / 06:27 PM
+                          09:19 PM moonrise - 77.8%
+2016 Tue 12/20 07:30 PM - Imaging SIG
+2016 Fri 12/23 07:00 PM - Astronomy 101
+                          04:55 PM sunset - 05:26 PM / 05:58 PM / 06:30 PM
+                          03:03 AM moonrise - 20.1%
+2016 Fri 12/23 07:00 PM - In-town Star Party
+                          04:55 PM sunset - 05:26 PM / 05:58 PM / 06:30 PM
+                          03:03 AM moonrise - 20.1%
+2016 Sat 12/24 05:30 PM - Starry Night (OSA)
+                          04:56 PM sunset - 05:27 PM / 05:59 PM / 06:30 PM
+                          03:57 AM moonrise - 12.9%
+======================================
+member events - total: 27
+--
+2016 Sat 01/09 05:45 PM - Dark Sky Night
+                          05:08 PM sunset - 05:38 PM / 06:10 PM / 06:41 PM
+                          05:15 PM moonset - 0.2%
+2016 Sat 01/23 06:00 PM - Board Meeting
+2016 Sat 02/06 06:15 PM - Dark Sky Night
+                          05:37 PM sunset - 06:06 PM / 06:36 PM / 07:07 PM
+                          03:59 PM moonset - 3.5%
+2016 Sat 02/20 06:00 PM - Board Meeting
+2016 Sat 03/05 06:30 PM - Dark Sky Night
+                          06:06 PM sunset - 06:34 PM / 07:03 PM / 07:34 PM
+                          04:46 AM moonrise - 8.9%
+2016 Sat 03/19 06:00 PM - Board Meeting
+2016 Sat 03/26 06:00 PM - Board Meeting
+2016 Sat 04/09 08:15 PM - Dark Sky Night
+                          07:38 PM sunset - 08:06 PM / 08:37 PM / 09:10 PM
+                          10:34 PM moonset - 11.3%
+2016 Sat 04/23 06:00 PM - Board Meeting
+2016 Sat 05/07 08:30 PM - Dark Sky Night
+                          08:03 PM sunset - 08:33 PM / 09:08 PM / 09:45 PM
+                          09:19 PM moonset - 3.0%
+2016 Sat 05/21 06:00 PM - Board Meeting
+2016 Sat 06/04 09:00 PM - Dark Sky Night
+                          08:25 PM sunset - 08:57 PM / 09:35 PM / 10:18 PM
+                          08:04 PM moonset - 0.2%
+2016 Sat 06/18 06:00 PM - Board Meeting
+2016 Sat 07/02 09:00 PM - Dark Sky Night
+                          08:32 PM sunset - 09:04 PM / 09:42 PM / 10:26 PM
+                          06:50 PM moonset - 2.8%
+2016 Sat 07/16 06:00 PM - Board Meeting
+2016 Sat 07/30 08:45 PM - Dark Sky Night
+                          08:16 PM sunset - 08:47 PM / 09:22 PM / 10:00 PM
+                          05:38 PM moonset - 9.8%
+2016 Sat 08/20 06:00 PM - Board Meeting
+2016 Sat 08/20 07:30 PM - *Movie Night
+2016 Sat 09/03 08:00 PM - Dark Sky Night
+                          07:32 PM sunset - 08:01 PM / 08:31 PM / 09:04 PM
+                          08:58 PM moonset - 7.5%
+2016 Sat 09/17 06:00 PM - Board Meeting
+2016 Sat 10/01 07:15 PM - Dark Sky Night
+                          06:50 PM sunset - 07:17 PM / 07:47 PM / 08:17 PM
+                          07:30 PM moonset - 1.2%
+2016 Sat 10/15 06:00 PM - Board Meeting
+2016 Sat 10/29 06:45 PM - Dark Sky Night
+                          06:12 PM sunset - 06:41 PM / 07:11 PM / 07:41 PM
+                          06:03 PM moonset - 0.5%
+2016 Sat 11/12 06:00 PM - Board Meeting
+2016 Sat 11/26 05:30 PM - Dark Sky Night
+                          04:51 PM sunset - 05:22 PM / 05:53 PM / 06:24 PM
+                          03:38 PM moonset - 5.8%
+2016 Sat 12/10 06:00 PM - Board Meeting
+2016 Sat 12/31 05:30 PM - Dark Sky Night
+                          05:01 PM sunset - 05:31 PM / 06:03 PM / 06:35 PM
+                          07:39 PM moonset - 8.1%
+======================================
+private events - total: 13
+--
+2016 Sat 01/16 07:00 PM - Quick STARt
+2016 Sat 02/13 07:00 PM - Quick STARt
+2016 Sat 03/12 07:00 PM - Quick STARt
+2016 Sat 04/16 07:00 PM - Quick STARt
+2016 Sat 05/14 07:00 PM - Quick STARt
+2016 Sat 06/11 07:00 PM - Quick STARt
+2016 Sat 07/09 07:00 PM - Quick STARt
+2016 Sat 08/06 07:00 PM - Quick STARt
+2016 Sat 08/13 07:00 PM - Quick STARt
+2016 Sat 09/10 07:00 PM - Quick STARt
+2016 Sat 10/08 07:00 PM - Quick STARt
+2016 Sat 11/05 07:00 PM - Quick STARt
+2016 Sat 12/03 07:00 PM - Quick STARt
