@@ -118,7 +118,7 @@ def calc_monthly_dates(start, end, event_type):
     date = date.replace(day=1)
 #   pdb.set_trace()
     while date < end:
-        weekday = event_type.day_of_week.value
+        weekday = weekday_to_int[event_type.day_of_week]
         week    = event_type.week.value
         # datetime.weekday - Monday=0, Sunday=6
         first_weekday_of_month = date.weekday()
@@ -172,7 +172,7 @@ def calc_lunar_dates(start, end, event_type):
     dates = []
     weekday_of_date = date.weekday()
 #   pdb.set_trace()
-    event_weekday = event_type.day_of_week.value
+    event_weekday = weekday_to_int[event_type.day_of_week]
     if weekday_of_date > event_weekday:
         days = event_weekday - weekday_of_date + 7
     else:
@@ -212,7 +212,7 @@ def calc_annual_dates(start, end, event_type):
     dates = []
     weekday_of_date = date.weekday()
 #   pdb.set_trace()
-    event_weekday = event_type.day_of_week.value
+    event_weekday = weekday_to_int[event_type.day_of_week]
     if weekday_of_date > event_weekday:
         days = event_weekday - weekday_of_date + 7
     else:

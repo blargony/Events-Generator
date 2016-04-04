@@ -160,6 +160,14 @@ rule_weekday     = { RuleWeekday.sunday          : su            ,
                      RuleWeekday.thursday        : th            ,
                      RuleWeekday.friday          : fr            ,
                      RuleWeekday.saturday        : sa             }
+# to match Python datetime 'date.weekday()'
+weekday_to_int   = { RuleWeekday.sunday          : 6             ,
+                     RuleWeekday.monday          : 0             ,
+                     RuleWeekday.tuesday         : 1             ,
+                     RuleWeekday.wednesday       : 2             ,
+                     RuleWeekday.thursday        : 3             ,
+                     RuleWeekday.friday          : 4             ,
+                     RuleWeekday.saturday        : 5              }
 ##########################
 # for astronomy scheduling
 rule_start_time  = { RuleStartTime.absolute      : 'absolute'    ,
