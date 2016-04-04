@@ -357,7 +357,7 @@ def gen_events(start, end):
             sun  = None
             moon = None
             if evtype.rule_start_time != RuleStartTime.absolute:
-                # get ephemeris data for sun, moon for 'date'
+                # get ephemeris data for sun, moon for start times based on twilight
                 sun, moon = cal_ephemeris.calc_date_ephem(date)
             events.append((date, evtype.name, sun, moon))
 
