@@ -94,7 +94,6 @@ class RuleStartTime(Enum):
 
 @unique
 class RuleWeekday(Enum):
-    # weekday: to match datetime.weekday()
     monday       = 'mo'
     tuesday      = 'tu'
     wednesday    = 'we'
@@ -160,7 +159,7 @@ rule_weekday     = { RuleWeekday.sunday          : su            ,
                      RuleWeekday.thursday        : th            ,
                      RuleWeekday.friday          : fr            ,
                      RuleWeekday.saturday        : sa             }
-# to match Python datetime 'date.weekday()'
+# to match datetime.weekday()
 weekday_to_int   = { RuleWeekday.sunday          : 6             ,
                      RuleWeekday.monday          : 0             ,
                      RuleWeekday.tuesday         : 1             ,
