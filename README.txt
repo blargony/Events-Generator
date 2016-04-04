@@ -22,6 +22,12 @@ The output is strictly for viewing purposes.  The app will be enhanced later
 to keep a database.
 
 
+Libraries:
+Install modules as follows:
+    pip3 install ephem
+    pip3 install pytz
+
+
 files:
     cal_gen.py       - has rules, calls functions to generate schedule
     cal_const.py     - constant values/data structures for app
