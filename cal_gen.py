@@ -20,6 +20,7 @@
 #
 #########################################################################
 
+import argparse
 import sys
 import datetime
 import pdb
@@ -396,20 +397,16 @@ def gen_events(start, end):
 
 
 if __name__ == '__main__':
-    year = '2016'
-    if len(sys.argv) > 1:
-        year = sys.argv[1]
-    else:
-        tmp = input("Specify year [{}]: ".format(year))
-        if tmp:
-            year = tmp
-    if not year.isdigit():
-        print("{} is not a number".format(year))
-        print("  test.py [year]")
-        exit()
-    year = int(year)
-    cal   = cal_ephemeris.calc(year)
-    start = TZ_LOCAL.localize(datetime.datetime(year, 1, 1))
-    end   = datetime.datetime(year+1, 1, 1) - datetime.timedelta(seconds=1)
+    parser = argparse.ArgumentParser(description='Calendar Generator')
+    parser.add_argument('--year', type=int, action='store', required=True,
+                        help='Year of the generated Calendar')
+    args = parser.parse_args()
+
+    # -------------------------------------
+    # Actually do the work we intend to do here
+    # -------------------------------------
+    cal   = cal_ephemeris.calc(args.year)
+    start = TZ_LOCAL.localize(datetime.datetime(args.year, 1, 1))
+    end   = datetime.datetime(args.year+1, 1, 1) - datetime.timedelta(seconds=1)
     end   = TZ_LOCAL.localize(end)
     gen_events(start, end)
