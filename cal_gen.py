@@ -21,18 +21,11 @@
 #########################################################################
 
 import argparse
-import sys
 import datetime
-import pdb
 
 from   cal_const  import *
 import cal_events
 import cal_ephemeris
-
-year  = 0
-cal   = None
-start = None
-end   = None
 
 locations = { 1 : "Houge Park, Blg. 1",  # indoor
               2 : "Houge Park",          # outdoor
@@ -319,6 +312,7 @@ swap_fall.notes              = ''
 
 
 def gen_events(start, end):
+    summary = []
     events_public      = []
     events_member      = []
     events_volunteer   = []
@@ -362,7 +356,6 @@ def gen_events(start, end):
                 sun, moon = cal_ephemeris.calc_date_ephem(date)
             events.append((date, evtype.name, sun, moon))
 
-#   pdb.set_trace()
     # sort events by time and print
     for evtype in EventVisibility:
         if   evtype == EventVisibility.ephemeris:
@@ -381,25 +374,26 @@ def gen_events(start, end):
             events = events_board
         if events:
             events.sort()
-            print("======================================")
-            print("{} events - total: {}".format(event_visibility[evtype], len(events)))
-            print("--")
+            summary.append("======================================")
+            summary.append("{} events - total: {}".format(event_visibility[evtype], len(events)))
+            summary.append("--")
             for ev in events:
                 if len(ev) > 2 and ev[2]:
                     # event has sun/moon ephemeris times
-                    print("{} - {}".format(ev[0].strftime(FMT_YEAR_DATE_HM),
-                          ev[1]))
-                    print("{:23}   {}".format('', ev[2]))
-                    print("{:23}   {}".format('', ev[3]))
+                    summary.append("{} - {}".format(ev[0].strftime(FMT_YEAR_DATE_HM), ev[1]))
+                    summary.append("{:23}   {}".format('', ev[2]))
+                    summary.append("{:23}   {}".format('', ev[3]))
                 else:
-                    print("{} - {}".format(ev[0].strftime(FMT_YEAR_DATE_HM),
-                          ev[1]))
+                    summary.append("{} - {}".format(ev[0].strftime(FMT_YEAR_DATE_HM), ev[1]))
+    return summary
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Calendar Generator')
     parser.add_argument('--year', type=int, action='store', required=True,
                         help='Year of the generated Calendar')
+    parser.add_argument('--test', action='store',
+                        help='Test')
     args = parser.parse_args()
 
     # -------------------------------------
@@ -409,4 +403,16 @@ if __name__ == '__main__':
     start = TZ_LOCAL.localize(datetime.datetime(args.year, 1, 1))
     end   = datetime.datetime(args.year+1, 1, 1) - datetime.timedelta(seconds=1)
     end   = TZ_LOCAL.localize(end)
-    gen_events(start, end)
+    summary = gen_events(start, end)
+    if not args.test:
+        print('\n'.join(summary))
+    else:
+        fail = False
+        with open(args.test, 'r') as fp:
+            for i, line in enumerate(fp):
+                if line.rstrip() != summary[i]:
+                    print(line)
+                    print(summary[i])
+                    fail = True
+        if not fail:
+            print("PASS!!")
