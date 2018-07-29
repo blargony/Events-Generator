@@ -25,55 +25,55 @@ import ephem
 # import pdb
 # import logging
 
-from   cal_const     import *
+from cal_const import *
 import cal_ephemeris
 
 
 # template for types of events, e.g., "In-town Star Party"
 class EventType():
-    type_id         = None
-    name            = None
-    visibility      = None
-    tentative       = True
-    coordinator_id  = None
-    hide_location   = False
-    location        = None
-    repeat          = None  # lunar, monthly, ...
-    lunar_phase     = None  # new, 1Q, full, 3Q
-    day_of_week     = None  # Monday, ...
+    type_id = None
+    name = None
+    visibility = None
+    tentative = True
+    coordinator_id = None
+    hide_location = False
+    location = None
+    repeat = None  # lunar, monthly, ...
+    lunar_phase = None  # new, 1Q, full, 3Q
+    day_of_week = None  # Monday, ...
     rule_start_time = None  # absolute, sunset, civil, ..., rounded to 1/4 hour
-    month           = None
-    week            = None
-    day_of_month    = None
-    time_earliest   = None  # time
-    time_start      = None  # time
-    time_offset     = None  # timedelta
-    time_length     = None  # timedelta
-    email           = None
-    url             = None
-    notes           = None
+    month = None
+    week = None
+    day_of_month = None
+    time_earliest = None  # time
+    time_start = None  # time
+    time_offset = None  # timedelta
+    time_length = None  # timedelta
+    email = None
+    url = None
+    notes = None
 
 
 class Event():
-    event_id        = 0
-    type_id         = 0
-    name            = ''
-    visibility      = 0
-    tentative       = True
-    deleted         = False
-    canceled        = False
-    sched_override  = False  # True if date/time changed manually
-    coordinator_id  = 0
-    hide_location   = False
-    location        = 0
+    event_id = 0
+    type_id = 0
+    name = ''
+    visibility = 0
+    tentative = True
+    deleted = False
+    canceled = False
+    sched_override = False  # True if date/time changed manually
+    coordinator_id = 0
+    hide_location = False
+    location = 0
     rule_start_time = 0
-    time_start      = 0
-    time_length     = 0
-    email           = None
-    url             = ''
-    notes           = ''
-    date_created    = None
-    date_updated    = None
+    time_start = 0
+    time_length = 0
+    email = None
+    url = ''
+    notes = ''
+    date_created = None
+    date_updated = None
 
 
 def calc_monthly_dates(start, end, event_type):
@@ -119,20 +119,20 @@ def calc_monthly_dates(start, end, event_type):
 #   pdb.set_trace()
     while date < end:
         weekday = weekday_to_int[event_type.day_of_week]
-        week    = event_type.week.value
+        week = event_type.week.value
         # datetime.weekday - Monday=0, Sunday=6
         first_weekday_of_month = date.weekday()
         # calculate day of month
         if first_weekday_of_month > weekday:
             days = weekday - first_weekday_of_month + 7 + week*7
         else:
-            days = weekday - first_weekday_of_month     + week*7
+            days = weekday - first_weekday_of_month + week*7
         # append date
         prev_month = date.month
         date = date + DAY*days
         new_month = date.month
         # reject date if additional days pushes date into next month
-        if prev_month==new_month:
+        if prev_month == new_month:
             # reject date before start and after end
             if start <= date <= end:
                 date = TZ_LOCAL.localize(date.combine(date,
@@ -140,23 +140,23 @@ def calc_monthly_dates(start, end, event_type):
                 dates.append(date)
             # get month/year for following month
             next_month = date.month + 1
-            next_year  = date.year
+            next_year = date.year
             if next_month > 12:
                 next_month = 1
-                next_year  += + 1
+                next_year += + 1
             try:
                 date = date.replace(year=next_year, month=next_month, day=1)
             except:
                 pdb.set_trace()
         else:
-            date = date.replace(                  day=1)
+            date = date.replace(day=1)
     return dates
 
 
 def calc_lunar_dates(start, end, event_type):
-    '''
-    Generate list of dates on a given weekday nearest the specified lunar
+    """Generate list of dates on a given weekday nearest the specified lunar
     phase in the period defined by (datetime) 'start' and 'end', inclusive.
+
     E.g.: 3Q Fridays @ nautical twilight
 
     input
@@ -166,7 +166,7 @@ def calc_lunar_dates(start, end, event_type):
 
     output
         return      list            tuples of datetime.datetime
-    '''
+    """
     # set 'day' to 'weekday' at or after 'start'
     date = start
     dates = []
@@ -179,7 +179,7 @@ def calc_lunar_dates(start, end, event_type):
         days = event_weekday - weekday_of_date
     date = date + DAY*days
     while date < end:
-        dayofyear = int(date.strftime("%j"))
+        dayofyear = int(date.strftime('%j'))
         if cal_ephemeris.moon_phase[dayofyear] == event_type.lunar_phase and \
            date <= end:
             if event_type.rule_start_time == RuleStartTime.absolute:
@@ -219,7 +219,7 @@ def calc_annual_dates(start, end, event_type):
         days = event_weekday - weekday_of_date
     date = date + DAY*days
     while date < end:
-        dayofyear = int(date.strftime("%j"))
+        dayofyear = int(date.strftime('%j'))
         if cal_ephemeris.moon_phase[dayofyear] == event_type.lunar_phase and \
            date <= end:
             if event_type.rule_start_time == RuleStartTime.absolute:
@@ -235,8 +235,7 @@ def calc_annual_dates(start, end, event_type):
 
 
 def calc_start_time(date, event_type):
-    '''
-    Calculate start time of event based on twilight time for 'date'.
+    """Calculate start time of event based on twilight time for 'date'.
 
     input
         date        datetime.date   date/time of event
@@ -244,23 +243,24 @@ def calc_start_time(date, event_type):
 
     output
         return      datetime        calculated start time
-    '''
+    """
 
     if event_type.rule_start_time == RuleStartTime.absolute:
         date = TZ_LOCAL.localize(date.combine(date, event_type.time_start))
         return date
-    cal_ephemeris.local.date    = date.astimezone(TZ_UTC)
+    cal_ephemeris.local.date = date.astimezone(TZ_UTC)
     try:
         cal_ephemeris.local.horizon = rule_horizon[event_type.rule_start_time]
     except:
         pdb.set_trace()
-    dusk = TZ_LOCAL.localize(ephem.localtime(cal_ephemeris.local.next_setting(SUN)))
+    dusk = TZ_LOCAL.localize(ephem.localtime(
+        cal_ephemeris.local.next_setting(SUN)))
     old_h = dusk.hour
     old_m = dusk.minute
     new_h = old_h
     new_m = old_m
     # round minutes to nearest quarter hour
-    if old_m <  5:
+    if old_m < 5:
         new_m = 0
     elif old_m < 20:
         new_m = 15
@@ -270,7 +270,7 @@ def calc_start_time(date, event_type):
         new_m = 45
     else:
         new_h += 1
-        new_m  = 0
+        new_m = 0
     date = date.replace(hour=new_h, minute=new_m) + event_type.time_offset
     # don't start before "earliest" (e.g., 7pm)
     if event_type.time_earliest and date.time() < event_type.time_earliest:
