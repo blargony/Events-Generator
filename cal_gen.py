@@ -347,11 +347,11 @@ def gen_events(start, end):
             events = events_board
         # create list of time/event name pairs
         if evtype.repeat == EventRepeat.lunar:
-            event_dates = cal_events.calc_lunar_dates(start, end, evtype)
+            event_dates = evtype.calc_lunar_dates(start, end)
         elif evtype.repeat == EventRepeat.monthly:
-            event_dates = cal_events.calc_monthly_dates(start, end, evtype)
+            event_dates = evtype.calc_monthly_dates(start, end)
         elif evtype.repeat == EventRepeat.annual:
-            event_dates = cal_events.calc_annual_dates(start, end, evtype)
+            event_dates = evtype.calc_annual_dates(start, end)
 
         # create list of all events
         for date in event_dates:
