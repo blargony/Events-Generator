@@ -22,19 +22,22 @@
 
 import datetime
 import ephem
-# import pdb
-from   enum      import Enum, unique
 
 from   cal_const import *
 import cal_opp
 
+
+local = ephem.Observer()
+local.lat       = LAT
+local.lon       = LONG
+local.elevation = ELEVATION
 
 moon_phase   = []
 astro_events = []
 
 
 class calc:
-    #
+
     def __init__(self, year):
         '''
             Generate seasons, moon, opposition data for entire year
@@ -51,7 +54,6 @@ class calc:
         new_years = datetime.datetime(year, 1, 1, 0, 0)
         new_years = TZ_LOCAL.localize(new_years)
         local.date    = new_years.astimezone(TZ_UTC)
-#       pdb.set_trace()
 
         # Generate seasons
         season = {
@@ -167,7 +169,7 @@ def calc_date_ephem(date):
         moon = '{} moonrise'.format(time_moonrise.strftime(FMT_HM))
     moon += ' - {:2.1f}%'.format(MOON.phase)
     return (sun, moon)
-            
+
 if __name__ == '__main__':
     date = datetime.datetime(2016,2,28)
     print(calc_date_ephem(date))

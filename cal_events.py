@@ -249,12 +249,12 @@ def calc_start_time(date, event_type):
     if event_type.rule_start_time == RuleStartTime.absolute:
         date = TZ_LOCAL.localize(date.combine(date, event_type.time_start))
         return date
-    local.date    = date.astimezone(TZ_UTC)
+    cal_ephemeris.local.date    = date.astimezone(TZ_UTC)
     try:
-        local.horizon = rule_horizon[event_type.rule_start_time]
+        cal_ephemeris.local.horizon = rule_horizon[event_type.rule_start_time]
     except:
         pdb.set_trace()
-    dusk = TZ_LOCAL.localize(ephem.localtime(local.next_setting(SUN)))
+    dusk = TZ_LOCAL.localize(ephem.localtime(cal_ephemeris.local.next_setting(SUN)))
     old_h = dusk.hour
     old_m = dusk.minute
     new_h = old_h

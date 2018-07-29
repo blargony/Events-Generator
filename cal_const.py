@@ -20,197 +20,165 @@
 #
 #########################################################################
 
+import calendar
 import datetime
 import pytz
 import ephem
-from   enum        import Enum, unique
+from enum import Enum, unique
 
+#########################################################################
+# Constants
+#########################################################################
+########################################
+# Time/Time Format Strings
+########################################
+DAY = datetime.timedelta(days=1)
+HOUR = datetime.timedelta(hours=1)
+MINUTE = datetime.timedelta(minutes=1)
+SECOND = datetime.timedelta(seconds=1)
 
-# To deal w/ DST transitions, set 'DAY_DST' to more than 24 hours
-# After adding 'day'
-# - use tz.normalize()
-# - date.replace(hour=0) to set hour to midnight
-DAY_DST  = datetime.timedelta(days=1, hours=4)
-DAY      = datetime.timedelta(days=1)
-HOUR     = datetime.timedelta(hours=1)
-MINUTE   = datetime.timedelta(minutes=1)
-SECOND   = datetime.timedelta(seconds=1)
-TZ_UTC   = pytz.timezone('UTC')
-# TODO: move to configuration, need method to show all possible timezones
-# To generate all supported timezones:
-#   python
-#   >>> import pytz
-#   >>> print(pytz.all_timezones)
+TZ_UTC = pytz.timezone('UTC')
 TZ_LOCAL = pytz.timezone('US/Pacific')
 
-FMT_YEAR_DATE_HM = "%Y %a %m/%d %I:%M %p"
-FMT_DATE_Y = "%a %m/%d %Y"
-FMT_DATE = "%m/%d"
-FMT_YDATE = "%Y %m/%d"
-FMT_HM   = "%I:%M %p"
-FMT_HMS  = "%I:%M:%S %p"
+FMT_YEAR_DATE_HM = '%Y %a %m/%d %I:%M %p'
+FMT_DATE_Y = '%a %m/%d %Y'
+FMT_HM = '%I:%M %p'
 
 ########################################
 # initialization for 'ephem' module
-SUN     = ephem.Sun()
-MOON    = ephem.Moon()
-PLANETS = ( ephem.Mars()  , ephem.Jupiter(), ephem.Saturn(),
-            ephem.Uranus(), ephem.Neptune(), ephem.Pluto()  )
-
-local = ephem.Observer()
-# TODO: move to configuration
-local.lat       =   '37.257465'  # houge_park_lat
-local.lon       = '-121.942281'  # houge_park_lon
-local.elevation = 50             # houge_park_elev
+########################################
+SUN = ephem.Sun()
+MOON = ephem.Moon()
+PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
+           ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
 
 
 ########################################
+# For Houge Park
+########################################
+LAT = '37.257465'
+LONG = '-121.942281'
+ELEVATION = 50
+
+########################################
 # Rules that govern scheduling of events
+########################################
 @unique
 class RuleWeek(Enum):
-    week_1       = 0
-    week_2       = 1
-    week_3       = 2
-    week_4       = 3
-    week_5       = 4
+    week_1 = 0
+    week_2 = 1
+    week_3 = 2
+    week_4 = 3
+    week_5 = 4
 
 
 @unique
 class RuleLunar(Enum):
-    moon_new     = 0
-    moon_1q      = 1
-    moon_full    = 2
-    moon_3q      = 3
+    moon_new = 0
+    moon_1q = 1
+    moon_full = 2
+    moon_3q = 3
 
 
 @unique
 class RuleStartTime(Enum):
-    absolute     = 'ab'  # start time specifies exact time
-    sunset       = 'su'  # others specfies period of day/twilight
-    civil        = 'ci'
-    nautical     = 'na'
+    absolute = 'ab'  # start time specifies exact time
+    sunset = 'su'  # others specfies period of day/twilight
+    civil = 'ci'
+    nautical = 'na'
     astronomical = 'as'
 
 
 @unique
 class RuleWeekday(Enum):
-    monday       = 'mo'
-    tuesday      = 'tu'
-    wednesday    = 'we'
-    thursday     = 'th'
-    friday       = 'fr'
-    saturday     = 'sa'
-    sunday       = 'su'
+    monday = 'mo'
+    tuesday = 'tu'
+    wednesday = 'we'
+    thursday = 'th'
+    friday = 'fr'
+    saturday = 'sa'
+    sunday = 'su'
 
 
 @unique
 class EventVisibility(Enum):
-    ephemeris    = 'ep'
-    public       = 'pu'
-    member       = 'me'
-    volunteer    = 'vo'
-    coordinator  = 'co'
-    private      = 'pr'
-    board        = 'bo'
-    observers    = 'ob'
-    imagers      = 'im'
+    ephemeris = 'ep'
+    public = 'pu'
+    member = 'me'
+    volunteer = 'vo'
+    coordinator = 'co'
+    private = 'pr'
+    board = 'bo'
+    observers = 'ob'
+    imagers = 'im'
 
 
 @unique
 class EventRepeat(Enum):
-    onetime      = 'on'
+    onetime = 'on'
 #   weekly       = 'we'  # not currently supported
-    monthly      = 'mo'
-    lunar        = 'lu'
-    annual       = 'an'
-
-
-########################################
-# Locations not hard coded.
-# TODO: Need to move to file for configuration data
-locations = { 1 : "Houge Park, Blg. 1",  # indoor
-              2 : "Houge Park",          # outdoor
-              3 : "Rancho Cañada del Oro",
-              4 : "Mendoza Ranch",
-              5 : "Coyote Valley",
-              6 : "Pinnacles Nat'l Park, East Side",
-              7 : "Pinnacles Nat'l Park, West Side",
-              8 : "Yosemite Nat'l Park, Glacier Point" }
+    monthly = 'mo'
+    lunar = 'lu'
+    annual = 'an'
 
 
 ########################################
 # display strings corresponding to above rules
-mo = datetime.datetime(2007, 1, 1).strftime('%A')  # 2007/1/1 is Monday
-tu = datetime.datetime(2007, 1, 2).strftime('%A')
-we = datetime.datetime(2007, 1, 3).strftime('%A')
-th = datetime.datetime(2007, 1, 4).strftime('%A')
-fr = datetime.datetime(2007, 1, 5).strftime('%A')
-sa = datetime.datetime(2007, 1, 6).strftime('%A')
-su = datetime.datetime(2007, 1, 7).strftime('%A')
-rule_week        = { RuleWeek.week_1             : '1st week'    ,
-                     RuleWeek.week_2             : '2nd week'    ,
-                     RuleWeek.week_3             : '3rd week'    ,
-                     RuleWeek.week_4             : '4th week'    ,
-                     RuleWeek.week_5             : '5th week'     }
-rule_weekday     = { RuleWeekday.sunday          : su            ,
-                     RuleWeekday.monday          : mo            ,
-                     RuleWeekday.tuesday         : tu            ,
-                     RuleWeekday.wednesday       : we            ,
-                     RuleWeekday.thursday        : th            ,
-                     RuleWeekday.friday          : fr            ,
-                     RuleWeekday.saturday        : sa             }
+########################################
+rule_week = {RuleWeek.week_1: '1st week',
+             RuleWeek.week_2: '2nd week',
+             RuleWeek.week_3: '3rd week',
+             RuleWeek.week_4: '4th week',
+             RuleWeek.week_5: '5th week'}
+
+rule_weekday = {RuleWeekday.sunday: calendar.day_abbr[6],
+                RuleWeekday.monday: calendar.day_abbr[0],
+                RuleWeekday.tuesday: calendar.day_abbr[1],
+                RuleWeekday.wednesday: calendar.day_abbr[2],
+                RuleWeekday.thursday: calendar.day_abbr[3],
+                RuleWeekday.friday: calendar.day_abbr[4],
+                RuleWeekday.saturday: calendar.day_abbr[5]}
+
 # to match datetime.weekday()
-weekday_to_int   = { RuleWeekday.sunday          : 6             ,
-                     RuleWeekday.monday          : 0             ,
-                     RuleWeekday.tuesday         : 1             ,
-                     RuleWeekday.wednesday       : 2             ,
-                     RuleWeekday.thursday        : 3             ,
-                     RuleWeekday.friday          : 4             ,
-                     RuleWeekday.saturday        : 5              }
+weekday_to_int = {RuleWeekday.sunday: 6,
+                  RuleWeekday.monday: 0,
+                  RuleWeekday.tuesday: 1,
+                  RuleWeekday.wednesday: 2,
+                  RuleWeekday.thursday: 3,
+                  RuleWeekday.friday: 4,
+                  RuleWeekday.saturday: 5}
+
 ##########################
 # for astronomy scheduling
-rule_start_time  = { RuleStartTime.absolute      : 'absolute'    ,
-                     RuleStartTime.sunset        : 'sunset'      ,
-                     RuleStartTime.civil         : 'civil'       ,  # add "twilight"?
-                     RuleStartTime.nautical      : 'nautical'    ,
-                     RuleStartTime.astronomical  : 'astronomical' }
-rule_lunar       = { RuleLunar.moon_new          : 'new moon'    ,
-                     RuleLunar.moon_1q           : '1Q moon'     ,
-                     RuleLunar.moon_full         : 'full moon'   ,
-                     RuleLunar.moon_3q           : '3Q moon'      }
-rule_horizon     = { RuleStartTime.sunset        : '0'           ,
-                     RuleStartTime.civil         : '-6'          ,
-                     RuleStartTime.nautical      : '-12'         ,
-                     RuleStartTime.astronomical  : '-18'          }
 ##########################
-event_visibility = { EventVisibility.ephemeris   : 'ephemeris'   ,
-                     EventVisibility.public      : 'public'      ,
-                     EventVisibility.member      : 'member'      ,
-                     EventVisibility.volunteer   : 'volunteer'   ,
-                     EventVisibility.coordinator : 'coordinator' ,
-                     EventVisibility.private     : 'private'     ,
-                     EventVisibility.board       : 'board'        }
-event_repeat     = { EventRepeat.onetime         : 'one-time'    ,
-                     EventRepeat.monthly         : 'monthly'     ,
-#                    EventRepeat.weekly          : 'weekly'      ,
-                     EventRepeat.lunar           : 'lunar'       ,
-                     EventRepeat.annual          : 'annual'       }
+rule_start_time = {RuleStartTime.absolute: 'absolute',
+                   RuleStartTime.sunset: 'sunset',
+                   RuleStartTime.civil: 'civil',
+                   RuleStartTime.nautical: 'nautical',
+                   RuleStartTime.astronomical: 'astronomical'}
 
-channels = { 1: "GCal",
-             2: "Meetup",
-             3: "SJAA email",
-             4: "member email",
-             5: "Twitter",
-             6: "Facebook",
-             7: "Wordpress"
-}
+rule_lunar = {RuleLunar.moon_new: 'new moon',
+              RuleLunar.moon_1q: '1Q moon',
+              RuleLunar.moon_full: 'full moon',
+              RuleLunar.moon_3q: '3Q moon'}
 
-channel_public = {
-    1 : False,  # GCal
-    2 : True , # Meetup
-    3 : True , # SJAA announcelist email
-    4 : False, # member email
-    5 : True , # Twitter
-    6 : True , # Facebook
-    7 : False  # member email
-}
+rule_horizon = {RuleStartTime.sunset: '0',
+                RuleStartTime.civil: '-6',
+                RuleStartTime.nautical: '-12',
+                RuleStartTime.astronomical: '-18'}
+
+##########################
+event_visibility = {EventVisibility.ephemeris: 'ephemeris',
+                    EventVisibility.public: 'public',
+                    EventVisibility.member: 'member',
+                    EventVisibility.volunteer: 'volunteer',
+                    EventVisibility.coordinator: 'coordinator',
+                    EventVisibility.private: 'private',
+                    EventVisibility.board: 'board'}
+
+event_repeat = {EventRepeat.onetime: 'one-time',
+                EventRepeat.monthly: 'monthly',
+                #                    EventRepeat.weekly          : 'weekly'      ,
+                EventRepeat.lunar: 'lunar',
+                EventRepeat.annual: 'annual'}
+
