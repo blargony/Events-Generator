@@ -37,12 +37,9 @@ locations = { 1 : "Houge Park, Blg. 1",  # indoor
               8 : "Yosemite Nat'l Park, Glacier Point" }
 
 
-class_intro = cal_events.EventType()
-class_intro.type_id          = 1
+class_intro = cal_events.CalEvent()
 class_intro.name             = 'Intro to the Night Sky'
-class_intro.tentative        = False
 class_intro.visibility       = EventVisibility.public
-class_intro.coordinator_id   = 1
 class_intro.location         = locations[1]
 class_intro.repeat           = EventRepeat.lunar
 class_intro.lunar_phase      = RuleLunar.moon_1q
@@ -54,12 +51,9 @@ class_intro.time_length      = datetime.timedelta(hours=1)
 class_intro.url              = 'www.sjaa.net/programs/beginners-astronomy'
 class_intro.notes            = ''
 
-class_101 = cal_events.EventType()
-class_101.type_id            = 2
+class_101 = cal_events.CalEvent()
 class_101.name               = 'Astronomy 101'
-class_101.tentative          = False
 class_101.visibility         = EventVisibility.public
-class_101.coordinator_id     = 1
 class_101.location           = locations[1]
 class_101.repeat             = EventRepeat.lunar
 class_101.lunar_phase        = RuleLunar.moon_3q
@@ -71,12 +65,9 @@ class_101.time_length        = datetime.timedelta(hours=1)
 class_101.url                = 'www.sjaa.net/programs/beginners-astronomy'
 class_101.notes              = ''
 
-itsp_1q = cal_events.EventType()
-itsp_1q.type_id              = 3
+itsp_1q = cal_events.CalEvent()
 itsp_1q.name                 = 'In-town Star Party'
-itsp_1q.tentative            = False
 itsp_1q.visibility           = EventVisibility.public
-itsp_1q.coordinator_id       = 1
 itsp_1q.location             = locations[2]
 itsp_1q.repeat               = EventRepeat.lunar
 itsp_1q.lunar_phase          = RuleLunar.moon_1q
@@ -89,12 +80,9 @@ itsp_1q.time_length          = datetime.timedelta(hours=2)
 itsp_1q.url                  = 'www.sjaa.net/events/monthly-star-parties'
 itsp_1q.notes                = '1st quarter moon ITSP'
 
-itsp_3q = cal_events.EventType()
-itsp_3q.type_id              = 4
+itsp_3q = cal_events.CalEvent()
 itsp_3q.name                 = 'In-town Star Party'
-itsp_3q.tentative            = False
 itsp_3q.visibility           = EventVisibility.public
-itsp_3q.coordinator_id       = 1
 itsp_3q.location             = locations[2]
 itsp_3q.repeat               = EventRepeat.lunar
 itsp_3q.lunar_phase          = RuleLunar.moon_3q
@@ -107,11 +95,9 @@ itsp_3q.time_length          = datetime.timedelta(hours=2)
 itsp_3q.url                  = 'www.sjaa.net/events/monthly-star-parties'
 itsp_3q.notes                = '3rd quarter moon ITSP'
 
-dark_sky = cal_events.EventType()
-dark_sky.type_id             = 5
+dark_sky = cal_events.CalEvent()
 dark_sky.name                = 'Dark Sky Night'
 dark_sky.visibility          = EventVisibility.member
-dark_sky.coordinator_id      = 1
 dark_sky.location            = locations[4]
 dark_sky.repeat              = EventRepeat.lunar
 dark_sky.lunar_phase         = RuleLunar.moon_new
@@ -122,13 +108,10 @@ dark_sky.time_length         = datetime.timedelta(hours=4)
 dark_sky.url                 = 'www.sjaa.net/dark-sky-nights??'
 dark_sky.notes               = ''
 
-quick_start = cal_events.EventType()
-quick_start.type_id          = 6
+quick_start = cal_events.CalEvent()
 quick_start.name             = 'Quick STARt'
 quick_start.visibility       = EventVisibility.private
 quick_start.private          = True
-quick_start.hide_location    = True
-quick_start.coordinator_id   = 1
 quick_start.location         = locations[1]
 quick_start.repeat           = EventRepeat.lunar
 quick_start.lunar_phase      = RuleLunar.moon_1q
@@ -140,11 +123,9 @@ quick_start.url              = 'www.sjaa.net/programs/quick-start'
 quick_start.email            = 'joe@null.dev'
 quick_start.notes            = ''
 
-solar_sunday = cal_events.EventType()
-solar_sunday.type_id         = 7
+solar_sunday = cal_events.CalEvent()
 solar_sunday.name            = 'Solar Sunday'
 solar_sunday.visibility      = EventVisibility.public
-solar_sunday.coordinator_id  = 1
 solar_sunday.location        = locations[1]
 solar_sunday.repeat          = EventRepeat.monthly
 solar_sunday.week            = RuleWeek.week_1
@@ -155,11 +136,9 @@ solar_sunday.time_length     = datetime.timedelta(hours=2)
 solar_sunday.url             = 'www.sjaa.net/solar-observing??'
 solar_sunday.notes           = ''
 
-fix_it = cal_events.EventType()
-fix_it.type_id               = 8
+fix_it = cal_events.CalEvent()
 fix_it.name                  = 'Fix It'
 fix_it.visibility            = EventVisibility.public
-fix_it.coordinator_id        = 1
 fix_it.location              = locations[2]
 fix_it.repeat                = EventRepeat.monthly
 fix_it.week                  = RuleWeek.week_1
@@ -170,11 +149,9 @@ fix_it.time_length           = datetime.timedelta(hours=2)
 fix_it.url                   = 'www.sjaa.net/programs/fix-it'
 fix_it.notes                 = ''
 
-board_mtg = cal_events.EventType()
-board_mtg.type_id            = 9
+board_mtg = cal_events.CalEvent()
 board_mtg.name               = 'Board Meeting'
 board_mtg.visibility         = EventVisibility.member
-board_mtg.coordinator_id     = 1
 board_mtg.location           = locations[1]
 board_mtg.repeat             = EventRepeat.lunar
 board_mtg.lunar_phase        = RuleLunar.moon_full
@@ -185,11 +162,9 @@ board_mtg.time_length        = datetime.timedelta(hours=1.5)
 board_mtg.url                = 'www.sjaa.net/board-meeting??'
 board_mtg.notes              = ''
 
-gen_mtg = cal_events.EventType()
-gen_mtg.type_id              = 10
+gen_mtg = cal_events.CalEvent()
 gen_mtg.name                 = 'General Meeting'
 gen_mtg.visibility           = EventVisibility.public
-gen_mtg.coordinator_id       = 1
 gen_mtg.location             = locations[1]
 gen_mtg.repeat               = EventRepeat.lunar
 gen_mtg.lunar_phase          = RuleLunar.moon_full
@@ -200,11 +175,9 @@ gen_mtg.time_length          = datetime.timedelta(hours=2)
 gen_mtg.url                  = 'www.sjaa.net/programs/monthly-guest-speakers'
 gen_mtg.notes                = ''
 
-starry_night = cal_events.EventType()
-starry_night.type_id         = 11
+starry_night = cal_events.CalEvent()
 starry_night.name            = 'Starry Night (OSA)'
 starry_night.visibility      = EventVisibility.public
-starry_night.coordinator_id  = 1
 starry_night.location        = locations[3]
 starry_night.repeat          = EventRepeat.lunar
 starry_night.lunar_phase     = RuleLunar.moon_3q
@@ -215,11 +188,9 @@ starry_night.time_length     = datetime.timedelta(hours=2)
 starry_night.url             = 'www.sjaa.net/events/starry-nights-public-star-party/'
 starry_night.notes           = ''
 
-image_sig = cal_events.EventType()
-image_sig.type_id            = 12
+image_sig = cal_events.CalEvent()
 image_sig.name               = 'Imaging SIG'
 image_sig.visibility         = EventVisibility.public
-image_sig.coordinator_id     = 1
 image_sig.location           = locations[1]
 image_sig.repeat             = EventRepeat.monthly
 image_sig.week               = RuleWeek.week_3
@@ -230,11 +201,9 @@ image_sig.time_length        = datetime.timedelta(hours=2)
 image_sig.url                = 'www.sjaa.net/programs/imaging-sig'
 image_sig.notes              = ''
 
-mem_mtg = cal_events.EventType()
-mem_mtg.type_id              = 13
+mem_mtg = cal_events.CalEvent()
 mem_mtg.name                 = '*Membership Meeting/Awards Night'
 mem_mtg.visibility           = EventVisibility.public
-mem_mtg.coordinator_id       = 1
 mem_mtg.location             = locations[1]
 mem_mtg.repeat               = EventRepeat.annual
 mem_mtg.lunar_phase          = RuleLunar.moon_full
@@ -246,11 +215,9 @@ mem_mtg.time_length          = datetime.timedelta(hours=2)
 mem_mtg.url                  = 'www.sjaa.net/membership-meeting??'
 mem_mtg.notes                = ''
 
-swap_spring = cal_events.EventType()
-swap_spring.type_id          = 14
+swap_spring = cal_events.CalEvent()
 swap_spring.name             = '*Spring Swap Meet'
 swap_spring.visibility       = EventVisibility.public
-swap_spring.coordinator_id   = 1
 swap_spring.location         = locations[1]
 swap_spring.repeat           = EventRepeat.annual
 swap_spring.lunar_phase      = RuleLunar.moon_full
@@ -262,11 +229,9 @@ swap_spring.time_length      = datetime.timedelta(hours=4)
 swap_spring.url              = 'www.sjaa.net/events/swap-meet'
 swap_spring.notes            = ''
 
-movie_night = cal_events.EventType()
-movie_night.type_id          = 15
+movie_night = cal_events.CalEvent()
 movie_night.name             = '*Movie Night'
 movie_night.visibility       = EventVisibility.member
-movie_night.coordinator_id   = 1
 movie_night.location         = locations[1]
 movie_night.repeat           = EventRepeat.annual
 movie_night.lunar_phase      = RuleLunar.moon_full
@@ -278,11 +243,9 @@ movie_night.time_length      = datetime.timedelta(hours=3)
 movie_night.url              = 'www.sjaa.net/movie-night'
 movie_night.notes            = "Don't publicize title on public media like Meetup!"
 
-show_n_tell = cal_events.EventType()
-show_n_tell.type_id          = 16
+show_n_tell = cal_events.CalEvent()
 show_n_tell.name             = '*Show-n-tell'
 show_n_tell.visibility       = EventVisibility.public
-show_n_tell.coordinator_id   = 1
 show_n_tell.location         = locations[1]
 show_n_tell.repeat           = EventRepeat.annual
 show_n_tell.lunar_phase      = RuleLunar.moon_full
@@ -294,11 +257,9 @@ show_n_tell.time_length      = datetime.timedelta(hours=2)
 show_n_tell.url              = 'www.sjaa.net/events/show-n-tell??'
 show_n_tell.notes            = ''
 
-swap_fall = cal_events.EventType()
-swap_fall.type_id            = 17
+swap_fall = cal_events.CalEvent()
 swap_fall.name               = '*Fall Swap Meet'
 swap_fall.visibility         = EventVisibility.public
-swap_fall.coordinator_id     = 1
 swap_fall.location           = locations[1]
 swap_fall.repeat             = EventRepeat.annual
 swap_fall.lunar_phase        = RuleLunar.moon_full

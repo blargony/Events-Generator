@@ -27,13 +27,9 @@ import cal_ephemeris
 
 
 # template for types of events, e.g., "In-town Star Party"
-class EventType():
-    type_id = None
+class CalEvent():
     name = None
     visibility = None
-    tentative = True
-    coordinator_id = None
-    hide_location = False
     location = None
     repeat = None  # lunar, monthly, ...
     lunar_phase = None  # new, 1Q, full, 3Q
@@ -49,7 +45,6 @@ class EventType():
     email = None
     url = None
     notes = None
-
 
     def calc_monthly_dates(self, start, end):
         '''
