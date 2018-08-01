@@ -45,13 +45,23 @@ FMT_DATE_Y = '%a %m/%d %Y'
 FMT_HM = '%I:%M %p'
 
 ########################################
-# initialization for 'ephem' module
+# Ephem Constants
 ########################################
 SUN = ephem.Sun()
 MOON = ephem.Moon()
 PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
            ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
 
+SEASONS = {
+    'spring': (ephem.next_vernal_equinox, 'Spring Equinox'),
+    'summer': (ephem.next_summer_solstice, 'Summer Solstice'),
+    'fall': (ephem.next_autumn_equinox, 'Fall Equinox'),
+    'winter': (ephem.next_winter_solstice, 'Winter Solstice')
+}
+
+EPHEM_SECOND = ephem.second
+EPHEM_DAY = ephem.hour*24
+EPHEM_MONTH = EPHEM_DAY*30
 
 ########################################
 # For Houge Park
@@ -70,6 +80,11 @@ class RuleWeek(Enum):
     week_3 = 2
     week_4 = 3
     week_5 = 4
+
+    def __str__(self):
+        ordinal = ['st', 'nd', 'rd', 'th']
+        week = self.value + 1
+        return '{0}{1} week'.format(week, ordinal[week])
 
 
 @unique

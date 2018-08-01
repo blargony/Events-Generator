@@ -20,11 +20,8 @@
 #
 #########################################################################
 
-import ephem
-
-from cal_const import *
 import cal_ephemeris
-
+from cal_const import *
 
 # template for types of events, e.g., "In-town Star Party"
 class CalEvent():
@@ -45,6 +42,9 @@ class CalEvent():
     email = None
     url = None
     notes = None
+
+    def get_ephem(self):
+        return cal_ephemeris.CalEphemeris()
 
     def calc_monthly_dates(self, start, end):
         '''
@@ -126,19 +126,24 @@ class CalEvent():
         output
             return      list            tuples of datetime.datetime
         """
+        cal_eph = self.get_ephem()
+        cal_eph.gen_astro_data(start.year)
+
         # set 'day' to 'weekday' at or after 'start'
         date = start
         dates = []
+        weekday = weekday_to_int[self.day_of_week]
         weekday_of_date = date.weekday()
-        event_weekday = weekday_to_int[self.day_of_week]
-        if weekday_of_date > event_weekday:
-            days = event_weekday - weekday_of_date + 7
+
+        if weekday_of_date > weekday:
+            days = weekday - weekday_of_date + 7
         else:
-            days = event_weekday - weekday_of_date
-        date = date + DAY*days
+            days = weekday - weekday_of_date
+        date = date + DAY * days
+
         while date < end:
             dayofyear = int(date.strftime('%j'))
-            if cal_ephemeris.moon_phase[dayofyear] == self.lunar_phase and date <= end:
+            if cal_eph.moon_phase[dayofyear] == self.lunar_phase and date <= end:
                 if self.rule_start_time == RuleStartTime.absolute:
                     time = self.time_start
                     date = TZ_LOCAL.localize(date.combine(date, time))
@@ -163,6 +168,9 @@ class CalEvent():
         output
             return      list            tuples of datetime.datetime
         '''
+        cal_eph = self.get_ephem()
+        cal_eph.gen_astro_data(start.year)
+
         # set 'date' to 'weekday' at or after 'start'
         date = start.replace(month=self.month, day=1)
         dates = []
@@ -173,9 +181,10 @@ class CalEvent():
         else:
             days = event_weekday - weekday_of_date
         date = date + DAY*days
+
         while date < end:
             dayofyear = int(date.strftime('%j'))
-            if cal_ephemeris.moon_phase[dayofyear] == self.lunar_phase and date <= end:
+            if cal_eph.moon_phase[dayofyear] == self.lunar_phase and date <= end:
                 if self.rule_start_time == RuleStartTime.absolute:
                     time = self.time_start
                     date = TZ_LOCAL.localize(date.combine(date, time))
@@ -202,10 +211,10 @@ class CalEvent():
             date = TZ_LOCAL.localize(date.combine(date, self.time_start))
             return date
 
-        cal_ephemeris.local.date = date.astimezone(TZ_UTC)
-        cal_ephemeris.local.horizon = rule_horizon[self.rule_start_time]
-        dusk = TZ_LOCAL.localize(ephem.localtime(
-            cal_ephemeris.local.next_setting(SUN)))
+        cal_eph = self.get_ephem()
+        cal_eph.observer.date = date.astimezone(TZ_UTC)
+        cal_eph.observer.horizon = rule_horizon[self.rule_start_time]
+        dusk = cal_eph.get_sunset()
 
         # round minutes to nearest quarter hour
         rounded_hour = dusk.hour

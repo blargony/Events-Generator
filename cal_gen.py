@@ -273,6 +273,8 @@ swap_fall.notes              = ''
 
 
 def gen_events(start, end):
+    cal_eph = cal_ephemeris.CalEphemeris()
+    cal_eph.gen_astro_data(start.year)
     summary = []
     events_public      = []
     events_member      = []
@@ -314,13 +316,13 @@ def gen_events(start, end):
             moon = None
             if evtype.rule_start_time != RuleStartTime.absolute:
                 # get ephemeris data for sun, moon for start times based on twilight
-                sun, moon = cal_ephemeris.calc_date_ephem(date)
+                sun, moon = cal_eph.calc_date_ephem(date)
             events.append((date, evtype.name, sun, moon))
 
     # sort events by time and print
     for evtype in EventVisibility:
         if   evtype == EventVisibility.ephemeris:
-            events = cal_ephemeris.astro_events
+            events = cal_eph.astro_events
         elif evtype == EventVisibility.public:
             events = events_public
         elif evtype == EventVisibility.member:
@@ -360,7 +362,6 @@ if __name__ == '__main__':
     # -------------------------------------
     # Actually do the work we intend to do here
     # -------------------------------------
-    cal   = cal_ephemeris.calc(args.year)
     start = TZ_LOCAL.localize(datetime.datetime(args.year, 1, 1))
     end   = datetime.datetime(args.year+1, 1, 1) - datetime.timedelta(seconds=1)
     end   = TZ_LOCAL.localize(end)
