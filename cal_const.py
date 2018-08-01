@@ -17,13 +17,15 @@
 #
 #   Contributors:
 #       2016-02-25  Teruo Utsumi, initial code
+#       2018-07-31  Robert Chapman
+#                    - moved ephemeris only consts to cal_ephemeris
+#                    - moved LUTs into the enum classes
 #
 #########################################################################
 
 import calendar
 import datetime
 import pytz
-import ephem
 from enum import Enum, unique
 
 #########################################################################
@@ -43,25 +45,6 @@ TZ_LOCAL = pytz.timezone('US/Pacific')
 FMT_YEAR_DATE_HM = '%Y %a %m/%d %I:%M %p'
 FMT_DATE_Y = '%a %m/%d %Y'
 FMT_HM = '%I:%M %p'
-
-########################################
-# Ephem Constants
-########################################
-SUN = ephem.Sun()
-MOON = ephem.Moon()
-PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
-           ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
-
-SEASONS = {
-    'spring': (ephem.next_vernal_equinox, 'Spring Equinox'),
-    'summer': (ephem.next_summer_solstice, 'Summer Solstice'),
-    'fall': (ephem.next_autumn_equinox, 'Fall Equinox'),
-    'winter': (ephem.next_winter_solstice, 'Winter Solstice')
-}
-
-EPHEM_SECOND = ephem.second
-EPHEM_DAY = ephem.hour*24
-EPHEM_MONTH = EPHEM_DAY*30
 
 ########################################
 # For Houge Park
@@ -88,11 +71,34 @@ class RuleWeek(Enum):
 
 
 @unique
+class RuleWeekday(Enum):
+    monday = 'mo'
+    tuesday = 'tu'
+    wednesday = 'we'
+    thursday = 'th'
+    friday = 'fr'
+    saturday = 'sa'
+    sunday = 'su'
+
+    def __int__(self):
+        """Return standard datetime encoding, the week starts on Monday (0)."""
+        lut = {'mo': 0, 'tu': 1, 'we': 2, 'th': 3, 'fr': 4, 'sa': 5, 'su': 6}
+        return lut[self.value]
+
+    def __str__(self):
+        return calendar.day_abbr[int(self)]
+
+
+@unique
 class RuleLunar(Enum):
     moon_new = 0
     moon_1q = 1
     moon_full = 2
     moon_3q = 3
+
+    def __str__(self):
+        lut = ['new moon', '1Q moon', 'full moon', '3Q moon']
+        return lut[self.value]
 
 
 @unique
@@ -103,16 +109,15 @@ class RuleStartTime(Enum):
     nautical = 'na'
     astronomical = 'as'
 
+    def __str__(self):
+        lut = {'ab': 'absolute', 'su': 'sunset', 'ci': 'civil',
+               'na': 'nautical', 'as': 'astronomical'}
+        return lut[self.value]
 
-@unique
-class RuleWeekday(Enum):
-    monday = 'mo'
-    tuesday = 'tu'
-    wednesday = 'we'
-    thursday = 'th'
-    friday = 'fr'
-    saturday = 'sa'
-    sunday = 'su'
+    @property
+    def deg(self):
+        lut = {'su': '0', 'ci': '-6', 'na': '-12', 'as': '-18'}
+        return lut[self.value]
 
 
 @unique
@@ -127,73 +132,22 @@ class EventVisibility(Enum):
     observers = 'ob'
     imagers = 'im'
 
+    def __str__(self):
+        lut = {'ep': 'ephemeris', 'pu': 'public', 'me': 'member',
+               'vo': 'volunteer', 'co': 'coordinator', 'pr': 'private',
+               'bo': 'board', 'ob': 'observers', 'im': 'imagers'}
+        return lut[self.value]
+
 
 @unique
 class EventRepeat(Enum):
     onetime = 'on'
-#   weekly       = 'we'  # not currently supported
+    weekly = 'we'
     monthly = 'mo'
     lunar = 'lu'
     annual = 'an'
 
-
-########################################
-# display strings corresponding to above rules
-########################################
-rule_week = {RuleWeek.week_1: '1st week',
-             RuleWeek.week_2: '2nd week',
-             RuleWeek.week_3: '3rd week',
-             RuleWeek.week_4: '4th week',
-             RuleWeek.week_5: '5th week'}
-
-rule_weekday = {RuleWeekday.sunday: calendar.day_abbr[6],
-                RuleWeekday.monday: calendar.day_abbr[0],
-                RuleWeekday.tuesday: calendar.day_abbr[1],
-                RuleWeekday.wednesday: calendar.day_abbr[2],
-                RuleWeekday.thursday: calendar.day_abbr[3],
-                RuleWeekday.friday: calendar.day_abbr[4],
-                RuleWeekday.saturday: calendar.day_abbr[5]}
-
-# to match datetime.weekday()
-weekday_to_int = {RuleWeekday.sunday: 6,
-                  RuleWeekday.monday: 0,
-                  RuleWeekday.tuesday: 1,
-                  RuleWeekday.wednesday: 2,
-                  RuleWeekday.thursday: 3,
-                  RuleWeekday.friday: 4,
-                  RuleWeekday.saturday: 5}
-
-##########################
-# for astronomy scheduling
-##########################
-rule_start_time = {RuleStartTime.absolute: 'absolute',
-                   RuleStartTime.sunset: 'sunset',
-                   RuleStartTime.civil: 'civil',
-                   RuleStartTime.nautical: 'nautical',
-                   RuleStartTime.astronomical: 'astronomical'}
-
-rule_lunar = {RuleLunar.moon_new: 'new moon',
-              RuleLunar.moon_1q: '1Q moon',
-              RuleLunar.moon_full: 'full moon',
-              RuleLunar.moon_3q: '3Q moon'}
-
-rule_horizon = {RuleStartTime.sunset: '0',
-                RuleStartTime.civil: '-6',
-                RuleStartTime.nautical: '-12',
-                RuleStartTime.astronomical: '-18'}
-
-##########################
-event_visibility = {EventVisibility.ephemeris: 'ephemeris',
-                    EventVisibility.public: 'public',
-                    EventVisibility.member: 'member',
-                    EventVisibility.volunteer: 'volunteer',
-                    EventVisibility.coordinator: 'coordinator',
-                    EventVisibility.private: 'private',
-                    EventVisibility.board: 'board'}
-
-event_repeat = {EventRepeat.onetime: 'one-time',
-                EventRepeat.monthly: 'monthly',
-                #                    EventRepeat.weekly          : 'weekly'      ,
-                EventRepeat.lunar: 'lunar',
-                EventRepeat.annual: 'annual'}
-
+    def __str__(self):
+        lut = {'on': 'one-time', 'we': 'weekly', 'mo': 'monthly',
+               'lu': 'lunar', 'an': 'annual'}
+        return lut[self.value]

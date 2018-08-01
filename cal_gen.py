@@ -338,7 +338,7 @@ def gen_events(start, end):
         if events:
             events.sort()
             summary.append("======================================")
-            summary.append("{} events - total: {}".format(event_visibility[evtype], len(events)))
+            summary.append("{} events - total: {}".format(str(evtype), len(events)))
             summary.append("--")
             for ev in events:
                 if len(ev) > 2 and ev[2]:

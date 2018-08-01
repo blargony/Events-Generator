@@ -27,6 +27,34 @@ import ephem
 
 from cal_const import *
 
+########################################
+# Ephem Constants
+########################################
+SUN = ephem.Sun()
+MOON = ephem.Moon()
+PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
+           ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
+
+EPHEM_SECOND = ephem.second
+EPHEM_DAY = ephem.hour*24
+EPHEM_MONTH = EPHEM_DAY*30
+
+SEASONS = {
+    'spring': (ephem.next_vernal_equinox, 'Spring Equinox'),
+    'summer': (ephem.next_summer_solstice, 'Summer Solstice'),
+    'fall': (ephem.next_autumn_equinox, 'Fall Equinox'),
+    'winter': (ephem.next_winter_solstice, 'Winter Solstice')
+}
+
+NEXT_MOON_PHASE = {
+    #                      method to get phase          , name of phase , next phase
+    RuleLunar.moon_new: (ephem.next_new_moon, 'New moon', RuleLunar.moon_1q),
+    RuleLunar.moon_1q: (ephem.next_first_quarter_moon, '1st Qtr moon', RuleLunar.moon_full),
+    RuleLunar.moon_full: (ephem.next_full_moon, 'Full moon', RuleLunar.moon_3q),
+    RuleLunar.moon_3q: (ephem.next_last_quarter_moon, '3rd Qtr moon', RuleLunar.moon_new)
+}
+
+########################################
 class CalEphemeris(object):
     """Wrap python ephem library for use by cal_event et al."""
 
@@ -62,13 +90,6 @@ class CalEphemeris(object):
             self.astro_events.append((d1, n))
 
         # Generate moon phase events
-        next_phase = {
-            #                      method to get phase          , name of phase , next phase
-            RuleLunar.moon_new: (ephem.next_new_moon, 'New moon', RuleLunar.moon_1q),
-            RuleLunar.moon_1q: (ephem.next_first_quarter_moon, '1st Qtr moon', RuleLunar.moon_full),
-            RuleLunar.moon_full: (ephem.next_full_moon, 'Full moon', RuleLunar.moon_3q),
-            RuleLunar.moon_3q: (ephem.next_last_quarter_moon, '3rd Qtr moon', RuleLunar.moon_new)
-        }
         cur_year = year - 1
         next_year = year + 1
         ph = RuleLunar.moon_new
@@ -79,7 +100,7 @@ class CalEphemeris(object):
         l_moon_phases = []
         while cur_year != next_year:
             prev_ph = ph
-            m, n, ph = next_phase[ph]
+            m, n, ph = NEXT_MOON_PHASE[ph]
             d0 = m(d0)
             d1 = TZ_LOCAL.localize(ephem.localtime(d0))
             cur_year = d1.year
@@ -130,13 +151,13 @@ class CalEphemeris(object):
         # set time for noon
         date = TZ_LOCAL.localize(date.combine(date, datetime.time(12, 0)))
         self.observer.date = date.astimezone(TZ_LOCAL)
-        self.observer.horizon = rule_horizon[RuleStartTime.sunset]
+        self.observer.horizon = RuleStartTime.sunset.deg
         time_sunset = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
-        self.observer.horizon = rule_horizon[RuleStartTime.civil]
+        self.observer.horizon = RuleStartTime.civil.deg
         time_civil = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
-        self.observer.horizon = rule_horizon[RuleStartTime.nautical]
+        self.observer.horizon = RuleStartTime.nautical.deg
         time_nautical = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
-        self.observer.horizon = rule_horizon[RuleStartTime.astronomical]
+        self.observer.horizon = RuleStartTime.astronomical.deg
         time_astro = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
         time_sunset = time_sunset.strftime(FMT_HM)
         time_civil = time_civil.strftime(FMT_HM)
@@ -151,7 +172,7 @@ class CalEphemeris(object):
         date = TZ_LOCAL.localize(date.combine(date, datetime.time(15, 0)))
         MOON.compute(date)
         self.observer.date = date.astimezone(TZ_LOCAL)
-        self.observer.horizon = rule_horizon[RuleStartTime.sunset]
+        self.observer.horizon = RuleStartTime.sunset.deg
         time_moonset = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(MOON)))
         # figure out which of moonrise/moonset occurs from 3pm-3am
         if date <= time_moonset < date + HOUR*12:

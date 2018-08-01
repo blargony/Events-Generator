@@ -82,7 +82,7 @@ class CalEvent():
 
         dates = []
         date = start
-        weekday = weekday_to_int[self.day_of_week]
+        weekday = int(self.day_of_week)
         week = self.week.value
 
         while date < end:
@@ -132,7 +132,7 @@ class CalEvent():
         # set 'day' to 'weekday' at or after 'start'
         date = start
         dates = []
-        weekday = weekday_to_int[self.day_of_week]
+        weekday = int(self.day_of_week)
         weekday_of_date = date.weekday()
 
         if weekday_of_date > weekday:
@@ -175,7 +175,7 @@ class CalEvent():
         date = start.replace(month=self.month, day=1)
         dates = []
         weekday_of_date = date.weekday()
-        event_weekday = weekday_to_int[self.day_of_week]
+        event_weekday = int(self.day_of_week)
         if weekday_of_date > event_weekday:
             days = event_weekday - weekday_of_date + 7
         else:
@@ -213,7 +213,7 @@ class CalEvent():
 
         cal_eph = self.get_ephem()
         cal_eph.observer.date = date.astimezone(TZ_UTC)
-        cal_eph.observer.horizon = rule_horizon[self.rule_start_time]
+        cal_eph.observer.horizon = self.rule_start_time.deg
         dusk = cal_eph.get_sunset()
 
         # round minutes to nearest quarter hour
