@@ -373,8 +373,8 @@ if __name__ == '__main__':
         with open(args.test, 'r') as fp:
             for i, line in enumerate(fp):
                 if line.rstrip() != summary[i]:
-                    print(line)
-                    print(summary[i])
+                    print('Golden : {}'.format(line.rstrip()))
+                    print('Current: {}'.format(summary[i]))
                     fail = True
         if not fail:
             print("PASS!!")
