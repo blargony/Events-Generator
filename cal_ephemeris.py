@@ -23,6 +23,9 @@
 #########################################################################
 
 import datetime
+import math
+import unittest
+
 import ephem
 
 from cal_const import *
@@ -30,7 +33,6 @@ from cal_const import *
 ########################################
 # Ephem Constants
 ########################################
-SUN = ephem.Sun()
 MOON = ephem.Moon()
 PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
            ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
@@ -56,7 +58,7 @@ NEXT_MOON_PHASE = {
 
 ########################################
 class CalEphemeris(object):
-    """Wrap python ephem library for use by cal_event et al."""
+    """Wrap python ephem library for use by cal_events et al."""
 
     def __init__(self):
         self.observer = ephem.Observer()
@@ -64,14 +66,85 @@ class CalEphemeris(object):
         self.observer.lon = LONG
         self.observer.elevation = ELEVATION
 
-        self.moon_phase = ['']*368
         self.astro_events = []
 
         # self.gen_astro_data(year)
 
-    def get_sunset(self):
-        return TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
+    # --------------------------------------
+    # Ephem to Regular Units Helper Functions
+    # --------------------------------------
+    def get_datetime(self, ephem_date):
+        return ephem.localtime(ephem_date)
 
+    def get_degrees(self, radians):
+        return math.degrees(float(radians))
+
+    # --------------------------------------
+    # Rising/Setting/Phases/etc...
+    # --------------------------------------
+    def get_sunset(self, date, horizon=RuleStartTime.sunset):
+        self.observer.date = date
+        self.observer.horizon = horizon.deg
+        return self.get_datetime(self.observer.next_setting(ephem.Sun()))
+
+    def moon_rise(self, date):
+        '''Moon rise for a date, around the sunset please.'''
+        self.observer.date = date.replace(hour=21, minute=0)  # 9pm onwards
+        self.observer.horizon = 0
+        rise = self.get_datetime(self.observer.next_rising(ephem.Moon()))
+        return rise
+
+    def moon_set(self, date):
+        '''Moon set for a date, around the sunset please.'''
+        self.observer.date = date.replace(hour=21, minute=0)  # 9pm onwards
+        self.observer.horizon = 0
+        set = self.get_datetime(self.observer.next_setting(ephem.Moon()))
+        return set
+
+    def moon_illum(self, date):
+        date = date.replace(hour=18, minute=0)   # 6pm
+        moon = ephem.Moon()
+        moon.compute(date)
+        return moon.phase
+
+    def get_moon_phase(self, date):
+        """Get the Moon Phase around 6pm of any date."""
+        date = date.replace(hour=18, minute=0)
+        elong = self.get_degrees(ephem.Moon(date).elong)
+        # Lean a little bit towards the next phase
+        phase = round(elong/90.0) * 90
+        if phase == -90:
+            return RuleLunar.moon_3q
+        elif phase == 0:
+            return RuleLunar.moon_new
+        elif phase == 90:
+            return RuleLunar.moon_1q
+        else:
+            return RuleLunar.moon_full
+
+    def gen_moon_phases(self, start_date, end_date):
+        """Return an interator of moon phases over the given dates."""
+        phase_date = start_date
+        while phase_date < end_date:
+            elong = self.get_degrees(ephem.Moon(phase_date).elong)
+            if elong < -90:
+                nxt_phase = ephem.next_last_quarter_moon(phase_date)
+                phase = '3rd Qtr Moon'
+            elif elong < 0:
+                nxt_phase = ephem.next_new_moon(phase_date)
+                phase = 'New Moon'
+            elif elong < 90:
+                nxt_phase = ephem.next_first_quarter_moon(phase_date)
+                phase = '1st Qtr Moon'
+            else:
+                nxt_phase = ephem.next_full_moon(phase_date)
+                phase = 'Full Moon'
+            phase_date = self.get_datetime(nxt_phase)
+            if phase_date < end_date:
+                yield phase, phase_date
+            phase_date += DAY
+
+    # --------------------------------------
     def gen_astro_data(self, year):
         """Generate seasons, moon, opposition data for entire year."""
 
@@ -111,31 +184,6 @@ class CalEphemeris(object):
         self.astro_events += self.calc_planets(year)
         self.astro_events.sort()
 
-        # populate "moon_phase" with moon phase for every day of year
-        ph_time, ph = l_moon_phases.pop(0)
-        for e in l_moon_phases:
-            next_ph_time, next_ph = e
-            delta_ph_time = next_ph_time - ph_time
-            # find midpoint between two consecutive lunar events,
-            #   e.g., 1Q, full moon
-            mid_ph_time = ph_time + delta_ph_time/2
-            # append midpoint time
-            # use old phase if midpoint is after 7pm, otherwise use new phase
-            if mid_ph_time.year == year:
-                # day of year, e.g., 201
-                mid_ph_day = int(mid_ph_time.strftime('%j'))
-                self.moon_phase[mid_ph_day] = ph if mid_ph_time.hour >= 19 else next_ph
-            ph_time = next_ph_time
-            ph = next_ph
-            # fill in "moon_phase" 10 days after midpoint with "ph"
-            # 10 days ensures no gap between this midpoint and the next
-            for j in range(1, 12):
-                day = mid_ph_time + DAY*j
-                # don't fill in moon_phase if day is not in current year
-                if day.year == year:
-                    k = int(day.strftime('%j'))
-                    self.moon_phase[k] = ph
-
 
     def calc_date_ephem(self, date):
         """input:
@@ -151,14 +199,10 @@ class CalEphemeris(object):
         # set time for noon
         date = TZ_LOCAL.localize(date.combine(date, datetime.time(12, 0)))
         self.observer.date = date.astimezone(TZ_LOCAL)
-        self.observer.horizon = RuleStartTime.sunset.deg
-        time_sunset = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
-        self.observer.horizon = RuleStartTime.civil.deg
-        time_civil = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
-        self.observer.horizon = RuleStartTime.nautical.deg
-        time_nautical = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
-        self.observer.horizon = RuleStartTime.astronomical.deg
-        time_astro = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(SUN)))
+        time_sunset = self.get_sunset(date, RuleStartTime.sunset)
+        time_civil = self.get_sunset(date, RuleStartTime.civil)
+        time_nautical = self.get_sunset(date, RuleStartTime.nautical)
+        time_astro = self.get_sunset(date, RuleStartTime.astronomical)
         time_sunset = time_sunset.strftime(FMT_HM)
         time_civil = time_civil.strftime(FMT_HM)
         time_nautical = time_nautical.strftime(FMT_HM)
@@ -289,3 +333,64 @@ class CalEphemeris(object):
         if date.year == year:
             return date
         return None
+
+
+#########################################################################
+class TestUM(unittest.TestCase):
+
+    def setUp(self):
+        self.eph = CalEphemeris()
+        self.summer = datetime.datetime(2018, 8, 1)
+        self.fall = datetime.datetime(2018, 10, 1)
+        self.spring = datetime.datetime(2018, 10, 1)
+
+    def test_sunset(self):
+        # Sunset on August 1, 2018 is 20:16 in San Jose
+        sunset = self.eph.get_sunset(self.summer)
+        self.assertEqual(sunset.hour, 20)
+        self.assertEqual(sunset.minute, 16)
+
+        # nautical sunset should be 21:18
+        sunset = self.eph.get_sunset(self.summer, RuleStartTime.nautical)
+        self.assertEqual(sunset.hour, 21)
+        self.assertEqual(sunset.minute, 21)
+
+    def test_moon_rise(self):
+        # Moonrise on August 1, 2018 is 23:10 in San Jose
+        rise = self.eph.moon_rise(self.summer)
+        moon_time = datetime.datetime(2018, 8, 1, 23, 10)
+        self.assertEqual(rise.hour, moon_time.hour)
+        self.assertEqual(rise.minute, moon_time.minute)
+
+    def test_moon_set(self):
+        # Moonset on August 1, 2018 is not until August 2, 11am
+        set = self.eph.moon_set(self.summer)
+        moon_time = datetime.datetime(2018, 8, 2, 11, 36)
+        self.assertEqual(set.hour, moon_time.hour)
+        self.assertEqual(set.minute, moon_time.minute)
+
+    def test_moon_ill(self):
+        # Illuminate for August 1, 2018 is 79%
+        ill = self.eph.moon_illum(self.summer)
+        self.assertEqual(round(ill), 79)
+
+    def test_moon_phase(self):
+        # Phases of the Moon in August
+        phases = self.eph.gen_moon_phases(self.summer, self.summer.replace(day=31))
+        phases = list(phases)
+        self.assertEqual(len(phases), 4)
+        self.assertEqual(phases[0][1].day, 4)
+        self.assertEqual(phases[1][1].day, 11)
+        self.assertEqual(phases[2][1].day, 18)
+        self.assertEqual(phases[3][1].day, 26)
+        self.assertEqual(phases[0][0], 'Last Quarter')
+        self.assertEqual(phases[1][0], 'New')
+        self.assertEqual(phases[2][0], '1st Quarter')
+        self.assertEqual(phases[3][0], 'Full')
+
+
+
+#########################################################################
+if __name__ == '__main__':
+    unittest.main()
+

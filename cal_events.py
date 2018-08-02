@@ -142,8 +142,7 @@ class CalEvent():
         date = date + DAY * days
 
         while date < end:
-            dayofyear = int(date.strftime('%j'))
-            if cal_eph.moon_phase[dayofyear] == self.lunar_phase and date <= end:
+            if cal_eph.get_moon_phase(date) == self.lunar_phase and date <= end:
                 if self.rule_start_time == RuleStartTime.absolute:
                     time = self.time_start
                     date = TZ_LOCAL.localize(date.combine(date, time))
@@ -183,8 +182,7 @@ class CalEvent():
         date = date + DAY*days
 
         while date < end:
-            dayofyear = int(date.strftime('%j'))
-            if cal_eph.moon_phase[dayofyear] == self.lunar_phase and date <= end:
+            if cal_eph.get_moon_phase(date) == self.lunar_phase and date <= end:
                 if self.rule_start_time == RuleStartTime.absolute:
                     time = self.time_start
                     date = TZ_LOCAL.localize(date.combine(date, time))
@@ -212,9 +210,7 @@ class CalEvent():
             return date
 
         cal_eph = self.get_ephem()
-        cal_eph.observer.date = date.astimezone(TZ_UTC)
-        cal_eph.observer.horizon = self.rule_start_time.deg
-        dusk = cal_eph.get_sunset()
+        dusk = cal_eph.get_sunset(date, self.rule_start_time)
 
         # round minutes to nearest quarter hour
         rounded_hour = dusk.hour
