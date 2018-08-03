@@ -27,21 +27,21 @@ import holidays
 
 from dateutil import rrule
 
-from cal_const import RuleStartTime, RuleWeekday, DAY
+from cal_const import RuleStartTime, DAY
 import cal_ephemeris
 
 def holiday_weekend(date):
     hol = holidays.US()
 
-    if date.weekday() == int(RuleWeekday.friday):
-        prev = 1
-        next = 3
-    elif date.weekday() == int(RuleWeekday.saturday):
-        prev = 2
-        next = 2
+    if date.weekday() < 2:
+        prev = 3 + date.weekday()   # 3 days prior minimum if Mon-Tues
+        next = 2 - date.weekday()   # 1-2 days after for Mon-Tues
+    elif date.weekday() > 2:
+        prev = date.weekday() - 2   # 1 days prior for Thurs, more for later
+        next = 8 - date.weekday()   # 1 day after for Sunday, more for earlier
 
-    for i in range(-1 * prev, next + 1):
-        test_date = date - i * DAY
+    for i in range(-1 * prev, next):
+        test_date = date + (i * DAY)
         holiday = hol.get(test_date)
         if holiday:
             return '{0} ({1})'.format(holiday, test_date.strftime('%b %-d'))
