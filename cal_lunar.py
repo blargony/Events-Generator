@@ -1,7 +1,7 @@
 #########################################################################
 #
-#   Astronomy Club Event Generator
-#   file: test.py
+#   Astronomy Club Lunar Ephemeris Data Generator
+#   file: cal_lunar.py
 #
 #   Copyright (C) 2016  Teruo Utsumi, San Jose Astronomical Association
 #
@@ -16,7 +16,7 @@
 #   GNU General Public License for more details.
 #
 #   Contributors:
-#       2016-02-25  Teruo Utsumi, initial code
+#       2018-08-01  Robert Chapman, initial version
 #
 #########################################################################
 
