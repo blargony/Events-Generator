@@ -88,8 +88,8 @@ class CalEphemeris(object):
         return self.get_datetime(self.observer.next_setting(ephem.Sun()))
 
     def _moon_setup(self, date):
-        start_date = date.replace(hour=18, minute=0)
-        end_date = start_date + 9 * HOUR
+        start_date = date.replace(hour=15, minute=0)
+        end_date = start_date + 12 * HOUR    # 3pm to 3am window
         self.observer.date = start_date
         self.observer.horizon = 0
         return start_date, end_date
