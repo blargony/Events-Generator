@@ -97,7 +97,7 @@ class RuleLunar(Enum):
     moon_3q = 3
 
     def __str__(self):
-        lut = ['new moon', '1Q moon', 'full moon', '3Q moon']
+        lut = ['New Moon', '1st Qtr Moon', 'Full Moon', '3rd Qtr Moon']
         return lut[self.value]
 
 
