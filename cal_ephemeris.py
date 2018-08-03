@@ -87,19 +87,26 @@ class CalEphemeris(object):
         self.observer.horizon = horizon.deg
         return self.get_datetime(self.observer.next_setting(ephem.Sun()))
 
+    def _moon_setup(self, date):
+        start_date = date.replace(hour=18, minute=0)
+        end_date = start_date + 9 * HOUR
+        self.observer.date = start_date
+        self.observer.horizon = 0
+        return start_date, end_date
+
     def moon_rise(self, date):
         '''Moon rise for a date, around the sunset please.'''
-        self.observer.date = date.replace(hour=21, minute=0)  # 9pm onwards
-        self.observer.horizon = 0
+        start_date, end_date = self._moon_setup(date)
         rise = self.get_datetime(self.observer.next_rising(ephem.Moon()))
-        return rise
+        if rise > start_date and rise < end_date:
+            return rise
 
     def moon_set(self, date):
         '''Moon set for a date, around the sunset please.'''
-        self.observer.date = date.replace(hour=21, minute=0)  # 9pm onwards
-        self.observer.horizon = 0
+        start_date, end_date = self._moon_setup(date)
         set = self.get_datetime(self.observer.next_setting(ephem.Moon()))
-        return set
+        if set > start_date and set < end_date:
+            return set
 
     def moon_illum(self, date):
         date = date.replace(hour=18, minute=0)   # 6pm
@@ -129,16 +136,16 @@ class CalEphemeris(object):
             elong = self.get_degrees(ephem.Moon(phase_date).elong)
             if elong < -90:
                 nxt_phase = ephem.next_last_quarter_moon(phase_date)
-                phase = '3rd Qtr Moon'
+                phase = str(RuleLunar.moon_3q)
             elif elong < 0:
                 nxt_phase = ephem.next_new_moon(phase_date)
-                phase = 'New Moon'
+                phase = str(RuleLunar.moon_new)
             elif elong < 90:
                 nxt_phase = ephem.next_first_quarter_moon(phase_date)
-                phase = '1st Qtr Moon'
+                phase = str(RuleLunar.moon_1q)
             else:
                 nxt_phase = ephem.next_full_moon(phase_date)
-                phase = 'Full Moon'
+                phase = str(RuleLunar.moon_full)
             phase_date = self.get_datetime(nxt_phase)
             if phase_date < end_date:
                 yield phase, phase_date
@@ -340,53 +347,57 @@ class TestUM(unittest.TestCase):
 
     def setUp(self):
         self.eph = CalEphemeris()
-        self.summer = datetime.datetime(2018, 8, 1)
-        self.fall = datetime.datetime(2018, 10, 1)
-        self.spring = datetime.datetime(2018, 10, 1)
+        self.aug = datetime.datetime(2018, 8, 1)
+        self.aug_mid = datetime.datetime(2018, 8, 15)
+        self.aug_late = datetime.datetime(2018, 8, 31)
 
     def test_sunset(self):
         # Sunset on August 1, 2018 is 20:16 in San Jose
-        sunset = self.eph.get_sunset(self.summer)
+        sunset = self.eph.get_sunset(self.aug)
         self.assertEqual(sunset.hour, 20)
         self.assertEqual(sunset.minute, 16)
 
         # nautical sunset should be 21:18
-        sunset = self.eph.get_sunset(self.summer, RuleStartTime.nautical)
+        sunset = self.eph.get_sunset(self.aug, RuleStartTime.nautical)
         self.assertEqual(sunset.hour, 21)
         self.assertEqual(sunset.minute, 21)
 
     def test_moon_rise(self):
         # Moonrise on August 1, 2018 is 23:10 in San Jose
-        rise = self.eph.moon_rise(self.summer)
-        moon_time = datetime.datetime(2018, 8, 1, 23, 10)
-        self.assertEqual(rise.hour, moon_time.hour)
-        self.assertEqual(rise.minute, moon_time.minute)
+        rise = self.eph.moon_rise(self.aug)
+        self.assertEqual(rise.hour, 23)
+        self.assertEqual(rise.minute, 10)
+        # Moonrise on August 15, 2018 is in the morning
+        rise = self.eph.moon_rise(self.aug_mid)
+        self.assertEqual(rise, None)
 
     def test_moon_set(self):
         # Moonset on August 1, 2018 is not until August 2, 11am
-        set = self.eph.moon_set(self.summer)
-        moon_time = datetime.datetime(2018, 8, 2, 11, 36)
-        self.assertEqual(set.hour, moon_time.hour)
-        self.assertEqual(set.minute, moon_time.minute)
+        set = self.eph.moon_set(self.aug)
+        self.assertEqual(set, None)
+        # Moonset on August 15, 2018 is 11:03pm
+        set = self.eph.moon_set(self.aug_mid)
+        self.assertEqual(set.hour, 23)
+        self.assertEqual(set.minute, 3)
 
     def test_moon_ill(self):
         # Illuminate for August 1, 2018 is 79%
-        ill = self.eph.moon_illum(self.summer)
+        ill = self.eph.moon_illum(self.aug)
         self.assertEqual(round(ill), 79)
 
     def test_moon_phase(self):
         # Phases of the Moon in August
-        phases = self.eph.gen_moon_phases(self.summer, self.summer.replace(day=31))
+        phases = self.eph.gen_moon_phases(self.aug, self.aug_late)
         phases = list(phases)
         self.assertEqual(len(phases), 4)
         self.assertEqual(phases[0][1].day, 4)
         self.assertEqual(phases[1][1].day, 11)
         self.assertEqual(phases[2][1].day, 18)
         self.assertEqual(phases[3][1].day, 26)
-        self.assertEqual(phases[0][0], 'Last Quarter')
-        self.assertEqual(phases[1][0], 'New')
-        self.assertEqual(phases[2][0], '1st Quarter')
-        self.assertEqual(phases[3][0], 'Full')
+        self.assertEqual(phases[0][0], '3rd Qtr Moon')
+        self.assertEqual(phases[1][0], 'New Moon')
+        self.assertEqual(phases[2][0], '1st Qtr Moon')
+        self.assertEqual(phases[3][0], 'Full Moon')
 
 
 
