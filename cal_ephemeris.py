@@ -88,8 +88,8 @@ class CalEphemeris(object):
         return self.get_datetime(self.observer.next_setting(ephem.Sun()))
 
     def _moon_setup(self, date):
-        start_date = date.replace(hour=15, minute=0)
-        end_date = start_date + 12 * HOUR    # 3pm to 3am window
+        start_date = date.replace(hour=18, minute=0)
+        end_date = start_date + 9 * HOUR    # 3pm to 3am window
         self.observer.date = start_date
         self.observer.horizon = 0
         return start_date, end_date
@@ -118,7 +118,6 @@ class CalEphemeris(object):
         """Get the Moon Phase around 6pm of any date."""
         date = date.replace(hour=18, minute=0)
         elong = self.get_degrees(ephem.Moon(date).elong)
-        # Lean a little bit towards the next phase
         phase = round(elong/90.0) * 90
         if phase == -90:
             return RuleLunar.moon_3q
@@ -128,6 +127,17 @@ class CalEphemeris(object):
             return RuleLunar.moon_1q
         else:
             return RuleLunar.moon_full
+
+    def get_moon_visibility(self, date):
+        illum = self.moon_illum(date)
+        if illum < 5:
+            # New Moon
+            return ['No Moon', '', '']
+        elif illum < 90:
+            # First Quarter Moon
+            return [self.moon_illum(date), self.moon_rise(date), self.moon_set(date)]
+        else:
+            return ['Full Moon', '', '']
 
     def gen_moon_phases(self, start_date, end_date):
         """Return an interator of moon phases over the given dates."""

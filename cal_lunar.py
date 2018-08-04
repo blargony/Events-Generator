@@ -63,15 +63,19 @@ def gen_starttimes(rrule_gen):
         entry.append(day.strftime('%a'))
         entry.append(eph.get_sunset(day).strftime('%-I:%M %p'))
         entry.append(eph.get_sunset(day, RuleStartTime.nautical).strftime('%-I:%M %p'))
+        illum, rise, set = eph.get_moon_visibility(day)
         try:
-            entry.append(eph.moon_rise(day).strftime('%-I:%M %p'))
+            entry.append(float(round(illum)) / 100.0)
+        except TypeError:
+            entry.append(illum)
+        try:
+            entry.append(rise.strftime('%-I:%M %p'))
         except AttributeError:
             entry.append('')
         try:
-            entry.append(eph.moon_set(day).strftime('%-I:%M %p'))
+            entry.append(set.strftime('%-I:%M %p'))
         except AttributeError:
             entry.append('')
-        entry.append(round(eph.moon_illum(day)/100.0, 2))
         entry.append(holiday_weekend(day))
         data.append(entry)
     return data
