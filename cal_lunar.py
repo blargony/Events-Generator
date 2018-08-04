@@ -32,6 +32,10 @@ import cal_ephemeris
 
 def holiday_weekend(date):
     hol = holidays.US()
+    # Add the superbowl, first sunday in Feb.
+    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU,
+                             dtstart=datetime.date(date.year, 2, 1))
+    hol.append({list(superb_owl)[0]: 'Superbowl Sunday'})
 
     if date.weekday() < 2:
         prev = 3 + date.weekday()   # 3 days prior minimum if Mon-Tues
@@ -51,8 +55,8 @@ def gen_starttimes(rrule_gen):
     eph = cal_ephemeris.CalEphemeris()
 
     data = []
-    data.append(['Date', 'Day', 'Sunset', 'Nautical Sunset', 'Moon Rise',
-                 'Moon Set', 'Illumination %', 'Holiday'])
+    data.append(['Date', 'Day', 'Sunset', 'Nautical Twilight',
+                 'Illumination %', 'Moon Rise', 'Moon Set', 'Holiday'])
     for day in rrule_gen:
         entry = []
         entry.append(day.strftime('%b %-d %Y'))
