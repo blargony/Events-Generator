@@ -99,17 +99,17 @@ def write_ical(filename, data):
         date = datetime.date(line[0].year, line[0].month, line[0].day)
         event = icalendar.Event()
         event.add('dtstart', date)
-        event.add('summary', 'SS - {}, NT = {}\n'.format(line[2], line[3]))
+        event.add('summary', 'SS - {}, NT = {}\n'.format(line[3], line[4]))
         cal.add_component(event)
 
         event = icalendar.Event()
         event.add('dtstart', date)
-        if line[5]:
-            event.add('summary', 'MR - {}'.format(line[5]))
-        elif line[6]:
-            event.add('summary', 'MS - {}'.format(line[6]))
+        if line[6]:
+            event.add('summary', 'MR - {}'.format(line[6]))
+        elif line[7]:
+            event.add('summary', 'MS - {}'.format(line[7]))
         else:
-            event.add('summary', line[4])
+            event.add('summary', line[5])
         cal.add_component(event)
 
     with open(filename, 'wb') as fp:
