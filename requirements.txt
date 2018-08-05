@@ -1,5 +1,6 @@
 ephem==3.7.6.0
 holidays==0.9.5
+icalendar==4.0.2
 python-dateutil==2.7.3
 pytz==2018.5
 six==1.11.0
