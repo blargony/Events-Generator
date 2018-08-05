@@ -24,6 +24,7 @@ import argparse
 import csv
 import datetime
 import holidays
+import icalendar
 
 from dateutil import rrule
 
@@ -51,14 +52,13 @@ def holiday_weekend(date):
             return '{0} ({1})'.format(holiday, test_date.strftime('%b %-d'))
 
 
-def gen_starttimes(rrule_gen):
+def gen_lunar_data(rrule_gen):
     eph = cal_ephemeris.CalEphemeris()
 
     data = []
-    data.append(['Date', 'Day', 'Sunset', 'Nautical Twilight',
-                 'Illumination %', 'Moon Rise', 'Moon Set', 'Holiday'])
     for day in rrule_gen:
         entry = []
+        entry.append(day)
         entry.append(day.strftime('%b %-d %Y'))
         entry.append(day.strftime('%a'))
         entry.append(eph.get_sunset(day).strftime('%-I:%M %p'))
@@ -81,12 +81,49 @@ def gen_starttimes(rrule_gen):
     return data
 
 
+def write_csv(filename, data):
+    with open(filename, 'w') as fp:
+        cfp = csv.writer(fp)
+        header = ('Date', 'Day', 'Sunset', 'Nautical Twilight',
+                  'Illumination %', 'Moon Rise', 'Moon Set', 'Holiday')
+        cfp.writerow(header)
+        for line in data:
+            cfp.writerow(line[1:])    # omit the datetime object
+
+
+def write_ical(filename, data):
+    cal = icalendar.Calendar()
+    cal.add('prodid', 'Astro Calendar')
+    cal.add('version', '2.0')
+    for line in data:
+        date = datetime.date(line[0].year, line[0].month, line[0].day)
+        event = icalendar.Event()
+        event.add('dtstart', date)
+        event.add('summary', 'SS - {}, NT = {}\n'.format(line[2], line[3]))
+        cal.add_component(event)
+
+        event = icalendar.Event()
+        event.add('dtstart', date)
+        if line[5]:
+            event.add('summary', 'MR - {}'.format(line[5]))
+        elif line[6]:
+            event.add('summary', 'MS - {}'.format(line[6]))
+        else:
+            event.add('summary', line[4])
+        cal.add_component(event)
+
+    with open(filename, 'wb') as fp:
+        fp.write(cal.to_ical())
+
+
 def main():
     parser = argparse.ArgumentParser(description='Calendar Generator')
     parser.add_argument('--year', type=int, action='store', required=True,
                         help='Year of the generated Calendar')
     parser.add_argument('--filename', action='store',
-                        help='Filename')
+                        help='Filename', default='astro.csv')
+    parser.add_argument('--ifilename', action='store',
+                        help='Filename', default='astro.ics')
     args = parser.parse_args()
 
 
@@ -94,12 +131,9 @@ def main():
     until = datetime.datetime(args.year, 12, 31)
     rrule_gen = rrule.rrule(rrule.WEEKLY, dtstart=start, until=until,
                             byweekday=(rrule.FR, rrule.SA))
-    data = gen_starttimes(rrule_gen)
-
-    with open(args.filename, 'w') as fp:
-        cfp = csv.writer(fp)
-        for line in data:
-            cfp.writerow(line)
+    data = gen_lunar_data(rrule_gen)
+    write_csv(args.filename, data)
+    write_ical(args.ifilename, data)
 
 
 # -------------------------------------
