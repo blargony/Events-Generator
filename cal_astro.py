@@ -31,13 +31,26 @@ from dateutil import rrule
 from cal_const import RuleStartTime, DAY
 import cal_ephemeris
 
-def holiday_weekend(date):
-    hol = holidays.US()
-    # Add the superbowl, first sunday in Feb.
-    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU,
-                             dtstart=datetime.date(date.year, 2, 1))
-    hol.append({list(superb_owl)[0]: 'Superbowl Sunday'})
 
+def get_holiday_cal(year):
+    hol = holidays.US(years=year)
+    # Add the superbowl, first Sunday in Feb.
+    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU,
+                             dtstart=datetime.date(year, 2, 1))
+    hol.append({list(superb_owl)[0]: 'Superbowl Sunday'})
+    # Mother's day, Second Sunday in May
+    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU(2),
+                             dtstart=datetime.date(year, 5, 1))
+    hol.append({list(superb_owl)[0]: "Mother's Day"})
+    # Father's day, Third Sunday in June
+    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU(3),
+                             dtstart=datetime.date(year, 6, 1))
+    hol.append({list(superb_owl)[0]: "Father's Day"})
+
+    return hol
+
+def holiday_weekend(date):
+    hol = get_holiday_cal(date.year)
     if date.weekday() < 2:
         prev = 3 + date.weekday()   # 3 days prior minimum if Mon-Tues
         next = 2 - date.weekday()   # 1-2 days after for Mon-Tues
@@ -64,16 +77,19 @@ def gen_lunar_data(rrule_gen):
         entry.append(eph.get_sunset(day).strftime('%-I:%M %p'))
         entry.append(eph.get_sunset(day, RuleStartTime.nautical).strftime('%-I:%M %p'))
         illum, rise, set = eph.get_moon_visibility(day)
+        entry.append(int(round(illum)))
         try:
-            entry.append(float(round(illum)) / 100.0)
-        except TypeError:
-            entry.append(illum)
-        try:
-            entry.append(rise.strftime('%-I:%M %p'))
+            if rise.strftime('%p') == 'AM':
+                entry.append(rise.strftime('%-I:%M %p (%a)'))
+            else:
+                entry.append(rise.strftime('%-I:%M %p'))
         except AttributeError:
             entry.append('')
         try:
-            entry.append(set.strftime('%-I:%M %p'))
+            if set.strftime('%p') == 'AM':
+                entry.append(set.strftime('%-I:%M %p (%a)'))
+            else:
+                entry.append(set.strftime('%-I:%M %p'))
         except AttributeError:
             entry.append('')
         entry.append(holiday_weekend(day))
@@ -91,7 +107,7 @@ def write_csv(filename, data):
             cfp.writerow(line[1:])    # omit the datetime object
 
 
-def write_ical(filename, data):
+def write_astro_ical(filename, data, year):
     cal = icalendar.Calendar()
     cal.add('prodid', 'Astro Calendar')
     cal.add('version', '2.0')
@@ -104,12 +120,34 @@ def write_ical(filename, data):
 
         event = icalendar.Event()
         event.add('dtstart', date)
-        if line[6]:
-            event.add('summary', 'MR - {}'.format(line[6]))
+        if line[5] < 10:
+            event.add('summary', '{}% - New Moon'.format(line[5]))
+        elif line[5] > 90:
+            event.add('summary', '{}% - Full Moon'.format(line[5]))
+        elif line[6]:
+            event.add('summary', '{}% MR - {}'.format(line[5], line[6]))
         elif line[7]:
-            event.add('summary', 'MS - {}'.format(line[7]))
+            event.add('summary', '{}% MS - {}'.format(line[5], line[7]))
         else:
-            event.add('summary', line[5])
+            event.add('summary', '{}% Moon'.format(line[5]))
+        cal.add_component(event)
+
+    # Holidays
+    hol = get_holiday_cal(year)
+    for date, name in hol.items():
+        event = icalendar.Event()
+        event.add('dtstart', date)
+        event.add('summary', '{}\n'.format(name))
+        cal.add_component(event)
+
+    eph = cal_ephemeris.CalEphemeris()
+    dtstart = datetime.datetime(year, 1, 1)
+    dtend = datetime.datetime(year, 12, 31)
+    phases = list(eph.gen_moon_phases(dtstart, dtend))
+    for phase, date in phases:
+        event = icalendar.Event()
+        event.add('dtstart', date.date())  # Cast to just date from datetime
+        event.add('summary', '{}: {}\n'.format(phase, date.strftime('%-I:%M %p')))
         cal.add_component(event)
 
     with open(filename, 'wb') as fp:
@@ -121,19 +159,20 @@ def main():
     parser.add_argument('--year', type=int, action='store', required=True,
                         help='Year of the generated Calendar')
     parser.add_argument('--filename', action='store',
-                        help='Filename', default='astro.csv')
+                        help='CSV Output Filename', default='astro.csv')
     parser.add_argument('--ifilename', action='store',
-                        help='Filename', default='astro.ics')
+                        help='iCal Output Filename', default='astro.ics')
     args = parser.parse_args()
 
 
     start = datetime.datetime(args.year, 1, 1)
     until = datetime.datetime(args.year, 12, 31)
+    # Get info for every Friday and Saturday
     rrule_gen = rrule.rrule(rrule.WEEKLY, dtstart=start, until=until,
                             byweekday=(rrule.FR, rrule.SA))
     data = gen_lunar_data(rrule_gen)
     write_csv(args.filename, data)
-    write_ical(args.ifilename, data)
+    write_astro_ical(args.ifilename, data, args.year)
 
 
 # -------------------------------------
