@@ -129,15 +129,7 @@ class CalEphemeris(object):
             return RuleLunar.moon_full
 
     def get_moon_visibility(self, date):
-        illum = self.moon_illum(date)
-        if illum < 5:
-            # New Moon
-            return ['No Moon', '', '']
-        elif illum < 90:
-            # First Quarter Moon
-            return [self.moon_illum(date), self.moon_rise(date), self.moon_set(date)]
-        else:
-            return ['Full Moon', '', '']
+        return [self.moon_illum(date), self.moon_rise(date), self.moon_set(date)]
 
     def gen_moon_phases(self, start_date, end_date):
         """Return an interator of moon phases over the given dates."""
