@@ -23,51 +23,15 @@
 import argparse
 import csv
 import datetime
-import holidays
 import icalendar
 
 from dateutil import rrule
 
-from cal_const import RuleStartTime, DAY
+from cal_const import RuleStartTime
 import cal_ephemeris
+import cal_holidays
 
-
-def get_holiday_cal(year):
-    hol = holidays.US(years=year)
-    # Add the superbowl, first Sunday in Feb.
-    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU,
-                             dtstart=datetime.date(year, 2, 1))
-    hol.append({list(superb_owl)[0]: 'Superbowl Sunday'})
-    # Mother's day, Second Sunday in May
-    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU(2),
-                             dtstart=datetime.date(year, 5, 1))
-    hol.append({list(superb_owl)[0]: "Mother's Day"})
-    # Father's day, Third Sunday in June
-    superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU(3),
-                             dtstart=datetime.date(year, 6, 1))
-    hol.append({list(superb_owl)[0]: "Father's Day"})
-
-    return hol
-
-def holiday_weekend(date):
-    hol = get_holiday_cal(date.year)
-    if date.weekday() < 2:
-        prev = 3 + date.weekday()   # 3 days prior minimum if Mon-Tues
-        next = 2 - date.weekday()   # 1-2 days after for Mon-Tues
-    elif date.weekday() > 2:
-        prev = date.weekday() - 2   # 1 days prior for Thurs, more for later
-        next = 8 - date.weekday()   # 1 day after for Sunday, more for earlier
-
-    for i in range(-1 * prev, next):
-        test_date = date + (i * DAY)
-        holiday = hol.get(test_date)
-        if holiday:
-            return '{0} ({1})'.format(holiday, test_date.strftime('%b %-d'))
-
-
-def gen_lunar_data(rrule_gen):
-    eph = cal_ephemeris.CalEphemeris()
-
+def gen_lunar_data(rrule_gen, eph, hol):
     data = []
     for day in rrule_gen:
         entry = []
@@ -92,7 +56,7 @@ def gen_lunar_data(rrule_gen):
                 entry.append(set.strftime('%-I:%M %p'))
         except AttributeError:
             entry.append('')
-        entry.append(holiday_weekend(day))
+        entry.append(hol.holiday_weekend(day))
         data.append(entry)
     return data
 
@@ -107,7 +71,7 @@ def write_csv(filename, data):
             cfp.writerow(line[1:])    # omit the datetime object
 
 
-def write_astro_ical(filename, data, year):
+def write_astro_ical(filename, data, eph, hol):
     cal = icalendar.Calendar()
     cal.add('prodid', 'Astro Calendar')
     cal.add('version', '2.0')
@@ -133,18 +97,14 @@ def write_astro_ical(filename, data, year):
         cal.add_component(event)
 
     # Holidays
-    hol = get_holiday_cal(year)
-    for date, name in hol.items():
+    for date, name in hol.get_holidays():
         event = icalendar.Event()
         event.add('dtstart', date)
         event.add('summary', '{}\n'.format(name))
         cal.add_component(event)
 
-    eph = cal_ephemeris.CalEphemeris()
-    dtstart = datetime.datetime(year, 1, 1)
-    dtend = datetime.datetime(year, 12, 31)
-    phases = list(eph.gen_moon_phases(dtstart, dtend))
-    for phase, date in phases:
+    # Moon Phases
+    for phase, date in eph.gen_moon_phases():
         event = icalendar.Event()
         event.add('dtstart', date.date())  # Cast to just date from datetime
         event.add('summary', '{}: {}\n'.format(phase, date.strftime('%-I:%M %p')))
@@ -170,9 +130,13 @@ def main():
     # Get info for every Friday and Saturday
     rrule_gen = rrule.rrule(rrule.WEEKLY, dtstart=start, until=until,
                             byweekday=(rrule.FR, rrule.SA))
-    data = gen_lunar_data(rrule_gen)
+
+    eph = cal_ephemeris.CalEphemeris()
+    hol = cal_holidays.CalHoliday(args.year)
+
+    data = gen_lunar_data(rrule_gen, eph, hol)
     write_csv(args.filename, data)
-    write_astro_ical(args.ifilename, data, args.year)
+    write_astro_ical(args.ifilename, data, eph, hol)
 
 
 # -------------------------------------

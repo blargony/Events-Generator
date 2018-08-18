@@ -60,11 +60,21 @@ NEXT_MOON_PHASE = {
 class CalEphemeris(object):
     """Wrap python ephem library for use by cal_events et al."""
 
-    def __init__(self):
+    def __init__(self, start=None, until=None):
         self.observer = ephem.Observer()
         self.observer.lat = LAT
         self.observer.lon = LONG
         self.observer.elevation = ELEVATION
+
+        # Set a date range used by some methods, because time goes on forever
+        if not start:
+            # This year's data
+            now = datetime.datetime.now()
+            self.start = datetime.datetime(now.year, 1, 1)
+            self.until = datetime.datetime(now.year + 1, 12, 31)
+        else:
+            self.start = start
+            self.until = until
 
         self.astro_events = []
 
@@ -131,8 +141,12 @@ class CalEphemeris(object):
     def get_moon_visibility(self, date):
         return [self.moon_illum(date), self.moon_rise(date), self.moon_set(date)]
 
-    def gen_moon_phases(self, start_date, end_date):
+    def gen_moon_phases(self, start_date=None, end_date=None):
         """Return an interator of moon phases over the given dates."""
+        if not start_date:
+            start_date = self.start
+            end_date = self.until
+
         phase_date = start_date
         while phase_date < end_date:
             elong = self.get_degrees(ephem.Moon(phase_date).elong)
