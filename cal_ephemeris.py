@@ -1,26 +1,27 @@
-#########################################################################
-#
-#   Astronomy Club Event Generator
-#   file: cal_ephemeris.py
-#
-#   Copyright (C) 2016  Teruo Utsumi, San Jose Astronomical Association
-#
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   Contributors:
-#       2016-02-25  Teruo Utsumi, initial code
-#       2018-07-31  Robert Chapman
-#                     - pythonize and add some support methods
-#
-#########################################################################
+'''
+
+  Astronomy Club Event Generator
+  file: cal_ephemeris.py
+
+  Copyright (C) 2016  Teruo Utsumi, San Jose Astronomical Association
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  Contributors:
+      2016-02-25  Teruo Utsumi, initial code
+      2018-07-31  Robert Chapman
+                    - pythonize and add some support methods
+      2018-08-16  Robert Chapman
+                    - lint cleanup, add start/until members
+'''
 
 import datetime
 import math
@@ -58,9 +59,10 @@ NEXT_MOON_PHASE = {
 
 ########################################
 class CalEphemeris(object):
-    """Wrap python ephem library for use by cal_events et al."""
+    '''Wrap python ephem library for use by cal_events et al.'''
 
     def __init__(self, start=None, until=None):
+        '''Setup the python ephem, with an observer at Houge Park.'''
         self.observer = ephem.Observer()
         self.observer.lat = LAT
         self.observer.lon = LONG
@@ -107,16 +109,18 @@ class CalEphemeris(object):
     def moon_rise(self, date):
         '''Moon rise for a date, around the sunset please.'''
         start_date, end_date = self._moon_setup(date)
-        rise = self.get_datetime(self.observer.next_rising(ephem.Moon()))
-        if rise > start_date and rise < end_date:
-            return rise
+        moon_rise = self.get_datetime(self.observer.next_rising(ephem.Moon()))
+        if moon_rise > start_date and moon_rise < end_date:
+            return moon_rise
+        return None
 
     def moon_set(self, date):
         '''Moon set for a date, around the sunset please.'''
         start_date, end_date = self._moon_setup(date)
-        set = self.get_datetime(self.observer.next_setting(ephem.Moon()))
-        if set > start_date and set < end_date:
-            return set
+        moon_set = self.get_datetime(self.observer.next_setting(ephem.Moon()))
+        if moon_set > start_date and moon_set < end_date:
+            return moon_set
+        return None
 
     def moon_illum(self, date):
         date = date.replace(hour=18, minute=0)   # 6pm
@@ -125,7 +129,7 @@ class CalEphemeris(object):
         return moon.phase
 
     def get_moon_phase(self, date):
-        """Get the Moon Phase around 6pm of any date."""
+        '''Get the Moon Phase around 6pm of any date.'''
         date = date.replace(hour=18, minute=0)
         elong = self.get_degrees(ephem.Moon(date).elong)
         phase = round(elong/90.0) * 90
@@ -135,14 +139,14 @@ class CalEphemeris(object):
             return RuleLunar.moon_new
         elif phase == 90:
             return RuleLunar.moon_1q
-        else:
-            return RuleLunar.moon_full
+        return RuleLunar.moon_full
 
     def get_moon_visibility(self, date):
-        return [self.moon_illum(date), self.moon_rise(date), self.moon_set(date)]
+        return [self.moon_illum(date), self.moon_rise(date),
+                self.moon_set(date)]
 
     def gen_moon_phases(self, start_date=None, end_date=None):
-        """Return an interator of moon phases over the given dates."""
+        '''Return an interator of moon phases over the given dates.'''
         if not start_date:
             start_date = self.start
             end_date = self.until
@@ -169,7 +173,7 @@ class CalEphemeris(object):
 
     # --------------------------------------
     def gen_astro_data(self, year):
-        """Generate seasons, moon, opposition data for entire year."""
+        '''Generate seasons, moon, opposition data for entire year.'''
 
         # Jan 1, midnight, local time
         new_years = datetime.datetime(year, 1, 1, 0, 0)
@@ -177,8 +181,7 @@ class CalEphemeris(object):
         self.observer.date = new_years.astimezone(TZ_UTC)
 
         # Generate season data
-        for season in SEASONS.keys():
-            m, n = SEASONS[season]
+        for m, n in SEASONS.values():
             d0 = m(new_years)
             d1 = TZ_LOCAL.localize(ephem.localtime(d0))
             # spaces for formatting
@@ -209,7 +212,7 @@ class CalEphemeris(object):
 
 
     def calc_date_ephem(self, date):
-        """input:
+        '''input:
 
             date - datetime.datetime
         output:
@@ -217,7 +220,7 @@ class CalEphemeris(object):
                 06:00 PM sunset - 06:28 PM / 06:58 PM / 07:28 PM
                 10:06 PM moonrise - 66%
             One of moonrise or moonset is generated, whichever is after 3pm that day.
-        """
+        '''
 
         # set time for noon
         date = TZ_LOCAL.localize(date.combine(date, datetime.time(12, 0)))
@@ -277,7 +280,7 @@ class CalEphemeris(object):
         return l_events
 
     def calc_opposition(self, year, planet):
-        '''
+        r'''
         Calculate opposition to solar system object.  Opposition occurs when
         elongation goes from -pi to +pi.
 
@@ -389,12 +392,12 @@ class TestUM(unittest.TestCase):
 
     def test_moon_set(self):
         # Moonset on August 1, 2018 is not until August 2, 11am
-        set = self.eph.moon_set(self.aug)
-        self.assertEqual(set, None)
+        moon_set = self.eph.moon_set(self.aug)
+        self.assertEqual(moon_set, None)
         # Moonset on August 15, 2018 is 11:03pm
-        set = self.eph.moon_set(self.aug_mid)
-        self.assertEqual(set.hour, 23)
-        self.assertEqual(set.minute, 3)
+        moon_set = self.eph.moon_set(self.aug_mid)
+        self.assertEqual(moon_set.hour, 23)
+        self.assertEqual(moon_set.minute, 3)
 
     def test_moon_ill(self):
         # Illuminate for August 1, 2018 is 79%
@@ -420,4 +423,3 @@ class TestUM(unittest.TestCase):
 #########################################################################
 if __name__ == '__main__':
     unittest.main()
-
