@@ -156,16 +156,16 @@ class CalEphemeris(object):
             elong = self.get_degrees(ephem.Moon(phase_date).elong)
             if elong < -90:
                 nxt_phase = ephem.next_last_quarter_moon(phase_date)
-                phase = str(RuleLunar.moon_3q)
+                phase = RuleLunar.moon_3q
             elif elong < 0:
                 nxt_phase = ephem.next_new_moon(phase_date)
-                phase = str(RuleLunar.moon_new)
+                phase = RuleLunar.moon_new
             elif elong < 90:
                 nxt_phase = ephem.next_first_quarter_moon(phase_date)
-                phase = str(RuleLunar.moon_1q)
+                phase = RuleLunar.moon_1q
             else:
                 nxt_phase = ephem.next_full_moon(phase_date)
-                phase = str(RuleLunar.moon_full)
+                phase = RuleLunar.moon_full
             phase_date = self.get_datetime(nxt_phase)
             if phase_date < end_date:
                 yield phase, phase_date
@@ -413,10 +413,10 @@ class TestUM(unittest.TestCase):
         self.assertEqual(phases[1][1].day, 11)
         self.assertEqual(phases[2][1].day, 18)
         self.assertEqual(phases[3][1].day, 26)
-        self.assertEqual(phases[0][0], '3rd Qtr Moon')
-        self.assertEqual(phases[1][0], 'New Moon')
-        self.assertEqual(phases[2][0], '1st Qtr Moon')
-        self.assertEqual(phases[3][0], 'Full Moon')
+        self.assertEqual(str(phases[0][0]), '3rd Qtr Moon')
+        self.assertEqual(str(phases[1][0]), 'New Moon')
+        self.assertEqual(str(phases[2][0]), '1st Qtr Moon')
+        self.assertEqual(str(phases[3][0]), 'Full Moon')
 
 
 

@@ -108,7 +108,7 @@ def write_astro_ical(filename, data, eph, hol):
     for phase, date in eph.gen_moon_phases():
         event = icalendar.Event()
         event.add('dtstart', date.date())  # Cast to just date from datetime
-        event.add('summary', '{}: {}\n'.format(phase, date.strftime('%-I:%M %p')))
+        event.add('summary', '{}: {}\n'.format(str(phase), date.strftime('%-I:%M %p')))
         cal.add_component(event)
 
     with open(filename, 'wb') as icfp:
