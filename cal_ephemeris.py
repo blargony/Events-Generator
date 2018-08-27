@@ -100,25 +100,25 @@ class CalEphemeris(object):
         return self.get_datetime(self.observer.next_setting(ephem.Sun()))
 
     def _moon_setup(self, date):
-        start_date = date.replace(hour=18, minute=0)
-        end_date = start_date + 9 * HOUR    # 3pm to 3am window
-        self.observer.date = start_date
+        start = date.replace(hour=18, minute=0)
+        until = start + 9 * HOUR    # 3pm to 3am window
+        self.observer.date = start
         self.observer.horizon = 0
-        return start_date, end_date
+        return start, until
 
     def moon_rise(self, date):
         '''Moon rise for a date, around the sunset please.'''
-        start_date, end_date = self._moon_setup(date)
+        start, until = self._moon_setup(date)
         moon_rise = self.get_datetime(self.observer.next_rising(ephem.Moon()))
-        if moon_rise > start_date and moon_rise < end_date:
+        if moon_rise > start and moon_rise < until:
             return moon_rise
         return None
 
     def moon_set(self, date):
         '''Moon set for a date, around the sunset please.'''
-        start_date, end_date = self._moon_setup(date)
+        start, until = self._moon_setup(date)
         moon_set = self.get_datetime(self.observer.next_setting(ephem.Moon()))
-        if moon_set > start_date and moon_set < end_date:
+        if moon_set > start and moon_set < until:
             return moon_set
         return None
 
@@ -145,14 +145,14 @@ class CalEphemeris(object):
         return [self.moon_illum(date), self.moon_rise(date),
                 self.moon_set(date)]
 
-    def gen_moon_phases(self, start_date=None, end_date=None):
+    def gen_moon_phases(self, start=None, until=None, lunar_phase=None):
         '''Return an interator of moon phases over the given dates.'''
-        if not start_date:
-            start_date = self.start
-            end_date = self.until
+        if not start:
+            start = self.start
+            until = self.until
+        phase_date = start
 
-        phase_date = start_date
-        while phase_date < end_date:
+        while phase_date < until:
             elong = self.get_degrees(ephem.Moon(phase_date).elong)
             if elong < -90:
                 nxt_phase = ephem.next_last_quarter_moon(phase_date)
@@ -167,9 +167,13 @@ class CalEphemeris(object):
                 nxt_phase = ephem.next_full_moon(phase_date)
                 phase = RuleLunar.moon_full
             phase_date = self.get_datetime(nxt_phase)
-            if phase_date < end_date:
+            if phase_date < until and (lunar_phase == phase or not lunar_phase):
                 yield phase, phase_date
             phase_date += DAY
+
+    def get_nearest_phase(self, date, lunar_phase):
+        phases = [x[1] for x in self.gen_moon_phases(lunar_phase=lunar_phase)]
+        return min(phases, key=lambda x: abs(x - date))
 
     # --------------------------------------
     def gen_astro_data(self, year):
@@ -365,7 +369,8 @@ class CalEphemeris(object):
 class TestUM(unittest.TestCase):
 
     def setUp(self):
-        self.eph = CalEphemeris()
+        self.eph = CalEphemeris(datetime.datetime(2018, 1, 1),
+                                datetime.datetime(2018, 12, 31))
         self.aug = datetime.datetime(2018, 8, 1)
         self.aug_mid = datetime.datetime(2018, 8, 15)
         self.aug_late = datetime.datetime(2018, 8, 31)
@@ -418,6 +423,18 @@ class TestUM(unittest.TestCase):
         self.assertEqual(str(phases[2][0]), '1st Qtr Moon')
         self.assertEqual(str(phases[3][0]), 'Full Moon')
 
+        # Filter moon phases by type
+        phases = self.eph.gen_moon_phases(self.aug, self.aug_late,
+                                          lunar_phase=RuleLunar.moon_1q)
+        phases = list(phases)
+        self.assertEqual(len(phases), 1)
+        self.assertEqual(phases[0][1].day, 18)
+        self.assertEqual(str(phases[0][0]), '1st Qtr Moon')
+
+    def test_moon_phase_nearest(self):
+        date = datetime.datetime(2018, 8, 9)
+        nearest = self.eph.get_nearest_phase(date, RuleLunar.moon_1q)
+        self.assertEqual(nearest.day, 18)
 
 
 #########################################################################
