@@ -167,7 +167,7 @@ class CalEphemeris(object):
                 nxt_phase = ephem.next_full_moon(phase_date)
                 phase = RuleLunar.moon_full
             phase_date = self.get_datetime(nxt_phase)
-            if phase_date < until and (lunar_phase == phase or not lunar_phase):
+            if phase_date < until and (not lunar_phase or lunar_phase == phase):
                 yield phase, phase_date
             phase_date += DAY
 
