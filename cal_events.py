@@ -17,199 +17,138 @@
 
   Contributors:
       2016-02-25  Teruo Utsumi, initial code
-      2018-07-21  Robert Chapman, strealined to single CalEvent class
+      2018-07-21  Robert Chapman, streamlined to single CalEvent class
       2018-08-15  Robert Chapman, line cleanup
-
+      2018-09-01  Robert Chapman, refactor to incorporate dateutil.rrule
 '''
+from datetime import datetime, timedelta
+import icalendar
 
-import cal_ephemeris
-from cal_const import DAY, TZ_LOCAL, RuleStartTime
+from dateutil import rrule
 
+
+# ==============================================================================
+# Constants
+# ==============================================================================
+MON = rrule.MO
+TUE = rrule.TU
+WED = rrule.WE
+THU = rrule.TH
+FRI = rrule.FR
+SAT = rrule.SA
+SUN = rrule.SU
+
+
+# ==============================================================================
 class CalEvent(object):
-    '''Generate Calendar events that follow the lunar cycles.'''
+    '''Club Event date generator that follow the solar or lunar calendar.'''
 
-    def __init__(self):
+    def __init__(self, eph, year):
+        self.eph = eph   # cal_ephemeris object with the appropriate settings
+        self.start = datetime(year, 1, 1)
+        self.until = datetime(year, 12, 31)
+        self.occurances = []
+
+        # Event information
         self.name = None
         self.visibility = None
         self.location = None
-        self.repeat = None  # lunar, monthly, ...
-        self.lunar_phase = None  # new, 1Q, full, 3Q
-        self.day_of_week = None  # Monday, ...
-        self.rule_start_time = None  # absolute, sunset, civil, ..., rounded to 1/4 hour
-        self.month = None
-        self.week = None
-        self.day_of_month = None
-        self.time_earliest = None  # time
-        self.time_start = None  # time
-        self.time_offset = None  # timedelta
-        self.time_length = None  # timedelta
-        self.email = None
         self.url = None
-        self.notes = None
-        self.cal_eph = cal_ephemeris.CalEphemeris()
+        self.description = None
 
-    def calc_monthly_dates(self, start, end):
-        '''
-        Generate list of datetime for monthly events on nth weekday given week
-        and day of the week of each month.
-        E.g., to calculate 2nd Tuesday of March, 1999:
-            calc_monthly_dates(<start datetime>, <end datetime>, RuleWeek.week_2,
-                            RuleWeekday.tuesday.value())
-            (Note: the date must be between start and end datetimes
+        # Normal Calendar style
+        self.date_rules = None   # rrule date generator
 
-        Look for all dates in complete months.  Then throw away dates not
-        between start and end, inclusive.
+        # Lunar Calendar style
+        self.lunar_rules = None    # new, 1Q, full, 3Q
+        self.lunar_months = None   # Months to hold lunar events (None = all)
 
-        Be sure time for 'start' and 'end' are '0:00'.
-        'week': Zero means 1st week.
+        # Specific Time
+        self.start_time = None  # datetime.time object
 
-        input
-            start       datetime.date   starting date of period to generate events
-            end         datetime.date   ending   date of period to generate events
+        # Sunset Style Time
+        self.sunset_type = None     # sunset, civil, nautical...
+        self.time_earliest = None   # datetime.time
+        self.time_offset = None     # datetime.timedelta from the sunset
 
-        output
-            return list of datetime.datetime of scheduled events
+        self.duration = None     # integer hours
 
-        test:
-            use above 'def a'
-            input:
-                start = datetime.datetime(2016, 2, 1)
-                end   = datetime.datetime(2016, 9, 30)
-                a(start, end, RuleWeek.week_5, RuleWeekday.tuesday) # 5th Tuesday
-            output:
-                2016-03-29 00:00:00
-                2016-05-31 00:00:00
-                2016-08-30 00:00:00
-        '''
+    # --------------------------------------
+    # Some helper functions to initialize properly
+    # --------------------------------------
+    def monthly(self, week, weekday):
+        '''Monthly event, like in typical calendar fashion.'''
+        self.date_rules = rrule.rrule(rrule.MONTHLY, byweekday=weekday(week),
+                                      dtstart=self.start, until=self.until)
 
-        dates = []
-        date = start
-        weekday = int(self.day_of_week)
-        week = self.week.value
+    def yearly(self, month, week, weekday):
+        '''Monthly event, like in typical calendar fashion.'''
+        self.date_rules = rrule.rrule(rrule.YEARLY,
+                                      bymonth=month, byweekday=weekday(week),
+                                      dtstart=self.start, until=self.until)
 
-        while date < end:
-            # set date to 1st of month
-            date = date.replace(day=1)
-            # datetime.weekday - Monday=0, Sunday=6
-            first_weekday_of_month = date.weekday()
+    def lunar(self, phase, weekday):
+        '''Every lunar cycle, nearest the given phase.'''
+        self.lunar_rules = phase
+        self.date_rules = rrule.rrule(rrule.WEEKLY, byweekday=weekday,
+                                      dtstart=self.start, until=self.until)
 
-            # calculate day of month
-            if first_weekday_of_month > weekday:
-                days = weekday - first_weekday_of_month + 7 + week * 7
-            else:
-                days = weekday - first_weekday_of_month + week * 7
-            prev_month = date.month
-            date = date + DAY * days
-            new_month = date.month
+    def lunar_yearly(self, phase, weekday, months):
+        '''Once a year near a lunar phase.'''
+        self.lunar_rules = phase
+        self.lunar_months = months
+        self.date_rules = rrule.rrule(rrule.WEEKLY, byweekday=weekday,
+                                      dtstart=self.start, until=self.until)
 
-            # reject date if additional days pushes date into next month
-            if prev_month == new_month:
-                # reject date before start and after end
-                if start <= date <= end:
-                    date = TZ_LOCAL.localize(date.combine(date, self.time_start))
-                    dates.append(date)
+    def times(self, start_time, duration=1):
+        '''Once a year near a lunar phase.'''
+        self.start_time = start_time
+        self.duration = timedelta(hours=duration)
 
-            # Increment the month
-            date = date.replace(day=1)
-            date = date + DAY * 32   # Definitely will hit the next month
-        return dates
+    def sunset_times(self, sunset_type, earliest, offset=0, length=1):
+        '''Once a year near a lunar phase.'''
+        self.sunset_type = sunset_type
 
+        self.time_earliest = earliest
+        self.time_offset = timedelta(hours=offset)
+        self.duration = timedelta(hours=length)
 
-    def calc_lunar_dates(self, start, end):
-        '''Generate list of dates on a given weekday nearest the specified lunar
-        phase in the period defined by (datetime) 'start' and 'end', inclusive.
-
-        E.g.: 3Q Fridays @ nautical twilight
-
-        input
-            start       datetime.date   starting date of period to generate events
-            end         datetime.date   ending   date of period to generate events
-
-        output
-            return      list            tuples of datetime.datetime
-        '''
-        self.cal_eph.gen_astro_data(start.year)
-
-        # set 'day' to 'weekday' at or after 'start'
-        date = start
-        dates = []
-        weekday = int(self.day_of_week)
-        weekday_of_date = date.weekday()
-
-        if weekday_of_date > weekday:
-            days = weekday - weekday_of_date + 7
+    # --------------------------------------
+    def gen_occurances(self):
+        if self.lunar_rules:
+            return self.gen_lunar_dates()
         else:
-            days = weekday - weekday_of_date
-        date = date + DAY * days
+            return self.gen_cal_dates()
 
-        while date < end:
-            if self.cal_eph.get_moon_phase(date) == self.lunar_phase and date <= end:
-                if self.rule_start_time == RuleStartTime.absolute:
-                    time = self.time_start
-                    date = TZ_LOCAL.localize(date.combine(date, time))
-                else:
-                    date = self.calc_start_time(date)
-                if start < date:
-                    dates.append(date)
-            date = date + DAY*7
-        return dates
+    def gen_cal_dates(self):
+        '''Generate all the occurances of the event'''
+        for dt in self.date_rules:
+            date = dt.date()
+            dtstart, dtend = self.calc_times(date)
+            self.occurances.append((dtstart, dtend))
+        return self.occurances
 
+    def gen_lunar_dates(self):
+        '''Find the dates nearest the specified lunar phase'''
+        days = list(self.date_rules)
+        for phase, dt in self.eph.gen_moon_phases(start=self.start, until=self.until,
+                                                  lunar_phase=self.lunar_rules):
+            date = min(days, key=lambda x: abs(x - dt))
+            dtstart, dtend = self.calc_times(date)
+            self.occurances.append((dtstart, dtend))
+        return self.occurances
 
-    def calc_annual_dates(self, start, end):
-        '''
-        Generate list of dates on a given weekday nearest the specified lunar
-        phase in the period defined by (datetime) 'start' and 'end', inclusive.
-        E.g.: February full moon Saturday
-
-        input
-            start       datetime.date   starting date of period to generate events
-            end         datetime.date   ending   date of period to generate events
-
-        output
-            return      list            tuples of datetime.datetime
-        '''
-        self.cal_eph.gen_astro_data(start.year)
-
-        # set 'date' to 'weekday' at or after 'start'
-        date = start.replace(month=self.month, day=1)
-        dates = []
-        weekday_of_date = date.weekday()
-        event_weekday = int(self.day_of_week)
-        if weekday_of_date > event_weekday:
-            days = event_weekday - weekday_of_date + 7
+    # --------------------------------------
+    def calc_times(self, date):
+        if self.start_time:
+            start = datetime.combine(date, self.start_time)
+            return start, start + self.duration
         else:
-            days = event_weekday - weekday_of_date
-        date = date + DAY*days
+            return self.calc_sunset_times(date)
 
-        while date < end:
-            if self.cal_eph.get_moon_phase(date) == self.lunar_phase and date <= end:
-                if self.rule_start_time == RuleStartTime.absolute:
-                    time = self.time_start
-                    date = TZ_LOCAL.localize(date.combine(date, time))
-                else:
-                    date = self.calc_start_time(date)
-                if start < date:
-                    dates.append(date)
-                    break
-            date = date + DAY*7
-        return dates
-
-
-    def calc_start_time(self, date):
-        '''Calculate start time of event based on twilight time for 'date'.
-
-        input
-            date        datetime.date   date/time of event
-
-        output
-            return      datetime        calculated start time
-        '''
-
-        if self.rule_start_time == RuleStartTime.absolute:
-            date = TZ_LOCAL.localize(date.combine(date, self.time_start))
-            return date
-
-        dusk = self.cal_eph.get_sunset(date, self.rule_start_time)
+    def calc_sunset_times(self, date):
+        '''Calculate start time of event based on twilight time for 'date'.'''
+        dusk = self.eph.get_sunset(date, self.sunset_type)
 
         # round minutes to nearest quarter hour
         rounded_hour = dusk.hour
@@ -221,6 +160,20 @@ class CalEvent(object):
 
         # don't start before "earliest" (e.g., 7pm)
         if self.time_earliest and date.time() < self.time_earliest:
-            # 'combine' doesn't keep timezone info
-            date = TZ_LOCAL.localize(date.combine(date, self.time_earliest))
-        return date
+            date = date.combine(date, self.time_earliest)
+        return date, date + self.duration
+
+    # --------------------------------------
+    def as_ical_events(self, cal):
+        '''Add all generated events to the given calendar object.'''
+        for dtstart, dtend in self.occurances:
+            event = icalendar.Event()
+            if dtend:
+                event.add('dtstart', dtstart)
+                event.add('dtend', dtend)
+            else:
+                event.add('dtstart', dtstart.date())
+            event.add('summary', self.name)
+            cal.add_component(event)
+
+

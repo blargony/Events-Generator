@@ -20,12 +20,14 @@
 #       2018-07-31  Robert Chapman
 #                    - moved ephemeris only consts to cal_ephemeris
 #                    - moved LUTs into the enum classes
+#       2018-09-01  Robert Chapman
+#                    - removed enums for standard cal repeating (rrule)
 #
 #########################################################################
 
-import calendar
 import datetime
 import pytz
+
 from enum import Enum, unique
 
 #########################################################################
@@ -53,44 +55,26 @@ LAT = '37.257465'
 LONG = '-121.942281'
 ELEVATION = 50
 
+
+########################################
+# Events
+########################################
+LOCATIONS = {1: 'Houge Park, Blg. 1',  # indoor
+             2: 'Houge Park',          # outdoor
+             3: 'Rancho Cañada del Oro',
+             4: 'Mendoza Ranch',
+             5: 'Coyote Valley',
+             6: "Pinnacles Nat'l Park, East Side",
+             7: "Pinnacles Nat'l Park, West Side",
+             8: "Yosemite Nat'l Park, Glacier Point"}
+
+
 ########################################
 # Rules that govern scheduling of events
 ########################################
 @unique
-class RuleWeek(Enum):
-    week_1 = 0
-    week_2 = 1
-    week_3 = 2
-    week_4 = 3
-    week_5 = 4
-
-    def __str__(self):
-        ordinal = ['st', 'nd', 'rd', 'th']
-        week = self.value + 1
-        return '{0}{1} week'.format(week, ordinal[week])
-
-
-@unique
-class RuleWeekday(Enum):
-    monday = 'mo'
-    tuesday = 'tu'
-    wednesday = 'we'
-    thursday = 'th'
-    friday = 'fr'
-    saturday = 'sa'
-    sunday = 'su'
-
-    def __int__(self):
-        """Return standard datetime encoding, the week starts on Monday (0)."""
-        lut = {'mo': 0, 'tu': 1, 'we': 2, 'th': 3, 'fr': 4, 'sa': 5, 'su': 6}
-        return lut[self.value]
-
-    def __str__(self):
-        return calendar.day_abbr[int(self)]
-
-
-@unique
 class RuleLunar(Enum):
+    """Lunar date rule, which phase of the moon do we want?"""
     moon_new = 0
     moon_1q = 1
     moon_full = 2
@@ -103,6 +87,7 @@ class RuleLunar(Enum):
 
 @unique
 class RuleStartTime(Enum):
+    """Solar time rule, which phase of sunset do we want for the time?"""
     absolute = 'ab'  # start time specifies exact time
     sunset = 'su'  # others specfies period of day/twilight
     civil = 'ci'
@@ -122,32 +107,11 @@ class RuleStartTime(Enum):
 
 @unique
 class EventVisibility(Enum):
-    ephemeris = 'ep'
+    '''Public/Private event?'''
     public = 'pu'
     member = 'me'
-    volunteer = 'vo'
-    coordinator = 'co'
     private = 'pr'
-    board = 'bo'
-    observers = 'ob'
-    imagers = 'im'
 
     def __str__(self):
-        lut = {'ep': 'ephemeris', 'pu': 'public', 'me': 'member',
-               'vo': 'volunteer', 'co': 'coordinator', 'pr': 'private',
-               'bo': 'board', 'ob': 'observers', 'im': 'imagers'}
-        return lut[self.value]
-
-
-@unique
-class EventRepeat(Enum):
-    onetime = 'on'
-    weekly = 'we'
-    monthly = 'mo'
-    lunar = 'lu'
-    annual = 'an'
-
-    def __str__(self):
-        lut = {'on': 'one-time', 'we': 'weekly', 'mo': 'monthly',
-               'lu': 'lunar', 'an': 'annual'}
+        lut = {'pu': 'public', 'me': 'member', 'pr': 'private'}
         return lut[self.value]

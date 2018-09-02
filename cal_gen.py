@@ -23,337 +23,209 @@
 import argparse
 import datetime
 
-from cal_const import *
+from cal_const import EventVisibility, RuleLunar, RuleStartTime, LOCATIONS
 import cal_events
 import cal_ephemeris
 
-locations = {1: 'Houge Park, Blg. 1',  # indoor
-             2: 'Houge Park',          # outdoor
-             3: 'Rancho Cañada del Oro',
-             4: 'Mendoza Ranch',
-             5: 'Coyote Valley',
-             6: "Pinnacles Nat'l Park, East Side",
-             7: "Pinnacles Nat'l Park, West Side",
-             8: "Yosemite Nat'l Park, Glacier Point"}
+
+class CalGen():
+
+    def __init__(self, year):
+        start = datetime.datetime(year, 1, 1)
+        until = datetime.datetime(year + 1, 12, 31)
+
+        self.eph = cal_ephemeris.CalEphemeris(start, until)
+        self.year = year
+
+        self.events = []
+        self.init_events()
+
+    def init_events(self):
+        import pprint
+        pp = pprint.PrettyPrinter(width=120)
+
+        class_intro = cal_events.CalEvent(self.eph, self.year)
+        class_intro.name = 'Intro to the Night Sky'
+        class_intro.visibility = EventVisibility.public
+        class_intro.location = LOCATIONS[1]
+        class_intro.url = 'www.sjaa.net/programs/beginners-astronomy'
+        class_intro.description = ''
+        class_intro.lunar(RuleLunar.moon_1q, cal_events.FRI)
+        class_intro.sunset_times(
+            RuleStartTime.nautical, datetime.time(hour=19), -1, 1)
+        self.events.append(class_intro)
+        pp.pprint(class_intro.gen_occurances())
+
+        class_101 = cal_events.CalEvent(self.eph, self.year)
+        class_101.name = 'Astronomy 101'
+        class_101.visibility = EventVisibility.public
+        class_101.location = LOCATIONS[1]
+        class_101.url = 'www.sjaa.net/programs/beginners-astronomy'
+        class_101.description = ''
+        class_101.lunar(RuleLunar.moon_3q, cal_events.FRI)
+        class_101.sunset_times(
+            RuleStartTime.nautical, datetime.time(hour=19), -1, 1)
+        self.events.append(class_101)
+
+        itsp_1q = cal_events.CalEvent(self.eph, self.year)
+        itsp_1q.name = 'In-town Star Party'
+        itsp_1q.visibility = EventVisibility.public
+        itsp_1q.location = LOCATIONS[2]
+        itsp_1q.url = 'www.sjaa.net/events/monthly-star-parties'
+        itsp_1q.description = '1st quarter moon ITSP'
+        itsp_1q.lunar(RuleLunar.moon_3q, cal_events.FRI)
+        itsp_1q.sunset_times(
+            RuleStartTime.nautical, datetime.time(hour=19), 0, 3)
+        self.events.append(itsp_1q)
+
+        itsp_3q = cal_events.CalEvent(self.eph, self.year)
+        itsp_3q.name = 'In-town Star Party'
+        itsp_3q.visibility = EventVisibility.public
+        itsp_3q.location = LOCATIONS[2]
+        itsp_3q.url = 'www.sjaa.net/events/monthly-star-parties'
+        itsp_3q.description = '3rd quarter moon ITSP'
+        itsp_3q.lunar(RuleLunar.moon_3q, cal_events.FRI)
+        itsp_3q.sunset_times(
+            RuleStartTime.nautical, datetime.time(hour=19), 0, 3)
+        self.events.append(itsp_3q)
+
+        starry_night = cal_events.CalEvent(self.eph, self.year)
+        starry_night.name = 'Starry Night (OSA)'
+        starry_night.visibility = EventVisibility.public
+        starry_night.location = LOCATIONS[3]
+        starry_night.url = 'www.sjaa.net/events/starry-nights-public-star-party/'
+        starry_night.description = ''
+        starry_night.lunar(RuleLunar.moon_3q, cal_events.SAT)
+        starry_night.sunset_times(
+            RuleStartTime.civil, None, 0, 3)
+        self.events.append(starry_night)
+
+        dark_sky = cal_events.CalEvent(self.eph, self.year)
+        dark_sky.name = 'Dark Sky Night'
+        dark_sky.visibility = EventVisibility.member
+        dark_sky.location = LOCATIONS[4]
+        dark_sky.url = 'www.sjaa.net/dark-sky-nights??'
+        dark_sky.description = ''
+        dark_sky.lunar(RuleLunar.moon_new, cal_events.SAT)
+        dark_sky.sunset_times(
+            RuleStartTime.civil, datetime.time(hour=19), 0, 4)
+        self.events.append(dark_sky)
+
+        quick_start = cal_events.CalEvent(self.eph, self.year)
+        quick_start.name = 'Quick STARt'
+        quick_start.visibility = EventVisibility.private
+        quick_start.location = LOCATIONS[1]
+        quick_start.url = 'www.sjaa.net/programs/quick-start'
+        quick_start.description = ''
+        quick_start.lunar(RuleLunar.moon_1q, cal_events.SAT)
+        quick_start.sunset_times(
+            RuleStartTime.absolute, datetime.time(hour=19), 0, 3)
+        self.events.append(quick_start)
+
+        solar_sunday = cal_events.CalEvent(self.eph, self.year)
+        solar_sunday.name = 'Solar Sunday'
+        solar_sunday.visibility = EventVisibility.public
+        solar_sunday.location = LOCATIONS[1]
+        solar_sunday.url = 'www.sjaa.net/solar-observing??'
+        solar_sunday.description = ''
+        solar_sunday.monthly(1, cal_events.SUN)
+        solar_sunday.times(datetime.time(hour=13), 2)
+        self.events.append(solar_sunday)
+
+        fix_it = cal_events.CalEvent(self.eph, self.year)
+        fix_it.name = 'Fix It'
+        fix_it.visibility = EventVisibility.public
+        fix_it.location = LOCATIONS[2]
+        fix_it.url = 'www.sjaa.net/programs/fix-it'
+        fix_it.description = ''
+        fix_it.monthly(1, cal_events.SUN)
+        fix_it.times(datetime.time(hour=14), 2)
+        self.events.append(fix_it)
+        pp.pprint(fix_it.gen_occurances())
+
+        image_sig = cal_events.CalEvent(self.eph, self.year)
+        image_sig.name = 'Imaging SIG'
+        image_sig.visibility = EventVisibility.public
+        image_sig.location = LOCATIONS[1]
+        image_sig.url = 'www.sjaa.net/programs/imaging-sig'
+        image_sig.description = ''
+        image_sig.monthly(3, cal_events.TUE)
+        image_sig.times(datetime.time(hour=19, minute=30), 2)
+        self.events.append(image_sig)
+
+        board_mtg = cal_events.CalEvent(self.eph, self.year)
+        board_mtg.name = 'Board Meeting'
+        board_mtg.visibility = EventVisibility.member
+        board_mtg.location = LOCATIONS[1]
+        board_mtg.url = 'www.sjaa.net/board-meeting??'
+        board_mtg.description = ''
+        board_mtg.lunar(RuleLunar.moon_full, cal_events.SAT)
+        board_mtg.times(datetime.time(hour=18), 2)
+        self.events.append(board_mtg)
+
+        gen_mtg = cal_events.CalEvent(self.eph, self.year)
+        gen_mtg.name = 'General Meeting'
+        gen_mtg.visibility = EventVisibility.public
+        gen_mtg.location = LOCATIONS[1]
+        gen_mtg.url = 'www.sjaa.net/programs/monthly-guest-speakers'
+        gen_mtg.description = ''
+        gen_mtg.lunar_yearly(RuleLunar.moon_full, cal_events.SAT,
+                             months=(1, 3, 4, 5, 6, 7, 10, 11, 12))  # Skip special meetings
+        gen_mtg.times(datetime.time(hour=19, minute=30), 2)
+        self.events.append(gen_mtg)
+
+        mem_mtg = cal_events.CalEvent(self.eph, self.year)
+        mem_mtg.name = 'Membership Meeting/Awards Night'
+        mem_mtg.visibility = EventVisibility.member
+        mem_mtg.location = LOCATIONS[1]
+        mem_mtg.url = 'www.sjaa.net/membership-meeting??'
+        mem_mtg.description = ''
+        mem_mtg.lunar_yearly(RuleLunar.moon_full, cal_events.SAT, months=(2,))
+        mem_mtg.times(datetime.time(hour=19, minute=30), 2)
+        self.events.append(mem_mtg)
+
+        movie_night = cal_events.CalEvent(self.eph, self.year)
+        movie_night.name = 'Movie Night'
+        movie_night.visibility = EventVisibility.member
+        movie_night.location = LOCATIONS[1]
+        movie_night.url = 'www.sjaa.net/movie-night'
+        movie_night.description = 'Member Only Movie Night'
+        movie_night.lunar_yearly(RuleLunar.moon_full, cal_events.SAT, months=(8,))
+        movie_night.times(datetime.time(hour=19, minute=30), 2)
+        self.events.append(movie_night)
+
+        show_n_tell = cal_events.CalEvent(self.eph, self.year)
+        show_n_tell.name = '*Show-n-tell'
+        show_n_tell.visibility = EventVisibility.public
+        show_n_tell.location = LOCATIONS[1]
+        show_n_tell.url = 'www.sjaa.net/events/show-n-tell??'
+        show_n_tell.description = ''
+        show_n_tell.lunar_yearly(RuleLunar.moon_full, cal_events.SAT, months=(9,))
+        show_n_tell.times(datetime.time(hour=19, minute=30), 2)
+        self.events.append(show_n_tell)
+
+        swap_spring = cal_events.CalEvent(self.eph, self.year)
+        swap_spring.name = '*Spring Swap Meet'
+        swap_spring.visibility = EventVisibility.public
+        swap_spring.location = LOCATIONS[1]
+        swap_spring.url = 'www.sjaa.net/events/swap-meet'
+        swap_spring.description = ''
+        swap_spring.lunar_yearly(RuleLunar.moon_full, cal_events.SAT, months=(3,))
+        swap_spring.times(datetime.time(hour=11), 4)
+        self.events.append(swap_spring)
+
+        swap_fall = cal_events.CalEvent(self.eph, self.year)
+        swap_fall.name = '*Fall Swap Meet'
+        swap_fall.visibility = EventVisibility.public
+        swap_fall.location = LOCATIONS[1]
+        swap_fall.url = 'www.sjaa.net/events/swap-meet'
+        swap_fall.description = ''
+        swap_fall.lunar_yearly(RuleLunar.moon_full, cal_events.SAT, months=(10,))
+        swap_fall.times(datetime.time(hour=11), 4)
+        self.events.append(swap_fall)
 
 
-class_intro = cal_events.CalEvent()
-class_intro.name = 'Intro to the Night Sky'
-class_intro.visibility = EventVisibility.public
-class_intro.location = locations[1]
-class_intro.repeat = EventRepeat.lunar
-class_intro.lunar_phase = RuleLunar.moon_1q
-class_intro.day_of_week = RuleWeekday.friday
-class_intro.rule_start_time = RuleStartTime.nautical
-class_intro.time_earliest = datetime.time(19, 0, 0)
-class_intro.time_offset = datetime.timedelta(hours=-1)
-class_intro.time_length = datetime.timedelta(hours=1)
-class_intro.url = 'www.sjaa.net/programs/beginners-astronomy'
-class_intro.notes = ''
-
-class_101 = cal_events.CalEvent()
-class_101.name = 'Astronomy 101'
-class_101.visibility = EventVisibility.public
-class_101.location = locations[1]
-class_101.repeat = EventRepeat.lunar
-class_101.lunar_phase = RuleLunar.moon_3q
-class_101.day_of_week = RuleWeekday.friday
-class_101.rule_start_time = RuleStartTime.nautical
-class_101.time_earliest = datetime.time(19, 0, 0)
-class_101.time_offset = datetime.timedelta(hours=-1)
-class_101.time_length = datetime.timedelta(hours=1)
-class_101.url = 'www.sjaa.net/programs/beginners-astronomy'
-class_101.notes = ''
-
-itsp_1q = cal_events.CalEvent()
-itsp_1q.name = 'In-town Star Party'
-itsp_1q.visibility = EventVisibility.public
-itsp_1q.location = locations[2]
-itsp_1q.repeat = EventRepeat.lunar
-itsp_1q.lunar_phase = RuleLunar.moon_1q
-itsp_1q.day_of_week = RuleWeekday.friday
-itsp_1q.rule_start_time = RuleStartTime.nautical
-# set 1 second so classes get scheduled before ITSP
-itsp_1q.time_earliest = datetime.time(19, 0, 1)
-itsp_1q.time_offset = datetime.timedelta(hours=0)
-itsp_1q.time_length = datetime.timedelta(hours=2)
-itsp_1q.url = 'www.sjaa.net/events/monthly-star-parties'
-itsp_1q.notes = '1st quarter moon ITSP'
-
-itsp_3q = cal_events.CalEvent()
-itsp_3q.name = 'In-town Star Party'
-itsp_3q.visibility = EventVisibility.public
-itsp_3q.location = locations[2]
-itsp_3q.repeat = EventRepeat.lunar
-itsp_3q.lunar_phase = RuleLunar.moon_3q
-itsp_3q.day_of_week = RuleWeekday.friday
-itsp_3q.rule_start_time = RuleStartTime.nautical
-# set 1 second so classes get scheduled before ITSP
-itsp_3q.time_earliest = datetime.time(19, 0, 1)
-itsp_3q.time_offset = datetime.timedelta(hours=0)
-itsp_3q.time_length = datetime.timedelta(hours=2)
-itsp_3q.url = 'www.sjaa.net/events/monthly-star-parties'
-itsp_3q.notes = '3rd quarter moon ITSP'
-
-dark_sky = cal_events.CalEvent()
-dark_sky.name = 'Dark Sky Night'
-dark_sky.visibility = EventVisibility.member
-dark_sky.location = locations[4]
-dark_sky.repeat = EventRepeat.lunar
-dark_sky.lunar_phase = RuleLunar.moon_new
-dark_sky.day_of_week = RuleWeekday.saturday
-dark_sky.rule_start_time = RuleStartTime.civil
-dark_sky.time_offset = datetime.timedelta(hours=0)
-dark_sky.time_length = datetime.timedelta(hours=4)
-dark_sky.url = 'www.sjaa.net/dark-sky-nights??'
-dark_sky.notes = ''
-
-quick_start = cal_events.CalEvent()
-quick_start.name = 'Quick STARt'
-quick_start.visibility = EventVisibility.private
-quick_start.private = True
-quick_start.location = locations[1]
-quick_start.repeat = EventRepeat.lunar
-quick_start.lunar_phase = RuleLunar.moon_1q
-quick_start.day_of_week = RuleWeekday.saturday
-quick_start.rule_start_time = RuleStartTime.absolute
-quick_start.time_start = datetime.time(hour=19)
-quick_start.time_length = datetime.timedelta(hours=3)
-quick_start.url = 'www.sjaa.net/programs/quick-start'
-quick_start.email = 'joe@null.dev'
-quick_start.notes = ''
-
-solar_sunday = cal_events.CalEvent()
-solar_sunday.name = 'Solar Sunday'
-solar_sunday.visibility = EventVisibility.public
-solar_sunday.location = locations[1]
-solar_sunday.repeat = EventRepeat.monthly
-solar_sunday.week = RuleWeek.week_1
-solar_sunday.day_of_week = RuleWeekday.sunday
-solar_sunday.rule_start_time = RuleStartTime.absolute
-solar_sunday.time_start = datetime.time(hour=14)
-solar_sunday.time_length = datetime.timedelta(hours=2)
-solar_sunday.url = 'www.sjaa.net/solar-observing??'
-solar_sunday.notes = ''
-
-fix_it = cal_events.CalEvent()
-fix_it.name = 'Fix It'
-fix_it.visibility = EventVisibility.public
-fix_it.location = locations[2]
-fix_it.repeat = EventRepeat.monthly
-fix_it.week = RuleWeek.week_1
-fix_it.day_of_week = RuleWeekday.sunday
-fix_it.rule_start_time = RuleStartTime.absolute
-fix_it.time_start = datetime.time(hour=14)
-fix_it.time_length = datetime.timedelta(hours=2)
-fix_it.url = 'www.sjaa.net/programs/fix-it'
-fix_it.notes = ''
-
-board_mtg = cal_events.CalEvent()
-board_mtg.name = 'Board Meeting'
-board_mtg.visibility = EventVisibility.member
-board_mtg.location = locations[1]
-board_mtg.repeat = EventRepeat.lunar
-board_mtg.lunar_phase = RuleLunar.moon_full
-board_mtg.day_of_week = RuleWeekday.saturday
-board_mtg.rule_start_time = RuleStartTime.absolute
-board_mtg.time_start = datetime.time(hour=18)
-board_mtg.time_length = datetime.timedelta(hours=1.5)
-board_mtg.url = 'www.sjaa.net/board-meeting??'
-board_mtg.notes = ''
-
-gen_mtg = cal_events.CalEvent()
-gen_mtg.name = 'General Meeting'
-gen_mtg.visibility = EventVisibility.public
-gen_mtg.location = locations[1]
-gen_mtg.repeat = EventRepeat.lunar
-gen_mtg.lunar_phase = RuleLunar.moon_full
-gen_mtg.day_of_week = RuleWeekday.saturday
-gen_mtg.rule_start_time = RuleStartTime.absolute
-gen_mtg.time_start = datetime.time(hour=19, minute=30)
-gen_mtg.time_length = datetime.timedelta(hours=2)
-gen_mtg.url = 'www.sjaa.net/programs/monthly-guest-speakers'
-gen_mtg.notes = ''
-
-starry_night = cal_events.CalEvent()
-starry_night.name = 'Starry Night (OSA)'
-starry_night.visibility = EventVisibility.public
-starry_night.location = locations[3]
-starry_night.repeat = EventRepeat.lunar
-starry_night.lunar_phase = RuleLunar.moon_3q
-starry_night.day_of_week = RuleWeekday.saturday
-starry_night.rule_start_time = RuleStartTime.civil
-starry_night.time_offset = datetime.timedelta(hours=0)
-starry_night.time_length = datetime.timedelta(hours=2)
-starry_night.url = 'www.sjaa.net/events/starry-nights-public-star-party/'
-starry_night.notes = ''
-
-image_sig = cal_events.CalEvent()
-image_sig.name = 'Imaging SIG'
-image_sig.visibility = EventVisibility.public
-image_sig.location = locations[1]
-image_sig.repeat = EventRepeat.monthly
-image_sig.week = RuleWeek.week_3
-image_sig.day_of_week = RuleWeekday.tuesday
-image_sig.rule_start_time = RuleStartTime.absolute
-image_sig.time_start = datetime.time(hour=19, minute=30)
-image_sig.time_length = datetime.timedelta(hours=2)
-image_sig.url = 'www.sjaa.net/programs/imaging-sig'
-image_sig.notes = ''
-
-mem_mtg = cal_events.CalEvent()
-mem_mtg.name = '*Membership Meeting/Awards Night'
-mem_mtg.visibility = EventVisibility.public
-mem_mtg.location = locations[1]
-mem_mtg.repeat = EventRepeat.annual
-mem_mtg.lunar_phase = RuleLunar.moon_full
-mem_mtg.day_of_week = RuleWeekday.saturday
-mem_mtg.rule_start_time = RuleStartTime.absolute
-mem_mtg.month = 2
-mem_mtg.time_start = datetime.time(hour=19, minute=30)
-mem_mtg.time_length = datetime.timedelta(hours=2)
-mem_mtg.url = 'www.sjaa.net/membership-meeting??'
-mem_mtg.notes = ''
-
-swap_spring = cal_events.CalEvent()
-swap_spring.name = '*Spring Swap Meet'
-swap_spring.visibility = EventVisibility.public
-swap_spring.location = locations[1]
-swap_spring.repeat = EventRepeat.annual
-swap_spring.lunar_phase = RuleLunar.moon_full
-swap_spring.day_of_week = RuleWeekday.sunday
-swap_spring.rule_start_time = RuleStartTime.absolute
-swap_spring.month = 3
-swap_spring.time_start = datetime.time(hour=11)
-swap_spring.time_length = datetime.timedelta(hours=4)
-swap_spring.url = 'www.sjaa.net/events/swap-meet'
-swap_spring.notes = ''
-
-movie_night = cal_events.CalEvent()
-movie_night.name = '*Movie Night'
-movie_night.visibility = EventVisibility.member
-movie_night.location = locations[1]
-movie_night.repeat = EventRepeat.annual
-movie_night.lunar_phase = RuleLunar.moon_full
-movie_night.day_of_week = RuleWeekday.saturday
-movie_night.rule_start_time = RuleStartTime.absolute
-movie_night.month = 8
-movie_night.time_start = datetime.time(hour=19, minute=30)
-movie_night.time_length = datetime.timedelta(hours=3)
-movie_night.url = 'www.sjaa.net/movie-night'
-movie_night.notes = "Don't publicize title on public media like Meetup!"
-
-show_n_tell = cal_events.CalEvent()
-show_n_tell.name = '*Show-n-tell'
-show_n_tell.visibility = EventVisibility.public
-show_n_tell.location = locations[1]
-show_n_tell.repeat = EventRepeat.annual
-show_n_tell.lunar_phase = RuleLunar.moon_full
-show_n_tell.day_of_week = RuleWeekday.saturday
-show_n_tell.rule_start_time = RuleStartTime.absolute
-show_n_tell.month = 9
-show_n_tell.time_start = datetime.time(hour=19, minute=30)
-show_n_tell.time_length = datetime.timedelta(hours=2)
-show_n_tell.url = 'www.sjaa.net/events/show-n-tell??'
-show_n_tell.notes = ''
-
-swap_fall = cal_events.CalEvent()
-swap_fall.name = '*Fall Swap Meet'
-swap_fall.visibility = EventVisibility.public
-swap_fall.location = locations[1]
-swap_fall.repeat = EventRepeat.annual
-swap_fall.lunar_phase = RuleLunar.moon_full
-swap_fall.day_of_week = RuleWeekday.sunday
-swap_fall.rule_start_time = RuleStartTime.absolute
-swap_fall.month = 10
-swap_fall.time_start = datetime.time(hour=11)
-swap_fall.time_length = datetime.timedelta(hours=4)
-swap_fall.url = 'www.sjaa.net/events/swap-meet'
-swap_fall.notes = ''
-
-
-def gen_events(start, end):
-    cal_eph = cal_ephemeris.CalEphemeris()
-    cal_eph.gen_astro_data(start.year)
-    summary = []
-    events_public = []
-    events_member = []
-    events_volunteer = []
-    events_coordinator = []
-    events_private = []
-    events_board = []
-    event_types = (class_intro, class_101, itsp_1q, itsp_3q, dark_sky,
-                   quick_start, solar_sunday, fix_it, board_mtg, gen_mtg,
-                   starry_night, image_sig, mem_mtg, swap_spring, movie_night,
-                   show_n_tell, swap_fall)
-#   event_types = (class_intro, class_101, itsp_1q, itsp_3q, dark_sky,
-#                  quick_start, solar_sunday)
-    # generate all events for each type of visibility
-    for evtype in event_types:
-        if evtype.visibility == EventVisibility.public:
-            events = events_public
-        elif evtype.visibility == EventVisibility.member:
-            events = events_member
-        elif evtype.visibility == EventVisibility.volunteer:
-            events = events_volunteer
-        elif evtype.visibility == EventVisibility.coordinator:
-            events = events_coordinator
-        elif evtype.visibility == EventVisibility.private:
-            events = events_private
-        elif evtype.visibility == EventVisibility.board:
-            events = events_board
-        # create list of time/event name pairs
-        if evtype.repeat == EventRepeat.lunar:
-            event_dates = evtype.calc_lunar_dates(start, end)
-        elif evtype.repeat == EventRepeat.monthly:
-            event_dates = evtype.calc_monthly_dates(start, end)
-        elif evtype.repeat == EventRepeat.annual:
-            event_dates = evtype.calc_annual_dates(start, end)
-
-        # create list of all events
-        for date in event_dates:
-            sun = None
-            moon = None
-            if evtype.rule_start_time != RuleStartTime.absolute:
-                # get ephemeris data for sun, moon for start times based on twilight
-                sun, moon = cal_eph.calc_date_ephem(date)
-            events.append((date, evtype.name, sun, moon))
-
-    # sort events by time and print
-    for evtype in EventVisibility:
-        if evtype == EventVisibility.ephemeris:
-            events = cal_eph.astro_events
-        elif evtype == EventVisibility.public:
-            events = events_public
-        elif evtype == EventVisibility.member:
-            events = events_member
-        elif evtype == EventVisibility.volunteer:
-            events = events_volunteer
-        elif evtype == EventVisibility.coordinator:
-            events = events_coordinator
-        elif evtype == EventVisibility.private:
-            events = events_private
-        elif evtype == EventVisibility.board:
-            events = events_board
-        if events:
-            events.sort()
-            summary.append('======================================')
-            summary.append(
-                '{} events - total: {}'.format(str(evtype), len(events)))
-            summary.append('--')
-            for ev in events:
-                if len(ev) > 2 and ev[2]:
-                    # event has sun/moon ephemeris times
-                    summary.append(
-                        '{} - {}'.format(ev[0].strftime(FMT_YEAR_DATE_HM), ev[1]))
-                    summary.append('{:23}   {}'.format('', ev[2]))
-                    summary.append('{:23}   {}'.format('', ev[3]))
-                else:
-                    summary.append(
-                        '{} - {}'.format(ev[0].strftime(FMT_YEAR_DATE_HM), ev[1]))
-    return summary
-
-
+# ==============================================================================
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Calendar Generator')
     parser.add_argument('--year', type=int, action='store', required=True,
@@ -365,12 +237,12 @@ if __name__ == '__main__':
     # -------------------------------------
     # Actually do the work we intend to do here
     # -------------------------------------
-    start = TZ_LOCAL.localize(datetime.datetime(args.year, 1, 1))
-    end = datetime.datetime(args.year+1, 1, 1) - datetime.timedelta(seconds=1)
-    end = TZ_LOCAL.localize(end)
-    summary = gen_events(start, end)
+    cal_gen = CalGen(args.year)
+    # summary = cal_gen.gen_events()
+
     if not args.test:
-        print('\n'.join(summary))
+        pass
+        # print('\n'.join(summary))
     else:
         fail = False
         with open(args.test, 'r') as fp:
