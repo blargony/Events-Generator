@@ -71,7 +71,7 @@ def write_csv(filename, data):
             cfp.writerow(line[1:])    # omit the datetime object
 
 
-def write_astro_ical(filename, data, eph, hol):
+def write_astro_ical(filename, start, until, data, eph, hol):
     '''Write out lunar data and other events in an iCal compatible format.'''
     cal = icalendar.Calendar()
     cal.add('prodid', 'Astro Calendar')
@@ -105,7 +105,7 @@ def write_astro_ical(filename, data, eph, hol):
         cal.add_component(event)
 
     # Moon Phases
-    for phase, date in eph.gen_moon_phases():
+    for phase, date in eph.gen_moon_phases(start, until):
         event = icalendar.Event()
         event.add('dtstart', date.date())  # Cast to just date from datetime
         event.add('summary', '{}: {}\n'.format(str(phase), date.strftime('%-I:%M %p')))
@@ -127,19 +127,18 @@ def main():
     args = parser.parse_args()
 
 
-    start = datetime.datetime(args.year, 1, 1)
-    until = datetime.datetime(args.year, 12, 31)
-
-    eph = cal_ephemeris.CalEphemeris(start, until)
+    eph = cal_ephemeris.CalEphemeris()
     hol = cal_holidays.CalHoliday(args.year)
 
     # Get info for every Friday and Saturday
+    start = datetime.datetime(args.year, 1, 1)
+    until = datetime.datetime(args.year, 12, 31)
     rrule_gen = rrule.rrule(rrule.WEEKLY, dtstart=start, until=until,
                             byweekday=(rrule.FR, rrule.SA))
 
     data = gen_lunar_data(rrule_gen, eph, hol)
     write_csv(args.filename, data)
-    write_astro_ical(args.ifilename, data, eph, hol)
+    write_astro_ical(args.ifilename, start, until, data, eph, hol)
 
 
 # -------------------------------------
