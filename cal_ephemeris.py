@@ -136,7 +136,7 @@ class CalEphemeris(object):
         return [self.moon_illum(date), self.moon_rise(date),
                 self.moon_set(date)]
 
-    def gen_moon_phases(self, start=None, until=None, lunar_phase=None):
+    def gen_moon_phases(self, start, until, lunar_phase=None):
         '''Return an interator of moon phases over the given dates.'''
         phase_date = start
 
