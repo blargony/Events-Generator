@@ -31,9 +31,9 @@ import ephem
 
 from cal_const import *
 
-########################################
+# ==============================================================================
 # Ephem Constants
-########################################
+# ==============================================================================
 MOON = ephem.Moon()
 PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
            ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
@@ -57,29 +57,20 @@ NEXT_MOON_PHASE = {
     RuleLunar.moon_3q: (ephem.next_last_quarter_moon, '3rd Qtr moon', RuleLunar.moon_new)
 }
 
-########################################
+# ==============================================================================
+# Ephemeris Wrapper Class
+# ==============================================================================
 class CalEphemeris(object):
     '''Wrap python ephem library for use by cal_events et al.'''
 
-    def __init__(self, start=None, until=None):
+    def __init__(self):
         '''Setup the python ephem, with an observer at Houge Park.'''
         self.observer = ephem.Observer()
         self.observer.lat = LAT
         self.observer.lon = LONG
         self.observer.elevation = ELEVATION
 
-        # Set a date range used by some methods, because time goes on forever
-        if not start:
-            # This year's data
-            now = datetime.datetime.now()
-            self.start = datetime.datetime(now.year, 1, 1)
-            self.until = datetime.datetime(now.year + 1, 12, 31)
-        else:
-            self.start = start
-            self.until = until
-
         self.astro_events = []
-
         # self.gen_astro_data(year)
 
     # --------------------------------------
@@ -147,9 +138,6 @@ class CalEphemeris(object):
 
     def gen_moon_phases(self, start=None, until=None, lunar_phase=None):
         '''Return an interator of moon phases over the given dates.'''
-        if not start:
-            start = self.start
-            until = self.until
         phase_date = start
 
         while phase_date < until:
@@ -172,7 +160,9 @@ class CalEphemeris(object):
             phase_date += DAY
 
     def get_nearest_phase(self, date, lunar_phase):
-        phases = [x[1] for x in self.gen_moon_phases(lunar_phase=lunar_phase)]
+        start = date - datetime.timedelta(days=15)
+        until = date + datetime.timedelta(days=15)
+        phases = [x[1] for x in self.gen_moon_phases(start, until, lunar_phase=lunar_phase)]
         return min(phases, key=lambda x: abs(x - date))
 
     # --------------------------------------
@@ -369,8 +359,7 @@ class CalEphemeris(object):
 class TestUM(unittest.TestCase):
 
     def setUp(self):
-        self.eph = CalEphemeris(datetime.datetime(2018, 1, 1),
-                                datetime.datetime(2018, 12, 31))
+        self.eph = CalEphemeris()
         self.aug = datetime.datetime(2018, 8, 1)
         self.aug_mid = datetime.datetime(2018, 8, 15)
         self.aug_late = datetime.datetime(2018, 8, 31)
