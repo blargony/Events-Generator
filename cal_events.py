@@ -68,14 +68,13 @@ class RuleLunar(Enum):
 @unique
 class RuleSunset(Enum):
     """Solar time rule, which phase of sunset do we want for the time?"""
-    absolute = 'ab'  # start time specifies exact time
     sunset = 'su'  # others specfies period of day/twilight
     civil = 'ci'
     nautical = 'na'
     astronomical = 'as'
 
     def __str__(self):
-        lut = {'ab': 'absolute', 'su': 'sunset', 'ci': 'civil',
+        lut = {'su': 'sunset', 'ci': 'civil',
                'na': 'nautical', 'as': 'astronomical'}
         return lut[self.value]
 
@@ -101,11 +100,8 @@ class EventVisibility(Enum):
 class CalEvent(object):
     '''Club Event date generator that follow the solar or lunar calendar.'''
 
-    def __init__(self, eph, year):
+    def __init__(self, eph):
         self.eph = eph   # cal_ephemeris object with the appropriate settings
-        self.start = datetime(year, 1, 1)
-        self.until = datetime(year, 12, 31)
-        self.occurances = []
 
         # Event information
         self.name = None
@@ -137,26 +133,26 @@ class CalEvent(object):
     def monthly(self, week, weekday):
         '''Monthly event, like in typical calendar fashion.'''
         self.date_rules = rrule.rrule(rrule.MONTHLY, byweekday=weekday(week),
-                                      dtstart=self.start, until=self.until)
+                                      count=1000)   # generously large but not infinite event count
 
     def yearly(self, month, week, weekday):
         '''Monthly event, like in typical calendar fashion.'''
         self.date_rules = rrule.rrule(rrule.YEARLY,
                                       bymonth=month, byweekday=weekday(week),
-                                      dtstart=self.start, until=self.until)
+                                      count=1000)
 
     def lunar(self, phase, weekday):
-        '''Every lunar cycle, nearest the given phase.'''
+        '''On given weekday every lunar cycle, nearest the given phase.'''
         self.lunar_rules = phase
         self.date_rules = rrule.rrule(rrule.WEEKLY, byweekday=weekday,
-                                      dtstart=self.start, until=self.until)
+                                      count=1000)
 
     def lunar_yearly(self, phase, weekday, months):
-        '''Once a year near a lunar phase.'''
+        '''Yearly near a lunar phase, on the given weekday/months.'''
         self.lunar_rules = phase
         self.lunar_months = months
-        self.date_rules = rrule.rrule(rrule.WEEKLY, byweekday=weekday,
-                                      dtstart=self.start, until=self.until)
+        self.date_rules = rrule.rrule(rrule.YEARLY, bymonth=months, byweekday=weekday,
+                                      count=1000)
 
     def times(self, start_time, duration=1):
         '''Once a year near a lunar phase.'''
@@ -172,29 +168,35 @@ class CalEvent(object):
         self.duration = timedelta(hours=length)
 
     # --------------------------------------
-    def gen_occurances(self):
+    def gen_occurances(self, start, until):
         if self.lunar_rules:
-            return self.gen_lunar_dates()
+            return self.gen_lunar_dates(start, until)
         else:
-            return self.gen_cal_dates()
+            return self.gen_cal_dates(start, until)
 
-    def gen_cal_dates(self):
-        '''Generate all the occurances of the event'''
-        for dt in self.date_rules:
-            date = dt.date()
-            dtstart, dtend = self.calc_times(date)
-            self.occurances.append((dtstart, dtend))
-        return self.occurances
-
-    def gen_lunar_dates(self):
-        '''Find the dates nearest the specified lunar phase'''
+    def gen_dates(self, start, until):
         days = list(self.date_rules)
-        for phase, dt in self.eph.gen_moon_phases(start=self.start, until=self.until,
-                                                  lunar_phase=self.lunar_rules):
-            date = min(days, key=lambda x: abs(x - dt))
-            dtstart, dtend = self.calc_times(date)
-            self.occurances.append((dtstart, dtend))
-        return self.occurances
+        return [d for d in days if d > start and d < until]
+
+    def gen_cal_dates(self, start, until):
+        '''Generate all the occurances of the event'''
+        occurances = []
+        for dt in self.gen_dates(start, until):
+            dt = dt.date()
+            dtstart, dtend = self.calc_times(dt)
+            occurances.append((dtstart, dtend))
+        return occurances
+
+    def gen_lunar_dates(self, start, until):
+        '''Find the dates nearest the specified lunar phase'''
+        occurances = []
+        days = self.gen_dates(start, until)
+        for phase, dt in self.eph.gen_moon_phases(start, until, lunar_phase=self.lunar_rules):
+            if not self.lunar_months or dt.month in self.lunar_months:
+                dt = min(days, key=lambda x: abs(x - dt))
+                dtstart, dtend = self.calc_times(dt)
+                occurances.append((dtstart, dtend))
+        return occurances
 
     # --------------------------------------
     def calc_times(self, date):
@@ -222,9 +224,9 @@ class CalEvent(object):
         return date, date + self.duration
 
     # --------------------------------------
-    def as_ical_events(self, cal):
+    def add_ical_events(self, start, until, cal):
         '''Add all generated events to the given calendar object.'''
-        for dtstart, dtend in self.occurances:
+        for dtstart, dtend in self.gen_occurances(start, until):
             event = icalendar.Event()
             if dtend:
                 event.add('dtstart', dtstart)
