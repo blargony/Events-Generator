@@ -31,10 +31,7 @@ import cal_ephemeris
 class CalGen():
 
     def __init__(self, year):
-        start = datetime.datetime(year, 1, 1)
-        until = datetime.datetime(year + 1, 12, 31)
-
-        self.eph = cal_ephemeris.CalEphemeris(start, until)
+        self.eph = cal_ephemeris.CalEphemeris()
         self.year = year
 
         self.events = []
