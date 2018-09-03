@@ -1,7 +1,7 @@
 #########################################################################
 #
 #   Astronomy Club Event Generator
-#   file: test.py
+#   file: cal_gen.py
 #
 #   Copyright (C) 2016  Teruo Utsumi, San Jose Astronomical Association
 #
@@ -17,30 +17,33 @@
 #
 #   Contributors:
 #       2016-02-25  Teruo Utsumi, initial code
+#       2018-09-02  Robert Chapman
+#                     - Updated for modified cal_events
+#                     - Changed output format to CSV and iCal
 #
 #########################################################################
 
 import argparse
+import csv
 import datetime
+import icalendar
 
 import cal_events
 import cal_ephemeris
 
 
+# ==============================================================================
+# Generate a calendar of events
+# ==============================================================================
 class CalGen():
 
-    def __init__(self, year):
+    def __init__(self):
         self.eph = cal_ephemeris.CalEphemeris()
-        self.year = year
-
         self.events = []
         self.init_events()
 
     def init_events(self):
-        import pprint
-        pp = pprint.PrettyPrinter(width=120)
-
-        class_intro = cal_events.CalEvent(self.eph, self.year)
+        class_intro = cal_events.CalEvent(self.eph)
         class_intro.name = 'Intro to the Night Sky'
         class_intro.visibility = cal_events.EventVisibility.public
         class_intro.location = cal_events.LOCATIONS[1]
@@ -50,9 +53,8 @@ class CalGen():
         class_intro.sunset_times(
             cal_events.RuleSunset.nautical, datetime.time(hour=19), -1, 1)
         self.events.append(class_intro)
-        pp.pprint(class_intro.gen_occurances())
 
-        class_101 = cal_events.CalEvent(self.eph, self.year)
+        class_101 = cal_events.CalEvent(self.eph)
         class_101.name = 'Astronomy 101'
         class_101.visibility = cal_events.EventVisibility.public
         class_101.location = cal_events.LOCATIONS[1]
@@ -63,18 +65,18 @@ class CalGen():
             cal_events.RuleSunset.nautical, datetime.time(hour=19), -1, 1)
         self.events.append(class_101)
 
-        itsp_1q = cal_events.CalEvent(self.eph, self.year)
+        itsp_1q = cal_events.CalEvent(self.eph)
         itsp_1q.name = 'In-town Star Party'
         itsp_1q.visibility = cal_events.EventVisibility.public
         itsp_1q.location = cal_events.LOCATIONS[2]
         itsp_1q.url = 'www.sjaa.net/events/monthly-star-parties'
         itsp_1q.description = '1st quarter moon ITSP'
-        itsp_1q.lunar(cal_events.RuleLunar.moon_3q, cal_events.FRI)
+        itsp_1q.lunar(cal_events.RuleLunar.moon_1q, cal_events.FRI)
         itsp_1q.sunset_times(
             cal_events.RuleSunset.nautical, datetime.time(hour=19), 0, 3)
         self.events.append(itsp_1q)
 
-        itsp_3q = cal_events.CalEvent(self.eph, self.year)
+        itsp_3q = cal_events.CalEvent(self.eph)
         itsp_3q.name = 'In-town Star Party'
         itsp_3q.visibility = cal_events.EventVisibility.public
         itsp_3q.location = cal_events.LOCATIONS[2]
@@ -85,7 +87,7 @@ class CalGen():
             cal_events.RuleSunset.nautical, datetime.time(hour=19), 0, 3)
         self.events.append(itsp_3q)
 
-        starry_night = cal_events.CalEvent(self.eph, self.year)
+        starry_night = cal_events.CalEvent(self.eph)
         starry_night.name = 'Starry Night (OSA)'
         starry_night.visibility = cal_events.EventVisibility.public
         starry_night.location = cal_events.LOCATIONS[3]
@@ -96,7 +98,7 @@ class CalGen():
             cal_events.RuleSunset.civil, None, 0, 3)
         self.events.append(starry_night)
 
-        dark_sky = cal_events.CalEvent(self.eph, self.year)
+        dark_sky = cal_events.CalEvent(self.eph)
         dark_sky.name = 'Dark Sky Night'
         dark_sky.visibility = cal_events.EventVisibility.member
         dark_sky.location = cal_events.LOCATIONS[4]
@@ -107,18 +109,17 @@ class CalGen():
             cal_events.RuleSunset.civil, datetime.time(hour=19), 0, 4)
         self.events.append(dark_sky)
 
-        quick_start = cal_events.CalEvent(self.eph, self.year)
+        quick_start = cal_events.CalEvent(self.eph)
         quick_start.name = 'Quick STARt'
         quick_start.visibility = cal_events.EventVisibility.private
         quick_start.location = cal_events.LOCATIONS[1]
         quick_start.url = 'www.sjaa.net/programs/quick-start'
         quick_start.description = ''
         quick_start.lunar(cal_events.RuleLunar.moon_1q, cal_events.SAT)
-        quick_start.sunset_times(
-            cal_events.RuleSunset.absolute, datetime.time(hour=19), 0, 3)
+        quick_start.times(datetime.time(hour=19), 2)
         self.events.append(quick_start)
 
-        solar_sunday = cal_events.CalEvent(self.eph, self.year)
+        solar_sunday = cal_events.CalEvent(self.eph)
         solar_sunday.name = 'Solar Sunday'
         solar_sunday.visibility = cal_events.EventVisibility.public
         solar_sunday.location = cal_events.LOCATIONS[1]
@@ -128,7 +129,7 @@ class CalGen():
         solar_sunday.times(datetime.time(hour=13), 2)
         self.events.append(solar_sunday)
 
-        fix_it = cal_events.CalEvent(self.eph, self.year)
+        fix_it = cal_events.CalEvent(self.eph)
         fix_it.name = 'Fix It'
         fix_it.visibility = cal_events.EventVisibility.public
         fix_it.location = cal_events.LOCATIONS[2]
@@ -137,9 +138,8 @@ class CalGen():
         fix_it.monthly(1, cal_events.SUN)
         fix_it.times(datetime.time(hour=14), 2)
         self.events.append(fix_it)
-        pp.pprint(fix_it.gen_occurances())
 
-        image_sig = cal_events.CalEvent(self.eph, self.year)
+        image_sig = cal_events.CalEvent(self.eph)
         image_sig.name = 'Imaging SIG'
         image_sig.visibility = cal_events.EventVisibility.public
         image_sig.location = cal_events.LOCATIONS[1]
@@ -149,7 +149,7 @@ class CalGen():
         image_sig.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(image_sig)
 
-        board_mtg = cal_events.CalEvent(self.eph, self.year)
+        board_mtg = cal_events.CalEvent(self.eph)
         board_mtg.name = 'Board Meeting'
         board_mtg.visibility = cal_events.EventVisibility.member
         board_mtg.location = cal_events.LOCATIONS[1]
@@ -159,7 +159,7 @@ class CalGen():
         board_mtg.times(datetime.time(hour=18), 2)
         self.events.append(board_mtg)
 
-        gen_mtg = cal_events.CalEvent(self.eph, self.year)
+        gen_mtg = cal_events.CalEvent(self.eph)
         gen_mtg.name = 'General Meeting'
         gen_mtg.visibility = cal_events.EventVisibility.public
         gen_mtg.location = cal_events.LOCATIONS[1]
@@ -170,7 +170,7 @@ class CalGen():
         gen_mtg.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(gen_mtg)
 
-        mem_mtg = cal_events.CalEvent(self.eph, self.year)
+        mem_mtg = cal_events.CalEvent(self.eph)
         mem_mtg.name = 'Membership Meeting/Awards Night'
         mem_mtg.visibility = cal_events.EventVisibility.member
         mem_mtg.location = cal_events.LOCATIONS[1]
@@ -180,7 +180,7 @@ class CalGen():
         mem_mtg.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(mem_mtg)
 
-        movie_night = cal_events.CalEvent(self.eph, self.year)
+        movie_night = cal_events.CalEvent(self.eph)
         movie_night.name = 'Movie Night'
         movie_night.visibility = cal_events.EventVisibility.member
         movie_night.location = cal_events.LOCATIONS[1]
@@ -190,8 +190,8 @@ class CalGen():
         movie_night.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(movie_night)
 
-        show_n_tell = cal_events.CalEvent(self.eph, self.year)
-        show_n_tell.name = '*Show-n-tell'
+        show_n_tell = cal_events.CalEvent(self.eph)
+        show_n_tell.name = 'Show-n-tell'
         show_n_tell.visibility = cal_events.EventVisibility.public
         show_n_tell.location = cal_events.LOCATIONS[1]
         show_n_tell.url = 'www.sjaa.net/events/show-n-tell??'
@@ -200,8 +200,8 @@ class CalGen():
         show_n_tell.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(show_n_tell)
 
-        swap_spring = cal_events.CalEvent(self.eph, self.year)
-        swap_spring.name = '*Spring Swap Meet'
+        swap_spring = cal_events.CalEvent(self.eph)
+        swap_spring.name = 'Spring Swap Meet'
         swap_spring.visibility = cal_events.EventVisibility.public
         swap_spring.location = cal_events.LOCATIONS[1]
         swap_spring.url = 'www.sjaa.net/events/swap-meet'
@@ -210,8 +210,8 @@ class CalGen():
         swap_spring.times(datetime.time(hour=11), 4)
         self.events.append(swap_spring)
 
-        swap_fall = cal_events.CalEvent(self.eph, self.year)
-        swap_fall.name = '*Fall Swap Meet'
+        swap_fall = cal_events.CalEvent(self.eph)
+        swap_fall.name = 'Fall Swap Meet'
         swap_fall.visibility = cal_events.EventVisibility.public
         swap_fall.location = cal_events.LOCATIONS[1]
         swap_fall.url = 'www.sjaa.net/events/swap-meet'
@@ -220,32 +220,89 @@ class CalGen():
         swap_fall.times(datetime.time(hour=11), 4)
         self.events.append(swap_fall)
 
+    def print_events(self, start, until):
+        """Generate a summary of all events."""
+        public = []
+        private = []
+        for event in self.events:
+            if event.visibility == cal_events.EventVisibility.public:
+                for dtstart, _ in event.gen_occurances(start, until):
+                    public.append("{0}: {1}".format(event.name, dtstart.strftime('%a %b %-d %Y - %-I:%M %p')))
+            else:
+                for dtstart, _ in event.gen_occurances(start, until):
+                    private.append("{0}: {1}".format(event.name, dtstart.strftime('%a %b %-d %Y - %-I:%M %p')))
+
+        print('*' * 80 + '\n')
+        print('\n'.join(public))
+        print('*' * 80 + '\n')
+        print('\n'.join(private))
+        return public, private
+
+    def gen_cal(self, start, until, public):
+        """Generate a calendar of public events."""
+        cal = icalendar.Calendar()
+        if public:
+            cal.add('prodid', 'SJAA Public Events Calendar')
+            visibility = cal_events.EventVisibility.public,
+        else:
+            cal.add('prodid', 'SJAA Member Only Events Calendar')
+            visibility = (cal_events.EventVisibility.member,
+                          cal_events.EventVisibility.private)
+        cal.add('version', '2.0')
+
+        for event in self.events:
+            if event.visibility in visibility:
+                event.add_ical_events(start, until, cal)
+        return cal
+
+
+def write_csv(events, filename, start, until):
+    with open('{}.csv'.format(filename), 'w') as cfp:
+        cfp = csv.writer(cfp)
+        header = ('Event', 'Date', 'Day', 'Type',
+                  'Start Time', 'End Time', 'Location')
+        cfp.writerow(header)
+        for event in events:
+            for dtstart, dtend in event.gen_occurances(start, until):
+                line = [event.name]
+                line.append(dtstart.strftime('%b %-d %Y'))
+                line.append(dtstart.strftime('%a'))
+                line.append(str(event.visibility).capitalize())
+                line.append(dtstart.strftime('%-I:%M %p'))
+                line.append(dtend.strftime('%-I:%M %p'))
+                line.append(event.location)
+                cfp.writerow(line)
 
 # ==============================================================================
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Calendar Generator')
     parser.add_argument('--year', type=int, action='store', required=True,
                         help='Year of the generated Calendar')
-    parser.add_argument('--test', action='store',
-                        help='Test')
+    parser.add_argument('--public', action='store',
+                        help='Public Events Base Filename', default='public')
+    parser.add_argument('--private', action='store',
+                        help='Private Events Base Filename', default='private')
     args = parser.parse_args()
 
     # -------------------------------------
     # Actually do the work we intend to do here
     # -------------------------------------
-    cal_gen = CalGen(args.year)
-    # summary = cal_gen.gen_events()
+    start = datetime.datetime(args.year, 1, 1)
+    until = datetime.datetime(args.year, 12, 31)
 
-    if not args.test:
-        pass
-        # print('\n'.join(summary))
-    else:
-        fail = False
-        with open(args.test, 'r') as fp:
-            for i, line in enumerate(fp):
-                if line.rstrip() != summary[i]:
-                    print('Golden : {}'.format(line.rstrip()))
-                    print('Current: {}'.format(summary[i]))
-                    fail = True
-        if not fail:
-            print('PASS!!')
+    cal_gen = CalGen()
+    cal_gen.print_events(start, until)
+
+    public = [e for e in cal_gen.events if e.visibility == cal_events.EventVisibility.public]
+    write_csv(public, args.public, start, until)
+    private = [e for e in cal_gen.events if e.visibility != cal_events.EventVisibility.public]
+    write_csv(private, args.private, start, until)
+
+    cal = cal_gen.gen_cal(start, until, public=True)
+    with open('{}.ics'.format(args.public), 'wb') as icfp:
+        icfp.write(cal.to_ical())
+
+    cal = cal_gen.gen_cal(start, until, public=False)
+    with open('{}.ics'.format(args.private), 'wb') as icfp:
+        icfp.write(cal.to_ical())
+
