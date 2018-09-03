@@ -29,11 +29,27 @@ import unittest
 
 import ephem
 
-from cal_const import *
+from cal_const import RuleLunar, RuleStartTime
 
 # ==============================================================================
 # Ephem Constants
 # ==============================================================================
+########################################
+# Time/Time Format Strings
+########################################
+FMT_HM = '%I:%M %p'
+
+########################################
+# For Houge Park
+########################################
+LAT = '37.257465'
+LONG = '-121.942281'
+ELEVATION = 50
+
+
+########################################
+# Astro objects
+########################################
 MOON = ephem.Moon()
 PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
            ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
@@ -50,7 +66,7 @@ SEASONS = {
 }
 
 NEXT_MOON_PHASE = {
-    #                      method to get phase          , name of phase , next phase
+    # method to get phase, string of phase name, next phase
     RuleLunar.moon_new: (ephem.next_new_moon, 'New moon', RuleLunar.moon_1q),
     RuleLunar.moon_1q: (ephem.next_first_quarter_moon, '1st Qtr moon', RuleLunar.moon_full),
     RuleLunar.moon_full: (ephem.next_full_moon, 'Full moon', RuleLunar.moon_3q),
@@ -92,7 +108,7 @@ class CalEphemeris(object):
 
     def _moon_setup(self, date):
         start = date.replace(hour=18, minute=0)
-        until = start + 9 * HOUR    # 3pm to 3am window
+        until = start + datetime.timedelta(hours=9)    # 3pm to 3am window
         self.observer.date = start
         self.observer.horizon = 0
         return start, until
@@ -157,7 +173,7 @@ class CalEphemeris(object):
             phase_date = self.get_datetime(nxt_phase)
             if phase_date < until and (not lunar_phase or lunar_phase == phase):
                 yield phase, phase_date
-            phase_date += DAY
+            phase_date += datetime.timedelta(days=1)
 
     def get_nearest_phase(self, date, lunar_phase):
         start = date - datetime.timedelta(days=15)
@@ -171,13 +187,12 @@ class CalEphemeris(object):
 
         # Jan 1, midnight, local time
         new_years = datetime.datetime(year, 1, 1, 0, 0)
-        new_years = TZ_LOCAL.localize(new_years)
-        self.observer.date = new_years.astimezone(TZ_UTC)
+        self.observer.date = new_years
 
         # Generate season data
         for m, n in SEASONS.values():
             d0 = m(new_years)
-            d1 = TZ_LOCAL.localize(ephem.localtime(d0))
+            d1 = ephem.localtime(d0)
             # spaces for formatting
             n = '              ' + n
             self.astro_events.append((d1, n))
@@ -189,13 +204,13 @@ class CalEphemeris(object):
         # Generate each successive moon phase event
         # start in December of prior year ("30" days before New Year's Day)
         #   to first phase in next year
-        d0 = new_years - DAY*30
+        d0 = new_years - datetime.timedelta(days=30)
         l_moon_phases = []
         while cur_year != next_year:
             prev_ph = ph
             m, n, ph = NEXT_MOON_PHASE[ph]
             d0 = m(d0)
-            d1 = TZ_LOCAL.localize(ephem.localtime(d0))
+            d1 = ephem.localtime(d0)
             cur_year = d1.year
             if cur_year == year:
                 self.astro_events.append((d1, n))
@@ -217,8 +232,7 @@ class CalEphemeris(object):
         '''
 
         # set time for noon
-        date = TZ_LOCAL.localize(date.combine(date, datetime.time(12, 0)))
-        self.observer.date = date.astimezone(TZ_LOCAL)
+        self.observer.date = date.combine(date, datetime.time(12, 0))
         time_sunset = self.get_sunset(date, RuleStartTime.sunset)
         time_civil = self.get_sunset(date, RuleStartTime.civil)
         time_nautical = self.get_sunset(date, RuleStartTime.nautical)
@@ -233,17 +247,16 @@ class CalEphemeris(object):
     #   print(date.strftime(FMT_YDATE))
     #   MOON.compute('2016/2/28')
         # set time for 3pm
-        date = TZ_LOCAL.localize(date.combine(date, datetime.time(15, 0)))
+        date = date.combine(date, datetime.time(15, 0))
         MOON.compute(date)
-        self.observer.date = date.astimezone(TZ_LOCAL)
+        self.observer.date = date
         self.observer.horizon = RuleStartTime.sunset.deg
-        time_moonset = TZ_LOCAL.localize(ephem.localtime(self.observer.next_setting(MOON)))
+        time_moonset = ephem.localtime(self.observer.next_setting(MOON))
         # figure out which of moonrise/moonset occurs from 3pm-3am
-        if date <= time_moonset < date + HOUR*12:
+        if date <= time_moonset < date + datetime.timedelay(hours=12):
             moon = '{} moonset'.format(time_moonset.strftime(FMT_HM))
         else:
-            time_moonrise = TZ_LOCAL.localize(
-                ephem.localtime(self.observer.next_rising(MOON)))
+            time_moonrise = ephem.localtime(self.observer.next_rising(MOON))
             moon = '{} moonrise'.format(time_moonrise.strftime(FMT_HM))
         moon += ' - {:2.1f}%'.format(MOON.phase)
         return (sun, moon)
@@ -315,41 +328,39 @@ class CalEphemeris(object):
         # set start_date as one month before New Year's local time
         # set end_date as one month after New Year's of following year
         new_years = datetime.datetime(year, 1, 1, 0, 0)
-        new_years = TZ_LOCAL.localize(new_years)
         start_date = ephem.Date(new_years) - EPHEM_MONTH
         end_date = ephem.Date(new_years) + EPHEM_MONTH*13
 
         date = start_date
-        min_elong      = +4
+        min_elong = +4
         min_elong_date = date
         # sample elong every month and find min
         while date < end_date:
             planet.compute(date)
             elong = planet.elong
             if elong < min_elong:
-                min_elong      = elong
+                min_elong = elong
                 min_elong_date = date
             date = ephem.Date(date) + EPHEM_MONTH
-        if min_elong_date==start_date or min_elong_date==end_date:
+        if min_elong_date == start_date or min_elong_date == end_date:
             # min elongation is outside year -> return nothing
             return None
         # elongation the month after opposition should be positive
-        end_date       = ephem.Date(min_elong_date) + EPHEM_MONTH
+        end_date = ephem.Date(min_elong_date) + EPHEM_MONTH
         end_date_elong = self.ephem_elong(end_date, planet)     # should be < 0
         # binary search - find min elongation until interval becomes <= 1 second
         start_date = min_elong_date
         while end_date-start_date > EPHEM_SECOND:
-            mid_date       = (start_date + end_date) / 2
+            mid_date = (start_date + end_date) / 2
             mid_date_elong = self.ephem_elong(mid_date, planet)
             if mid_date_elong > 0:
-                end_date   = mid_date
+                end_date = mid_date
             else:
                 start_date = mid_date
             d = ephem.Date(start_date)
         # change 'start_date' to datetime format
         d = ephem.Date(start_date)
         date = ephem.localtime(d)
-        date = TZ_LOCAL.localize(date)
         if date.year == year:
             return date
         return None

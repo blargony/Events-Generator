@@ -26,35 +26,12 @@
 #########################################################################
 
 import datetime
-import pytz
 
 from enum import Enum, unique
 
 #########################################################################
 # Constants
 #########################################################################
-########################################
-# Time/Time Format Strings
-########################################
-DAY = datetime.timedelta(days=1)
-HOUR = datetime.timedelta(hours=1)
-MINUTE = datetime.timedelta(minutes=1)
-SECOND = datetime.timedelta(seconds=1)
-
-TZ_UTC = pytz.timezone('UTC')
-TZ_LOCAL = pytz.timezone('US/Pacific')
-
-FMT_YEAR_DATE_HM = '%Y %a %m/%d %I:%M %p'
-FMT_DATE_Y = '%a %m/%d %Y'
-FMT_HM = '%I:%M %p'
-
-########################################
-# For Houge Park
-########################################
-LAT = '37.257465'
-LONG = '-121.942281'
-ELEVATION = 50
-
 
 ########################################
 # Events
