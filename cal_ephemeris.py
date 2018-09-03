@@ -29,7 +29,7 @@ import unittest
 
 import ephem
 
-from cal_const import RuleLunar, RuleStartTime
+from cal_events import RuleLunar, RuleSunset
 
 # ==============================================================================
 # Ephem Constants
@@ -101,7 +101,7 @@ class CalEphemeris(object):
     # --------------------------------------
     # Rising/Setting/Phases/etc...
     # --------------------------------------
-    def get_sunset(self, date, horizon=RuleStartTime.sunset):
+    def get_sunset(self, date, horizon=RuleSunset.sunset):
         self.observer.date = date
         self.observer.horizon = horizon.deg
         return self.get_datetime(self.observer.next_setting(ephem.Sun()))
@@ -233,10 +233,10 @@ class CalEphemeris(object):
 
         # set time for noon
         self.observer.date = date.combine(date, datetime.time(12, 0))
-        time_sunset = self.get_sunset(date, RuleStartTime.sunset)
-        time_civil = self.get_sunset(date, RuleStartTime.civil)
-        time_nautical = self.get_sunset(date, RuleStartTime.nautical)
-        time_astro = self.get_sunset(date, RuleStartTime.astronomical)
+        time_sunset = self.get_sunset(date, RuleSunset.sunset)
+        time_civil = self.get_sunset(date, RuleSunset.civil)
+        time_nautical = self.get_sunset(date, RuleSunset.nautical)
+        time_astro = self.get_sunset(date, RuleSunset.astronomical)
         time_sunset = time_sunset.strftime(FMT_HM)
         time_civil = time_civil.strftime(FMT_HM)
         time_nautical = time_nautical.strftime(FMT_HM)
@@ -250,7 +250,7 @@ class CalEphemeris(object):
         date = date.combine(date, datetime.time(15, 0))
         MOON.compute(date)
         self.observer.date = date
-        self.observer.horizon = RuleStartTime.sunset.deg
+        self.observer.horizon = RuleSunset.sunset.deg
         time_moonset = ephem.localtime(self.observer.next_setting(MOON))
         # figure out which of moonrise/moonset occurs from 3pm-3am
         if date <= time_moonset < date + datetime.timedelay(hours=12):
@@ -382,7 +382,7 @@ class TestUM(unittest.TestCase):
         self.assertEqual(sunset.minute, 16)
 
         # nautical sunset should be 21:18
-        sunset = self.eph.get_sunset(self.aug, RuleStartTime.nautical)
+        sunset = self.eph.get_sunset(self.aug, RuleSunset.nautical)
         self.assertEqual(sunset.hour, 21)
         self.assertEqual(sunset.minute, 21)
 

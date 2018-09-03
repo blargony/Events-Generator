@@ -25,6 +25,7 @@ from datetime import datetime, timedelta
 import icalendar
 
 from dateutil import rrule
+from enum import Enum, unique
 
 
 # ==============================================================================
@@ -37,6 +38,63 @@ THU = rrule.TH
 FRI = rrule.FR
 SAT = rrule.SA
 SUN = rrule.SU
+
+LOCATIONS = {1: 'Houge Park, Blg. 1',  # indoor
+             2: 'Houge Park',          # outdoor
+             3: 'Rancho Cañada del Oro',
+             4: 'Mendoza Ranch',
+             5: 'Coyote Valley',
+             6: "Pinnacles Nat'l Park, East Side",
+             7: "Pinnacles Nat'l Park, West Side",
+             8: "Yosemite Nat'l Park, Glacier Point"}
+
+
+# ==============================================================================
+# Enumerated Types for scheduling of events
+# ==============================================================================
+@unique
+class RuleLunar(Enum):
+    """Lunar date rule, which phase of the moon do we want?"""
+    moon_new = 0
+    moon_1q = 1
+    moon_full = 2
+    moon_3q = 3
+
+    def __str__(self):
+        lut = ['New Moon', '1st Qtr Moon', 'Full Moon', '3rd Qtr Moon']
+        return lut[self.value]
+
+
+@unique
+class RuleSunset(Enum):
+    """Solar time rule, which phase of sunset do we want for the time?"""
+    absolute = 'ab'  # start time specifies exact time
+    sunset = 'su'  # others specfies period of day/twilight
+    civil = 'ci'
+    nautical = 'na'
+    astronomical = 'as'
+
+    def __str__(self):
+        lut = {'ab': 'absolute', 'su': 'sunset', 'ci': 'civil',
+               'na': 'nautical', 'as': 'astronomical'}
+        return lut[self.value]
+
+    @property
+    def deg(self):
+        lut = {'su': '0', 'ci': '-6', 'na': '-12', 'as': '-18'}
+        return lut[self.value]
+
+
+@unique
+class EventVisibility(Enum):
+    '''Public/Private event?'''
+    public = 'pu'
+    member = 'me'
+    private = 'pr'
+
+    def __str__(self):
+        lut = {'pu': 'public', 'me': 'member', 'pr': 'private'}
+        return lut[self.value]
 
 
 # ==============================================================================

@@ -30,8 +30,8 @@ the pyephem module (http://rhodesmill.org/pyephem/) to calculate the
 lunar dates and other astro events.
 
 # File overview
-* cal_const.py - constant values/data structures for app
-* cal_gen.py - Contains the set of event date rules, builds a schedule using cal_ephemeris and cal_events
+* cal_gen.py - Contains the set of event date rules to build a yearly schedule using cal_events
 * cal_astro.py - Generates general astro-info (moon phases, illumination sunset times, etc) in CSV and .ICS formats
-* cal_events.py - Contains event classes and functions to calculate schedule details
-* cal_ephemeris.py - Wraps the pyephem module
+* cal_events.py - Contains event classes and functions to calculate event date/time details
+* cal_holidays.py - Contains methods to help identify if events overlap with US holidays
+* cal_ephemeris.py - Wraps the pyephem module to track the dates of moon phases and the times of sunsets and other astro info.

@@ -25,9 +25,9 @@ import icalendar
 
 from dateutil import rrule
 
-from cal_const import RuleStartTime
 import cal_ephemeris
 import cal_holidays
+
 
 def gen_lunar_data(rrule_gen, eph, hol):
     '''Return a list of lunar events for every date from the rrule.'''
@@ -38,7 +38,7 @@ def gen_lunar_data(rrule_gen, eph, hol):
         entry.append(day.strftime('%b %-d %Y'))
         entry.append(day.strftime('%a'))
         entry.append(eph.get_sunset(day).strftime('%-I:%M %p'))
-        entry.append(eph.get_sunset(day, RuleStartTime.nautical).strftime('%-I:%M %p'))
+        entry.append(eph.get_sunset(day, cal_ephemeris.RuleSunset.nautical).strftime('%-I:%M %p'))
         illum, moon_rise, moon_set = eph.get_moon_visibility(day)
         entry.append(int(round(illum)))
         try:
