@@ -27,7 +27,6 @@ import icalendar
 from dateutil import rrule
 from enum import Enum, unique
 
-
 # ==============================================================================
 # Constants
 # ==============================================================================
@@ -39,14 +38,16 @@ FRI = rrule.FR
 SAT = rrule.SA
 SUN = rrule.SU
 
-LOCATIONS = {1: 'Houge Park, Blg. 1',  # indoor
-             2: 'Houge Park',          # outdoor
-             3: 'Rancho Cañada del Oro',
-             4: 'Mendoza Ranch',
-             5: 'Coyote Valley',
-             6: "Pinnacles Nat'l Park, East Side",
-             7: "Pinnacles Nat'l Park, West Side",
-             8: "Yosemite Nat'l Park, Glacier Point"}
+LOCATIONS = {
+    1: 'Houge Park, Blg. 1',  # indoor
+    2: 'Houge Park',  # outdoor
+    3: 'Rancho Cañada del Oro',
+    4: 'Mendoza Ranch',
+    5: 'Coyote Valley',
+    6: "Pinnacles Nat'l Park, East Side",
+    7: "Pinnacles Nat'l Park, West Side",
+    8: "Yosemite Nat'l Park, Glacier Point"
+}
 
 
 # ==============================================================================
@@ -74,8 +75,12 @@ class RuleSunset(Enum):
     astronomical = 'as'
 
     def __str__(self):
-        lut = {'su': 'sunset', 'ci': 'civil',
-               'na': 'nautical', 'as': 'astronomical'}
+        lut = {
+            'su': 'sunset',
+            'ci': 'civil',
+            'na': 'nautical',
+            'as': 'astronomical'
+        }
         return lut[self.value]
 
     @property
@@ -101,7 +106,7 @@ class CalEvent(object):
     '''Club Event date generator that follow the solar or lunar calendar.'''
 
     def __init__(self, eph):
-        self.eph = eph   # cal_ephemeris object with the appropriate settings
+        self.eph = eph  # cal_ephemeris object with the appropriate settings
 
         # Event information
         self.name = None
@@ -111,48 +116,48 @@ class CalEvent(object):
         self.description = None
 
         # Normal Calendar style
-        self.date_rules = None   # rrule date generator
+        self.date_rules = None  # rrule date generator
 
         # Lunar Calendar style
-        self.lunar_rules = None    # new, 1Q, full, 3Q
-        self.lunar_months = None   # Months to hold lunar events (None = all)
+        self.lunar_rules = None  # new, 1Q, full, 3Q
+        self.lunar_months = None  # Months to hold lunar events (None = all)
 
         # Specific Time
         self.start_time = None  # datetime.time object
 
         # Sunset Style Time
-        self.sunset_type = None     # sunset, civil, nautical...
-        self.time_earliest = None   # datetime.time
-        self.time_offset = None     # datetime.timedelta from the sunset
+        self.sunset_type = None  # sunset, civil, nautical...
+        self.time_earliest = None  # datetime.time
+        self.time_offset = None  # datetime.timedelta from the sunset
 
-        self.duration = None     # integer hours
+        self.duration = None  # integer hours
 
     # --------------------------------------
     # Some helper functions to initialize properly
     # --------------------------------------
     def monthly(self, week, weekday):
         '''Monthly event, like in typical calendar fashion.'''
-        self.date_rules = rrule.rrule(rrule.MONTHLY, byweekday=weekday(week),
-                                      count=1000)   # generously large but not infinite event count
+        self.date_rules = rrule.rrule(
+            rrule.MONTHLY, byweekday=weekday(week),
+            count=1000)  # generously large but not infinite event count
 
     def yearly(self, month, week, weekday):
         '''Monthly event, like in typical calendar fashion.'''
-        self.date_rules = rrule.rrule(rrule.YEARLY,
-                                      bymonth=month, byweekday=weekday(week),
-                                      count=1000)
+        self.date_rules = rrule.rrule(
+            rrule.YEARLY, bymonth=month, byweekday=weekday(week), count=1000)
 
     def lunar(self, phase, weekday):
         '''On given weekday every lunar cycle, nearest the given phase.'''
         self.lunar_rules = phase
-        self.date_rules = rrule.rrule(rrule.WEEKLY, byweekday=weekday,
-                                      count=1000)
+        self.date_rules = rrule.rrule(
+            rrule.WEEKLY, byweekday=weekday, count=1000)
 
     def lunar_yearly(self, phase, weekday, months):
         '''Yearly near a lunar phase, on the given weekday/months.'''
         self.lunar_rules = phase
         self.lunar_months = months
-        self.date_rules = rrule.rrule(rrule.YEARLY, bymonth=months, byweekday=weekday,
-                                      count=1000)
+        self.date_rules = rrule.rrule(
+            rrule.YEARLY, bymonth=months, byweekday=weekday, count=1000)
 
     def times(self, start_time, duration=1):
         '''Once a year near a lunar phase.'''
@@ -191,7 +196,8 @@ class CalEvent(object):
         '''Find the dates nearest the specified lunar phase'''
         occurances = []
         days = self.gen_dates(start, until)
-        for phase, dt in self.eph.gen_moon_phases(start, until, lunar_phase=self.lunar_rules):
+        for phase, dt in self.eph.gen_moon_phases(
+                start, until, lunar_phase=self.lunar_rules):
             if not self.lunar_months or dt.month in self.lunar_months:
                 dt = min(days, key=lambda x: abs(x - dt))
                 dtstart, dtend = self.calc_times(dt)
@@ -212,11 +218,12 @@ class CalEvent(object):
 
         # round minutes to nearest quarter hour
         rounded_hour = dusk.hour
-        rounded_minute = round(dusk.minute/15.0) * 15
+        rounded_minute = round(dusk.minute / 15.0) * 15
         if rounded_minute == 60:
             rounded_hour += 1
             rounded_minute = 0
-        date = date.replace(hour=rounded_hour, minute=rounded_minute) + self.time_offset
+        date = date.replace(
+            hour=rounded_hour, minute=rounded_minute) + self.time_offset
 
         # don't start before "earliest" (e.g., 7pm)
         if self.time_earliest and date.time() < self.time_earliest:
@@ -235,5 +242,3 @@ class CalEvent(object):
                 event.add('dtstart', dtstart.date())
             event.add('summary', self.name)
             cal.add_component(event)
-
-

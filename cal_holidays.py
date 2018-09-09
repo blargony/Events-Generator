@@ -20,18 +20,27 @@ class CalHoliday(object):
 
     def _extra_holidays(self, year):
         # Add the superbowl, first Sunday in Feb.
-        superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU,
-                                 dtstart=datetime.date(year, 2, 1))
+        superb_owl = rrule.rrule(
+            rrule.MONTHLY,
+            count=1,
+            byweekday=rrule.SU,
+            dtstart=datetime.date(year, 2, 1))
         self.hol.append({list(superb_owl)[0]: 'Superbowl Sunday'})
 
         # Mother's day, Second Sunday in May
-        superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU(2),
-                                 dtstart=datetime.date(year, 5, 1))
+        superb_owl = rrule.rrule(
+            rrule.MONTHLY,
+            count=1,
+            byweekday=rrule.SU(2),
+            dtstart=datetime.date(year, 5, 1))
         self.hol.append({list(superb_owl)[0]: "Mother's Day"})
 
         # Father's day, Third Sunday in June
-        superb_owl = rrule.rrule(rrule.MONTHLY, count=1, byweekday=rrule.SU(3),
-                                 dtstart=datetime.date(year, 6, 1))
+        superb_owl = rrule.rrule(
+            rrule.MONTHLY,
+            count=1,
+            byweekday=rrule.SU(3),
+            dtstart=datetime.date(year, 6, 1))
         self.hol.append({list(superb_owl)[0]: "Father's Day"})
 
     def check_date(self, date):
@@ -45,24 +54,26 @@ class CalHoliday(object):
     def holiday_weekend(self, date):
         """Is the given date a near a holiday?"""
         if date.weekday() < 2:
-            prior_days = 3 + date.weekday()   # 3 days prior minimum if Mon-Tues
-            post_days = 2 - date.weekday()    # 1-2 days after for Mon-Tues
+            prior_days = 3 + date.weekday()  # 3 days prior minimum if Mon-Tues
+            post_days = 2 - date.weekday()  # 1-2 days after for Mon-Tues
         elif date.weekday() > 2:
-            prior_days = date.weekday() - 2   # 1 days prior for Thurs, more for later
-            post_days = 8 - date.weekday()    # 1 day after for Sunday, more for earlier
+            prior_days = date.weekday(
+            ) - 2  # 1 days prior for Thurs, more for later
+            post_days = 8 - date.weekday(
+            )  # 1 day after for Sunday, more for earlier
 
         holiday_text = ''
         for i in range(-1 * prior_days, post_days):
             test_date = date + (i * datetime.timedelta(days=1))
             holiday = self.hol.get(test_date)
             if holiday:
-                holiday_text = '{0} ({1})'.format(holiday, test_date.strftime('%b %-d'))
+                holiday_text = '{0} ({1})'.format(holiday,
+                                                  test_date.strftime('%b %-d'))
         return holiday_text
 
 
 # ==============================================================================
 class TestUM(unittest.TestCase):
-
     def setUp(self):
         self.hol = CalHoliday(2018)
 
@@ -83,7 +94,8 @@ class TestUM(unittest.TestCase):
     def test_weekend(self):
         """Check if a day is near a holiday."""
         date = datetime.datetime(2018, 5, 27)
-        self.assertEqual('Memorial Day (May 28)', self.hol.holiday_weekend(date))
+        self.assertEqual('Memorial Day (May 28)',
+                         self.hol.holiday_weekend(date))
 
 
 # ==============================================================================

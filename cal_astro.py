@@ -38,7 +38,9 @@ def gen_lunar_data(rrule_gen, eph, hol):
         entry.append(day.strftime('%b %-d %Y'))
         entry.append(day.strftime('%a'))
         entry.append(eph.get_sunset(day).strftime('%-I:%M %p'))
-        entry.append(eph.get_sunset(day, cal_ephemeris.RuleSunset.nautical).strftime('%-I:%M %p'))
+        entry.append(
+            eph.get_sunset(
+                day, cal_ephemeris.RuleSunset.nautical).strftime('%-I:%M %p'))
         illum, moon_rise, moon_set = eph.get_moon_visibility(day)
         entry.append(int(round(illum)))
         try:
@@ -68,7 +70,7 @@ def write_csv(filename, data):
                   'Illumination %', 'Moon Rise', 'Moon Set', 'Holiday')
         cfp.writerow(header)
         for line in data:
-            cfp.writerow(line[1:])    # omit the datetime object
+            cfp.writerow(line[1:])  # omit the datetime object
 
 
 def write_astro_ical(filename, start, until, data, eph, hol):
@@ -108,7 +110,8 @@ def write_astro_ical(filename, start, until, data, eph, hol):
     for phase, date in eph.gen_moon_phases(start, until):
         event = icalendar.Event()
         event.add('dtstart', date.date())  # Cast to just date from datetime
-        event.add('summary', '{}: {}\n'.format(str(phase), date.strftime('%-I:%M %p')))
+        event.add('summary', '{}: {}\n'.format(
+            str(phase), date.strftime('%-I:%M %p')))
         cal.add_component(event)
 
     with open(filename, 'wb') as icfp:
@@ -118,14 +121,23 @@ def write_astro_ical(filename, start, until, data, eph, hol):
 def main():
     '''Main, silly lint tool.'''
     parser = argparse.ArgumentParser(description='Calendar Generator')
-    parser.add_argument('--year', type=int, action='store', required=True,
-                        help='Year of the generated Calendar')
-    parser.add_argument('--filename', action='store',
-                        help='CSV Output Filename', default='astro.csv')
-    parser.add_argument('--ifilename', action='store',
-                        help='iCal Output Filename', default='astro.ics')
+    parser.add_argument(
+        '--year',
+        type=int,
+        action='store',
+        required=True,
+        help='Year of the generated Calendar')
+    parser.add_argument(
+        '--filename',
+        action='store',
+        help='CSV Output Filename',
+        default='astro.csv')
+    parser.add_argument(
+        '--ifilename',
+        action='store',
+        help='iCal Output Filename',
+        default='astro.ics')
     args = parser.parse_args()
-
 
     eph = cal_ephemeris.CalEphemeris()
     hol = cal_holidays.CalHoliday(args.year)
@@ -133,8 +145,11 @@ def main():
     # Get info for every Friday and Saturday
     start = datetime.datetime(args.year, 1, 1)
     until = datetime.datetime(args.year, 12, 31)
-    rrule_gen = rrule.rrule(rrule.WEEKLY, dtstart=start, until=until,
-                            byweekday=(rrule.FR, rrule.SA))
+    rrule_gen = rrule.rrule(
+        rrule.WEEKLY,
+        dtstart=start,
+        until=until,
+        byweekday=(rrule.FR, rrule.SA))
 
     data = gen_lunar_data(rrule_gen, eph, hol)
     write_csv(args.filename, data)

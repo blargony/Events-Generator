@@ -36,7 +36,6 @@ import cal_ephemeris
 # Generate a calendar of events
 # ==============================================================================
 class CalGen():
-
     def __init__(self):
         self.eph = cal_ephemeris.CalEphemeris()
         self.events = []
@@ -50,8 +49,8 @@ class CalGen():
         class_intro.url = 'www.sjaa.net/programs/beginners-astronomy'
         class_intro.description = ''
         class_intro.lunar(cal_events.RuleLunar.moon_1q, cal_events.FRI)
-        class_intro.sunset_times(
-            cal_events.RuleSunset.nautical, datetime.time(hour=19), -1, 1)
+        class_intro.sunset_times(cal_events.RuleSunset.nautical,
+                                 datetime.time(hour=19), -1, 1)
         self.events.append(class_intro)
 
         class_101 = cal_events.CalEvent(self.eph)
@@ -61,8 +60,8 @@ class CalGen():
         class_101.url = 'www.sjaa.net/programs/beginners-astronomy'
         class_101.description = ''
         class_101.lunar(cal_events.RuleLunar.moon_3q, cal_events.FRI)
-        class_101.sunset_times(
-            cal_events.RuleSunset.nautical, datetime.time(hour=19), -1, 1)
+        class_101.sunset_times(cal_events.RuleSunset.nautical,
+                               datetime.time(hour=19), -1, 1)
         self.events.append(class_101)
 
         itsp_1q = cal_events.CalEvent(self.eph)
@@ -72,8 +71,8 @@ class CalGen():
         itsp_1q.url = 'www.sjaa.net/events/monthly-star-parties'
         itsp_1q.description = '1st quarter moon ITSP'
         itsp_1q.lunar(cal_events.RuleLunar.moon_1q, cal_events.FRI)
-        itsp_1q.sunset_times(
-            cal_events.RuleSunset.nautical, datetime.time(hour=19), 0, 3)
+        itsp_1q.sunset_times(cal_events.RuleSunset.nautical,
+                             datetime.time(hour=19), 0, 3)
         self.events.append(itsp_1q)
 
         itsp_3q = cal_events.CalEvent(self.eph)
@@ -83,8 +82,8 @@ class CalGen():
         itsp_3q.url = 'www.sjaa.net/events/monthly-star-parties'
         itsp_3q.description = '3rd quarter moon ITSP'
         itsp_3q.lunar(cal_events.RuleLunar.moon_3q, cal_events.FRI)
-        itsp_3q.sunset_times(
-            cal_events.RuleSunset.nautical, datetime.time(hour=19), 0, 3)
+        itsp_3q.sunset_times(cal_events.RuleSunset.nautical,
+                             datetime.time(hour=19), 0, 3)
         self.events.append(itsp_3q)
 
         starry_night = cal_events.CalEvent(self.eph)
@@ -94,8 +93,7 @@ class CalGen():
         starry_night.url = 'www.sjaa.net/events/starry-nights-public-star-party/'
         starry_night.description = ''
         starry_night.lunar(cal_events.RuleLunar.moon_3q, cal_events.SAT)
-        starry_night.sunset_times(
-            cal_events.RuleSunset.civil, None, 0, 3)
+        starry_night.sunset_times(cal_events.RuleSunset.civil, None, 0, 3)
         self.events.append(starry_night)
 
         dark_sky = cal_events.CalEvent(self.eph)
@@ -105,8 +103,8 @@ class CalGen():
         dark_sky.url = 'www.sjaa.net/dark-sky-nights??'
         dark_sky.description = ''
         dark_sky.lunar(cal_events.RuleLunar.moon_new, cal_events.SAT)
-        dark_sky.sunset_times(
-            cal_events.RuleSunset.civil, datetime.time(hour=19), 0, 4)
+        dark_sky.sunset_times(cal_events.RuleSunset.civil,
+                              datetime.time(hour=19), 0, 4)
         self.events.append(dark_sky)
 
         quick_start = cal_events.CalEvent(self.eph)
@@ -165,8 +163,10 @@ class CalGen():
         gen_mtg.location = cal_events.LOCATIONS[1]
         gen_mtg.url = 'www.sjaa.net/programs/monthly-guest-speakers'
         gen_mtg.description = ''
-        gen_mtg.lunar_yearly(cal_events.RuleLunar.moon_full, cal_events.SAT,
-                             months=(1, 3, 4, 5, 6, 7, 10, 11, 12))  # Skip special meetings
+        gen_mtg.lunar_yearly(
+            cal_events.RuleLunar.moon_full,
+            cal_events.SAT,
+            months=(1, 3, 4, 5, 6, 7, 10, 11, 12))  # Skip special meetings
         gen_mtg.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(gen_mtg)
 
@@ -176,7 +176,8 @@ class CalGen():
         mem_mtg.location = cal_events.LOCATIONS[1]
         mem_mtg.url = 'www.sjaa.net/membership-meeting??'
         mem_mtg.description = ''
-        mem_mtg.lunar_yearly(cal_events.RuleLunar.moon_full, cal_events.SAT, months=(2,))
+        mem_mtg.lunar_yearly(
+            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(2, ))
         mem_mtg.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(mem_mtg)
 
@@ -186,7 +187,8 @@ class CalGen():
         movie_night.location = cal_events.LOCATIONS[1]
         movie_night.url = 'www.sjaa.net/movie-night'
         movie_night.description = 'Member Only Movie Night'
-        movie_night.lunar_yearly(cal_events.RuleLunar.moon_full, cal_events.SAT, months=(8,))
+        movie_night.lunar_yearly(
+            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(8, ))
         movie_night.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(movie_night)
 
@@ -196,7 +198,8 @@ class CalGen():
         show_n_tell.location = cal_events.LOCATIONS[1]
         show_n_tell.url = 'www.sjaa.net/events/show-n-tell??'
         show_n_tell.description = ''
-        show_n_tell.lunar_yearly(cal_events.RuleLunar.moon_full, cal_events.SAT, months=(9,))
+        show_n_tell.lunar_yearly(
+            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(9, ))
         show_n_tell.times(datetime.time(hour=19, minute=30), 2)
         self.events.append(show_n_tell)
 
@@ -206,7 +209,8 @@ class CalGen():
         swap_spring.location = cal_events.LOCATIONS[1]
         swap_spring.url = 'www.sjaa.net/events/swap-meet'
         swap_spring.description = ''
-        swap_spring.lunar_yearly(cal_events.RuleLunar.moon_full, cal_events.SAT, months=(3,))
+        swap_spring.lunar_yearly(
+            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(3, ))
         swap_spring.times(datetime.time(hour=11), 4)
         self.events.append(swap_spring)
 
@@ -216,7 +220,8 @@ class CalGen():
         swap_fall.location = cal_events.LOCATIONS[1]
         swap_fall.url = 'www.sjaa.net/events/swap-meet'
         swap_fall.description = ''
-        swap_fall.lunar_yearly(cal_events.RuleLunar.moon_full, cal_events.SAT, months=(10,))
+        swap_fall.lunar_yearly(
+            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(10, ))
         swap_fall.times(datetime.time(hour=11), 4)
         self.events.append(swap_fall)
 
@@ -227,10 +232,14 @@ class CalGen():
         for event in self.events:
             if event.visibility == cal_events.EventVisibility.public:
                 for dtstart, _ in event.gen_occurances(start, until):
-                    public.append("{0}: {1}".format(event.name, dtstart.strftime('%a %b %-d %Y - %-I:%M %p')))
+                    public.append("{0}: {1}".format(
+                        event.name,
+                        dtstart.strftime('%a %b %-d %Y - %-I:%M %p')))
             else:
                 for dtstart, _ in event.gen_occurances(start, until):
-                    private.append("{0}: {1}".format(event.name, dtstart.strftime('%a %b %-d %Y - %-I:%M %p')))
+                    private.append("{0}: {1}".format(
+                        event.name,
+                        dtstart.strftime('%a %b %-d %Y - %-I:%M %p')))
 
         print('*' * 80 + '\n')
         print('\n'.join(public))
@@ -259,8 +268,8 @@ class CalGen():
 def write_csv(events, filename, start, until):
     with open('{}.csv'.format(filename), 'w') as cfp:
         cfp = csv.writer(cfp)
-        header = ('Event', 'Date', 'Day', 'Type',
-                  'Start Time', 'End Time', 'Location')
+        header = ('Event', 'Date', 'Day', 'Type', 'Start Time', 'End Time',
+                  'Location')
         cfp.writerow(header)
         for event in events:
             for dtstart, dtend in event.gen_occurances(start, until):
@@ -273,15 +282,26 @@ def write_csv(events, filename, start, until):
                 line.append(event.location)
                 cfp.writerow(line)
 
+
 # ==============================================================================
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Calendar Generator')
-    parser.add_argument('--year', type=int, action='store', required=True,
-                        help='Year of the generated Calendar')
-    parser.add_argument('--public', action='store',
-                        help='Public Events Base Filename', default='public')
-    parser.add_argument('--private', action='store',
-                        help='Private Events Base Filename', default='private')
+    parser.add_argument(
+        '--year',
+        type=int,
+        action='store',
+        required=True,
+        help='Year of the generated Calendar')
+    parser.add_argument(
+        '--public',
+        action='store',
+        help='Public Events Base Filename',
+        default='public')
+    parser.add_argument(
+        '--private',
+        action='store',
+        help='Private Events Base Filename',
+        default='private')
     args = parser.parse_args()
 
     # -------------------------------------
@@ -293,9 +313,15 @@ if __name__ == '__main__':
     cal_gen = CalGen()
     cal_gen.print_events(start, until)
 
-    public = [e for e in cal_gen.events if e.visibility == cal_events.EventVisibility.public]
+    public = [
+        e for e in cal_gen.events
+        if e.visibility == cal_events.EventVisibility.public
+    ]
     write_csv(public, args.public, start, until)
-    private = [e for e in cal_gen.events if e.visibility != cal_events.EventVisibility.public]
+    private = [
+        e for e in cal_gen.events
+        if e.visibility != cal_events.EventVisibility.public
+    ]
     write_csv(private, args.private, start, until)
 
     cal = cal_gen.gen_cal(start, until, public=True)
@@ -305,4 +331,3 @@ if __name__ == '__main__':
     cal = cal_gen.gen_cal(start, until, public=False)
     with open('{}.ics'.format(args.private), 'wb') as icfp:
         icfp.write(cal.to_ical())
-

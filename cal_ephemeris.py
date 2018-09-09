@@ -46,17 +46,16 @@ LAT = '37.257465'
 LONG = '-121.942281'
 ELEVATION = 50
 
-
 ########################################
 # Astro objects
 ########################################
 MOON = ephem.Moon()
-PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(),
-           ephem.Uranus(), ephem.Neptune(), ephem.Pluto())
+PLANETS = (ephem.Mars(), ephem.Jupiter(), ephem.Saturn(), ephem.Uranus(),
+           ephem.Neptune(), ephem.Pluto())
 
 EPHEM_SECOND = ephem.second
-EPHEM_DAY = ephem.hour*24
-EPHEM_MONTH = EPHEM_DAY*30
+EPHEM_DAY = ephem.hour * 24
+EPHEM_MONTH = EPHEM_DAY * 30
 
 SEASONS = {
     'spring': (ephem.next_vernal_equinox, 'Spring Equinox'),
@@ -68,10 +67,14 @@ SEASONS = {
 NEXT_MOON_PHASE = {
     # method to get phase, string of phase name, next phase
     RuleLunar.moon_new: (ephem.next_new_moon, 'New moon', RuleLunar.moon_1q),
-    RuleLunar.moon_1q: (ephem.next_first_quarter_moon, '1st Qtr moon', RuleLunar.moon_full),
-    RuleLunar.moon_full: (ephem.next_full_moon, 'Full moon', RuleLunar.moon_3q),
-    RuleLunar.moon_3q: (ephem.next_last_quarter_moon, '3rd Qtr moon', RuleLunar.moon_new)
+    RuleLunar.moon_1q: (ephem.next_first_quarter_moon, '1st Qtr moon',
+                        RuleLunar.moon_full),
+    RuleLunar.moon_full: (ephem.next_full_moon, 'Full moon',
+                          RuleLunar.moon_3q),
+    RuleLunar.moon_3q: (ephem.next_last_quarter_moon, '3rd Qtr moon',
+                        RuleLunar.moon_new)
 }
+
 
 # ==============================================================================
 # Ephemeris Wrapper Class
@@ -108,7 +111,7 @@ class CalEphemeris(object):
 
     def _moon_setup(self, date):
         start = date.replace(hour=18, minute=0)
-        until = start + datetime.timedelta(hours=9)    # 3pm to 3am window
+        until = start + datetime.timedelta(hours=9)  # 3pm to 3am window
         self.observer.date = start
         self.observer.horizon = 0
         return start, until
@@ -130,7 +133,7 @@ class CalEphemeris(object):
         return None
 
     def moon_illum(self, date):
-        date = date.replace(hour=18, minute=0)   # 6pm
+        date = date.replace(hour=18, minute=0)  # 6pm
         moon = ephem.Moon()
         moon.compute(date)
         return moon.phase
@@ -139,7 +142,7 @@ class CalEphemeris(object):
         '''Get the Moon Phase around 6pm of any date.'''
         date = date.replace(hour=18, minute=0)
         elong = self.get_degrees(ephem.Moon(date).elong)
-        phase = round(elong/90.0) * 90
+        phase = round(elong / 90.0) * 90
         if phase == -90:
             return RuleLunar.moon_3q
         elif phase == 0:
@@ -149,8 +152,11 @@ class CalEphemeris(object):
         return RuleLunar.moon_full
 
     def get_moon_visibility(self, date):
-        return [self.moon_illum(date), self.moon_rise(date),
-                self.moon_set(date)]
+        return [
+            self.moon_illum(date),
+            self.moon_rise(date),
+            self.moon_set(date)
+        ]
 
     def gen_moon_phases(self, start, until, lunar_phase=None):
         '''Return an interator of moon phases over the given dates.'''
@@ -171,14 +177,18 @@ class CalEphemeris(object):
                 nxt_phase = ephem.next_full_moon(phase_date)
                 phase = RuleLunar.moon_full
             phase_date = self.get_datetime(nxt_phase)
-            if phase_date < until and (not lunar_phase or lunar_phase == phase):
+            if phase_date < until and (not lunar_phase
+                                       or lunar_phase == phase):
                 yield phase, phase_date
             phase_date += datetime.timedelta(days=1)
 
     def get_nearest_phase(self, date, lunar_phase):
         start = date - datetime.timedelta(days=15)
         until = date + datetime.timedelta(days=15)
-        phases = [x[1] for x in self.gen_moon_phases(start, until, lunar_phase=lunar_phase)]
+        phases = [
+            x[1] for x in self.gen_moon_phases(
+                start, until, lunar_phase=lunar_phase)
+        ]
         return min(phases, key=lambda x: abs(x - date))
 
     # --------------------------------------
@@ -219,16 +229,17 @@ class CalEphemeris(object):
         self.astro_events += self.calc_planets(year)
         self.astro_events.sort()
 
-
     def calc_date_ephem(self, date):
         '''input:
 
             date - datetime.datetime
         output:
-            return string of sun/moon ephemeris for 'date', e.g. for 2016 02/28:
+            return string of sun/moon ephemeris for 'date', e.g.
+            for 2016 02/28:
                 06:00 PM sunset - 06:28 PM / 06:58 PM / 07:28 PM
                 10:06 PM moonrise - 66%
-            One of moonrise or moonset is generated, whichever is after 3pm that day.
+            One of moonrise or moonset is generated, whichever is
+            after 3pm that day.
         '''
 
         # set time for noon
@@ -241,11 +252,11 @@ class CalEphemeris(object):
         time_civil = time_civil.strftime(FMT_HM)
         time_nautical = time_nautical.strftime(FMT_HM)
         time_astro = time_astro.strftime(FMT_HM)
-        sun = '{} sunset - {} / {} / {}'.format(time_sunset,
-                                                time_civil, time_nautical, time_astro)
+        sun = '{} sunset - {} / {} / {}'.format(time_sunset, time_civil,
+                                                time_nautical, time_astro)
 
-    #   print(date.strftime(FMT_YDATE))
-    #   MOON.compute('2016/2/28')
+        #   print(date.strftime(FMT_YDATE))
+        #   MOON.compute('2016/2/28')
         # set time for 3pm
         date = date.combine(date, datetime.time(15, 0))
         MOON.compute(date)
@@ -282,7 +293,10 @@ class CalEphemeris(object):
             date_opp = self.calc_opposition(year, planet)
             if date_opp:
                 # spaces for formatting
-                event = (date_opp, "                               {} at opposition".format(planet.name))
+                event = (
+                    date_opp,
+                    "                               {} at opposition".format(
+                        planet.name))
                 l_events.append(event)
         return l_events
 
@@ -309,9 +323,10 @@ class CalEphemeris(object):
         Notes:
         - Times within two minutes of Sky Safari in most cases, but not
           identical.
-        - Tried the following, but the calcuated minimum point was off by a
-          few minutes:
-        http://stackoverflow.com/questions/10146924/finding-the-maximum-of-a-function
+        - Tried the following, but the calcuated minimum point was
+          off by a few minutes:
+        http://stackoverflow.com/questions/10146924/finding-
+          the-maximum-of-a-function
 
         solution = scipy.optimize.minimize_scalar(lambda x: -f(x),
                                                   bounds=[0,1],
@@ -329,7 +344,7 @@ class CalEphemeris(object):
         # set end_date as one month after New Year's of following year
         new_years = datetime.datetime(year, 1, 1, 0, 0)
         start_date = ephem.Date(new_years) - EPHEM_MONTH
-        end_date = ephem.Date(new_years) + EPHEM_MONTH*13
+        end_date = ephem.Date(new_years) + EPHEM_MONTH * 13
 
         date = start_date
         min_elong = +4
@@ -347,10 +362,11 @@ class CalEphemeris(object):
             return None
         # elongation the month after opposition should be positive
         end_date = ephem.Date(min_elong_date) + EPHEM_MONTH
-        end_date_elong = self.ephem_elong(end_date, planet)     # should be < 0
-        # binary search - find min elongation until interval becomes <= 1 second
+        end_date_elong = self.ephem_elong(end_date, planet)  # should be < 0
+        # binary search - find min elongation until interval
+        # becomes <= 1 second
         start_date = min_elong_date
-        while end_date-start_date > EPHEM_SECOND:
+        while end_date - start_date > EPHEM_SECOND:
             mid_date = (start_date + end_date) / 2
             mid_date_elong = self.ephem_elong(mid_date, planet)
             if mid_date_elong > 0:
@@ -368,7 +384,6 @@ class CalEphemeris(object):
 
 #########################################################################
 class TestUM(unittest.TestCase):
-
     def setUp(self):
         self.eph = CalEphemeris()
         self.aug = datetime.datetime(2018, 8, 1)
@@ -424,8 +439,8 @@ class TestUM(unittest.TestCase):
         self.assertEqual(str(phases[3][0]), 'Full Moon')
 
         # Filter moon phases by type
-        phases = self.eph.gen_moon_phases(self.aug, self.aug_late,
-                                          lunar_phase=RuleLunar.moon_1q)
+        phases = self.eph.gen_moon_phases(
+            self.aug, self.aug_late, lunar_phase=RuleLunar.moon_1q)
         phases = list(phases)
         self.assertEqual(len(phases), 1)
         self.assertEqual(phases[0][1].day, 18)
