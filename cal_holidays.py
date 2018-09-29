@@ -28,20 +28,20 @@ class CalHoliday(object):
         self.hol.append({list(superb_owl)[0]: 'Superbowl Sunday'})
 
         # Mother's day, Second Sunday in May
-        superb_owl = rrule.rrule(
+        mday = rrule.rrule(
             rrule.MONTHLY,
             count=1,
             byweekday=rrule.SU(2),
             dtstart=datetime.date(year, 5, 1))
-        self.hol.append({list(superb_owl)[0]: "Mother's Day"})
+        self.hol.append({list(mday)[0]: "Mother's Day"})
 
         # Father's day, Third Sunday in June
-        superb_owl = rrule.rrule(
+        fday = rrule.rrule(
             rrule.MONTHLY,
             count=1,
             byweekday=rrule.SU(3),
             dtstart=datetime.date(year, 6, 1))
-        self.hol.append({list(superb_owl)[0]: "Father's Day"})
+        self.hol.append({list(fday)[0]: "Father's Day"})
 
     def check_date(self, date):
         """Return a holiday if the day passed is one."""
