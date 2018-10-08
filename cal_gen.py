@@ -36,12 +36,14 @@ import cal_ephemeris
 # Generate a calendar of events
 # ==============================================================================
 class CalGen():
+    """Wrap the list of SJAA Events for the year."""
     def __init__(self):
         self.eph = cal_ephemeris.CalEphemeris()
         self.events = []
         self.init_events()
 
     def init_events(self):
+        """Put all event objects here, with the date/time rules."""
         class_intro = cal_events.CalEvent(self.eph)
         class_intro.name = 'Intro to the Night Sky'
         class_intro.visibility = cal_events.EventVisibility.public
@@ -91,8 +93,11 @@ class CalGen():
         starry_night.visibility = cal_events.EventVisibility.public
         starry_night.location = cal_events.LOCATIONS[3]
         starry_night.url = 'www.sjaa.net/events/starry-nights-public-star-party/'
-        starry_night.description = ''
-        starry_night.lunar(cal_events.RuleLunar.moon_3q, cal_events.SAT)
+        starry_night.description = 'Starry Nights hosted by the Open Space Authority'
+        starry_night.lunar_yearly(
+            cal_events.RuleLunar.moon_3q,
+            cal_events.SAT,
+            months=(2, 3, 4, 5, 6, 7, 8, 9, 10))
         starry_night.sunset_times(cal_events.RuleSunset.civil, None, 0, 3)
         self.events.append(starry_night)
 
@@ -126,6 +131,62 @@ class CalGen():
         solar_sunday.monthly(1, cal_events.SUN)
         solar_sunday.times(datetime.time(hour=13), 2)
         self.events.append(solar_sunday)
+
+        img_workshop = cal_events.CalEvent(self.eph)
+        img_workshop.name = 'Imaging Workshop'
+        img_workshop.visibility = cal_events.EventVisibility.public
+        img_workshop.location = cal_events.LOCATIONS[5]
+        img_workshop.url = 'https://www.sjaa.net/programs/imaging-sig/'
+        img_workshop.description = ''
+        img_workshop.lunar_yearly(
+            cal_events.RuleLunar.moon_new,
+            cal_events.SAT,
+            months=(1, 2, 4, 5, 7, 8, 9, 10))
+        img_workshop.sunset_times(cal_events.RuleSunset.nautical,
+                                  datetime.time(hour=19), 0, 3)
+        self.events.append(img_workshop)
+
+        img_clinic = cal_events.CalEvent(self.eph)
+        img_clinic.name = 'Imaging Clinic'
+        img_clinic.visibility = cal_events.EventVisibility.public
+        img_clinic.location = cal_events.LOCATIONS[5]
+        img_clinic.url = 'https://www.sjaa.net/programs/imaging-sig/'
+        img_clinic.description = ''
+        img_clinic.lunar_yearly(
+            cal_events.RuleLunar.moon_new,
+            cal_events.SAT,
+            months=(3, 6, 9, 12))
+        img_clinic.sunset_times(cal_events.RuleSunset.nautical,
+                                datetime.time(hour=19), 0, 3)
+        self.events.append(img_clinic)
+
+        bino = cal_events.CalEvent(self.eph)
+        bino.name = 'Binocular Observing'
+        bino.visibility = cal_events.EventVisibility.public
+        bino.location = cal_events.LOCATIONS[5]
+        bino.url = 'https://www.sjaa.net/events/binocular-stargazing/'
+        bino.description = ''
+        bino.lunar_yearly(
+            cal_events.RuleLunar.moon_3q,
+            cal_events.SAT,
+            months=(5, 6, 7, 8))
+        bino.sunset_times(cal_events.RuleSunset.nautical,
+                          datetime.time(hour=19), 0, 3)
+        self.events.append(bino)
+
+        pinnacles = cal_events.CalEvent(self.eph)
+        pinnacles.name = 'Pinnacles Dark Sky Observing (NPS)'
+        pinnacles.visibility = cal_events.EventVisibility.public
+        pinnacles.location = cal_events.LOCATIONS[6]
+        pinnacles.url = 'https://www.sjaa.net/events/pinnacles-stargazing/'
+        pinnacles.description = ''
+        pinnacles.lunar_yearly(
+            cal_events.RuleLunar.moon_new,
+            cal_events.SAT,
+            months=(5, 6, 7, 8))
+        pinnacles.sunset_times(cal_events.RuleSunset.nautical,
+                               datetime.time(hour=19), 0, 3)
+        self.events.append(pinnacles)
 
         fix_it = cal_events.CalEvent(self.eph)
         fix_it.name = 'Fix It'
