@@ -94,10 +94,7 @@ class CalGen():
         starry_night.location = cal_events.LOCATIONS[3]
         starry_night.url = 'www.sjaa.net/events/starry-nights-public-star-party/'
         starry_night.description = 'Starry Nights hosted by the Open Space Authority'
-        starry_night.lunar_yearly(
-            cal_events.RuleLunar.moon_3q,
-            cal_events.SAT,
-            months=(2, 3, 4, 5, 6, 7, 8, 9, 10))
+        starry_night.lunar(cal_events.RuleLunar.moon_3q, cal_events.SAT)
         starry_night.sunset_times(cal_events.RuleSunset.civil, None, 0, 3)
         self.events.append(starry_night)
 
@@ -105,7 +102,7 @@ class CalGen():
         dark_sky.name = 'Dark Sky Night'
         dark_sky.visibility = cal_events.EventVisibility.member
         dark_sky.location = cal_events.LOCATIONS[4]
-        dark_sky.url = 'www.sjaa.net/dark-sky-nights??'
+        dark_sky.url = 'www.sjaa.net/events/dark-sky-nights'
         dark_sky.description = ''
         dark_sky.lunar(cal_events.RuleLunar.moon_new, cal_events.SAT)
         dark_sky.sunset_times(cal_events.RuleSunset.civil,
@@ -118,7 +115,10 @@ class CalGen():
         quick_start.location = cal_events.LOCATIONS[1]
         quick_start.url = 'www.sjaa.net/programs/quick-start'
         quick_start.description = ''
-        quick_start.lunar(cal_events.RuleLunar.moon_1q, cal_events.SAT)
+        quick_start.lunar_yearly(
+            cal_events.RuleLunar.moon_1q,
+            cal_events.SAT,
+            months=(1, 4, 7, 10))
         quick_start.times(datetime.time(hour=19), 2)
         self.events.append(quick_start)
 
@@ -129,7 +129,7 @@ class CalGen():
         solar_sunday.url = 'www.sjaa.net/solar-observing??'
         solar_sunday.description = ''
         solar_sunday.monthly(1, cal_events.SUN)
-        solar_sunday.times(datetime.time(hour=13), 2)
+        solar_sunday.times(datetime.time(hour=14), 2)
         self.events.append(solar_sunday)
 
         img_workshop = cal_events.CalEvent(self.eph)
@@ -141,7 +141,7 @@ class CalGen():
         img_workshop.lunar_yearly(
             cal_events.RuleLunar.moon_new,
             cal_events.SAT,
-            months=(1, 2, 4, 5, 7, 8, 9, 10))
+            months=(1, 2, 4, 5, 7, 8, 10, 11))
         img_workshop.sunset_times(cal_events.RuleSunset.nautical,
                                   datetime.time(hour=19), 0, 3)
         self.events.append(img_workshop)
@@ -244,7 +244,7 @@ class CalGen():
 
         movie_night = cal_events.CalEvent(self.eph)
         movie_night.name = 'Movie Night'
-        movie_night.visibility = cal_events.EventVisibility.member
+        movie_night.visibility = cal_events.EventVisibility.public
         movie_night.location = cal_events.LOCATIONS[1]
         movie_night.url = 'www.sjaa.net/movie-night'
         movie_night.description = 'Member Only Movie Night'
@@ -257,7 +257,7 @@ class CalGen():
         show_n_tell.name = 'Show-n-tell'
         show_n_tell.visibility = cal_events.EventVisibility.public
         show_n_tell.location = cal_events.LOCATIONS[1]
-        show_n_tell.url = 'www.sjaa.net/events/show-n-tell??'
+        show_n_tell.url = 'www.sjaa.net/events/show-n-tell'
         show_n_tell.description = ''
         show_n_tell.lunar_yearly(
             cal_events.RuleLunar.moon_full, cal_events.SAT, months=(9, ))
@@ -271,7 +271,7 @@ class CalGen():
         swap_spring.url = 'www.sjaa.net/events/swap-meet'
         swap_spring.description = ''
         swap_spring.lunar_yearly(
-            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(3, ))
+            cal_events.RuleLunar.moon_full, cal_events.SUN, months=(3, ))
         swap_spring.times(datetime.time(hour=11), 4)
         self.events.append(swap_spring)
 
@@ -282,7 +282,7 @@ class CalGen():
         swap_fall.url = 'www.sjaa.net/events/swap-meet'
         swap_fall.description = ''
         swap_fall.lunar_yearly(
-            cal_events.RuleLunar.moon_full, cal_events.SAT, months=(10, ))
+            cal_events.RuleLunar.moon_full, cal_events.SUN, months=(10, ))
         swap_fall.times(datetime.time(hour=11), 4)
         self.events.append(swap_fall)
 
