@@ -210,7 +210,7 @@ class CalGen():
 
         board_mtg = cal_events.CalEvent(self.eph)
         board_mtg.name = 'Board Meeting'
-        board_mtg.visibility = cal_events.EventVisibility.member
+        board_mtg.visibility = cal_events.EventVisibility.public
         board_mtg.location = cal_events.LOCATIONS[1]
         board_mtg.url = 'www.sjaa.net/board-meeting??'
         board_mtg.description = ''
@@ -233,7 +233,7 @@ class CalGen():
 
         mem_mtg = cal_events.CalEvent(self.eph)
         mem_mtg.name = 'Membership Meeting/Awards Night'
-        mem_mtg.visibility = cal_events.EventVisibility.member
+        mem_mtg.visibility = cal_events.EventVisibility.public
         mem_mtg.location = cal_events.LOCATIONS[1]
         mem_mtg.url = 'www.sjaa.net/membership-meeting??'
         mem_mtg.description = ''
